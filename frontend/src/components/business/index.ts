@@ -10,3 +10,6 @@ export { NeighborPopover } from './NeighborPopover';
 export type { NeighborInfo } from './NeighborPopover';
 export { MapCanvas } from './MapCanvas';
 export type { MapTerritory } from './MapCanvas';
+export { GuardianSelectPage } from './GuardianSelectPage';
+export { TerritoryAllocation } from './TerritoryAllocation';
+export { AgentGuide } from './AgentGuide';

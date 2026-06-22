@@ -1,72 +1,106 @@
 ﻿import Link from 'next/link';
+import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardBody } from '@/components/ui/card';
 import { TerritoryIcon } from '@/components/business/TerritoryIcon';
 import { AgentAvatar } from '@/components/business/AgentAvatar';
+import { AgentGuide } from '@/components/business/AgentGuide';
 
 export default function Home() {
   return (
     <main className="min-h-screen flex flex-col items-center justify-center px-6 py-12 relative overflow-hidden">
-      {/* 装饰：远景像素屋 */}
-      <div
-        className="absolute inset-0 opacity-[0.04] pointer-events-none"
+      {/* 装饰：远景光斑 */}
+      <motion.div
+        className="absolute inset-0 opacity-30 pointer-events-none"
         style={{
           backgroundImage:
-            'radial-gradient(circle at 20% 30%, #C9A87C 1px, transparent 1px), radial-gradient(circle at 80% 70%, #C9A87C 1px, transparent 1px)',
-          backgroundSize: '60px 60px, 80px 80px',
+            'radial-gradient(circle at 20% 30%, rgba(201, 168, 124, 0.06), transparent 40%), radial-gradient(circle at 80% 70%, rgba(90, 143, 108, 0.04), transparent 40%)',
         }}
-        aria-hidden="true"
+        animate={{ opacity: [0.25, 0.4, 0.25] }}
+        transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
       />
 
-      <div className="relative z-10 max-w-2xl w-full text-center">
-        {/* Logo + 主标题 */}
-        <div className="mb-2 flex items-center justify-center">
+      {/* Logo + 主标题 */}
+      <motion.div
+        className="relative z-10 max-w-2xl w-full text-center"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+      >
+        <motion.div
+          className="mb-3 flex items-center justify-center"
+          animate={{ y: [0, -6, 0] }}
+          transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+        >
           <TerritoryIcon level={3} size="lg" />
-        </div>
-        <h1 className="font-serif text-5xl md:text-6xl font-medium text-brand-paper mb-3 tracking-wide">
-          Gam<span className="text-brand-gold text-glow-gold">Den</span>
-        </h1>
-        <p className="text-brand-paper-mute font-serif text-lg italic mb-12">
+        </motion.div>
+
+        <motion.h1
+          className="font-serif text-5xl md:text-6xl font-medium text-brand-paper mb-3 tracking-wide"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.5 }}
+        >
+          <span className="inline-block">Gam</span>
+          <span className="text-brand-gold text-glow-gold inline-block">Den</span>
+        </motion.h1>
+
+        <motion.p
+          className="text-brand-paper-mute font-serif text-lg italic mb-10"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4, duration: 0.5 }}
+        >
           在算法之外，建一座游戏巢穴
-        </p>
+        </motion.p>
 
-        {/* 三栏特性 - 卷轴卡片 */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
-          <Card variant="scroll" className="text-left">
-            <CardBody>
-              <TerritoryIcon level={2} size="md" className="mb-3" />
-              <h2 className="font-serif text-lg text-brand-paper mb-2">领地系统</h2>
-              <p className="text-sm text-brand-paper-mute leading-relaxed">
-                注册即获专属领地，邀请好友扩张版图。
-              </p>
-            </CardBody>
-          </Card>
-
-          <Card variant="scroll" className="text-left">
-            <CardBody>
-              <div className="mb-3">
-                <AgentAvatar type="elf" size="md" />
-              </div>
-              <h2 className="font-serif text-lg text-brand-paper mb-2">AI 守护灵</h2>
-              <p className="text-sm text-brand-paper-mute leading-relaxed">
-                三位守护灵随你挑选，陪你走过巢穴四季。
-              </p>
-            </CardBody>
-          </Card>
-
-          <Card variant="scroll" className="text-left">
-            <CardBody>
-              <div className="text-4xl mb-3 text-brand-gold">✦</div>
-              <h2 className="font-serif text-lg text-brand-paper mb-2">俱乐部</h2>
-              <p className="text-sm text-brand-paper-mute leading-relaxed">
-                加入志同道合者的古风茶摊，慢慢聊。
-              </p>
-            </CardBody>
-          </Card>
+        {/* 三栏特性 */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
+          {[
+            {
+              icon: <TerritoryIcon level={2} size="md" />,
+              title: '领地系统',
+              desc: '注册即获专属领地，邀请好友扩张版图。',
+            },
+            {
+              icon: <AgentAvatar type="elf" size="md" />,
+              title: 'AI 守护灵',
+              desc: '三位守护灵随你挑选，陪你走过巢穴四季。',
+            },
+            {
+              icon: <span className="text-4xl text-brand-gold">✦</span>,
+              title: '俱乐部',
+              desc: '加入志同道合者的古风茶摊，慢慢聊。',
+            },
+          ].map((card, i) => (
+            <motion.div
+              key={card.title}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 + i * 0.1, duration: 0.4 }}
+            >
+              <Card variant="scroll" className="text-left h-full">
+                <CardBody>
+                  <div className="mb-3">{card.icon}</div>
+                  <h2 className="font-serif text-lg text-brand-paper mb-2">
+                    {card.title}
+                  </h2>
+                  <p className="text-sm text-brand-paper-mute leading-relaxed">
+                    {card.desc}
+                  </p>
+                </CardBody>
+              </Card>
+            </motion.div>
+          ))}
         </div>
 
         {/* CTA */}
-        <div className="flex gap-4 justify-center mb-6">
+        <motion.div
+          className="flex gap-4 justify-center mb-4"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.9, duration: 0.4 }}
+        >
           <Link href="/auth/login">
             <Button variant="primary" size="lg">
               进入巢穴
@@ -77,11 +111,32 @@ export default function Home() {
               注册新领地
             </Button>
           </Link>
-        </div>
+        </motion.div>
 
-        <p className="text-xs text-brand-mute font-serif italic">
+        <motion.p
+          className="text-xs text-brand-mute font-serif italic"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.1, duration: 0.4 }}
+        >
           邀请制社区 · 仅限持有邀请码者入内
-        </p>
+        </motion.p>
+      </motion.div>
+
+      {/* 守护灵引导气泡（首次访问时显示） */}
+      <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-50">
+        <AgentGuide
+          type="elf"
+          message="欢迎来到 GamDen。在算法之外，建一座属于你的巢穴。"
+          delay={1500}
+          autoHide={8000}
+          cta={{
+            label: '开始探索',
+            onClick: () => {
+              window.location.href = '/auth/login';
+            },
+          }}
+        />
       </div>
     </main>
   );
