@@ -1,0 +1,36 @@
+name: Project Automation
+
+on:
+  issues:
+    types: [opened, closed, reopened, labeled]
+  pull_request:
+    types: [opened, closed, ready_for_review]
+
+jobs:
+  add-to-project:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add issue to project
+        uses: actions/add-to-project@v0.5.0
+        with:
+          project-url: https://github.com/${{ secrets.GITHUB_OWNER }}/projects/${{ secrets.PROJECT_NUMBER }}
+          github-token: ${{ secrets.GITHUB_PROJECT_TOKEN }}
+
+  auto-close-issue:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
+    steps:
+      - name: Close linked issue
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const body = context.payload.pull_request.body || '';
+            const match = body.match(/(Closes|Fixes|Resolves)\s+#(\d+)/i);
+            if (match) {
+              await github.rest.issues.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: parseInt(match[2]),
+                state: 'closed'
+              });
+            }

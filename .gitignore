@@ -1,0 +1,59 @@
+# ===== GamDen V1.0 .gitignore =====
+
+# Dependencies
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Build outputs
+dist/
+build/
+.next/
+out/
+*.tsbuildinfo
+
+# Environment & Secrets
+.env
+.env.local
+.env.development
+.env.production
+*.pem
+*.key
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Database
+*.sqld
+*.db
+*.sqlite
+
+# Docker
+docker-compose.override.yml
+
+# Test
+coverage/
+.nyc_output/
+
+# Temporary
+tmp/
+temp/
+*.tmp
+
+# CodeBuddy
+.codebuddy/automations/
+!.codebuddy/integration/
+
+# OS
+Thumbs.db
+Desktop.ini
