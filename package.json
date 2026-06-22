@@ -1,0 +1,16 @@
+{
+  "name": "gamden",
+  "version": "1.0.0",
+  "description": "GamDen - 游戏巢穴社区",
+  "scripts": {
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "build:backend": "cd backend && npm run build",
+    "build:frontend": "cd frontend && npm run build",
+    "start:backend": "cd backend && npm start",
+    "start:frontend": "cd frontend && npm start"
+  },
+  "keywords": ["game", "community", "social"],
+  "author": "GamDen Team",
+  "license": "MIT"
+}

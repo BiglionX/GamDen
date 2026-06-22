@@ -1,32 +1,31 @@
-# ===== GamDen V1.0 .gitignore =====
-
 # Dependencies
 node_modules/
 package-lock.json
 yarn.lock
 pnpm-lock.yaml
 
+# Environment variables
+.env
+.env.local
+.env.development
+.env.production
+
 # Build outputs
 dist/
 build/
 .next/
 out/
-*.tsbuildinfo
-
-# Environment & Secrets
-.env
-.env.local
-.env.development
-.env.production
-*.pem
-*.key
 
 # IDE
 .vscode/
 .idea/
 *.swp
 *.swo
+*~
+
+# OS
 .DS_Store
+Thumbs.db
 
 # Logs
 logs/
@@ -34,26 +33,20 @@ logs/
 npm-debug.log*
 
 # Database
-*.sqld
 *.db
 *.sqlite
 
 # Docker
-docker-compose.override.yml
+.dockerignore
 
-# Test
-coverage/
-.nyc_output/
-
-# Temporary
-tmp/
-temp/
+# Temp files
 *.tmp
+*.temp
 
-# CodeBuddy
-.codebuddy/automations/
-!.codebuddy/integration/
-
-# OS
-Thumbs.db
-Desktop.ini
+# Scripts containing secrets (don't commit)
+.github/scripts/create-project-v2.py
+.github/scripts/create-project-v3.py
+.github/scripts/create-repo-project.py
+.github/scripts/link-project-to-repo.py
+.github/scripts/setup-board-final.py
+.github/scripts/setup-project-board.py

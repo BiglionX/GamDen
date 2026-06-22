@@ -41,9 +41,15 @@ function githubGraphQL(query, variables = {}) {
       let body = '';
       res.on('data', (chunk) => body += chunk);
       res.on('end', () => {
-        const json = JSON.parse(body);
+        let json;
+        try {
+          json = JSON.parse(body);
+        } catch (e) {
+          reject(new Error(`GitHub API 返回非 JSON 响应（HTTP ${res.statusCode}）:\n${body.substring(0, 500)}`));
+          return;
+        }
         if (json.errors) {
-          reject(new Error(JSON.stringify(json.errors, null, 2)));
+          reject(new Error(`GitHub API 错误:\n${JSON.stringify(json.errors, null, 2)}`));
         } else {
           resolve(json.data);
         }
@@ -85,12 +91,31 @@ function githubREST(method, path, body = null) {
 
 // ========== 主流程 ==========
 
+// 获取用户的 Node ID（GitHub GraphQL 需要 node ID 而不是用户名）
+async function getOwnerNodeId() {
+  console.log('🔍 查询 owner node ID...');
+  const query = `
+    query {
+      viewer {
+        id
+        login
+      }
+    }
+  `;
+  const data = await githubGraphQL(query, {});
+  if (data.viewer.login.toLowerCase() !== CONFIG.owner.toLowerCase()) {
+    console.warn(`⚠️  警告：Token 所属用户(${data.viewer.login}) 与配置的 owner(${CONFIG.owner}) 不一致`);
+  }
+  console.log(`✅ Owner Node ID: ${data.viewer.id}`);
+  return data.viewer.id;
+}
+
 // Step 1: 创建 GitHub Project (v2 / Projects Next)
-async function createProject() {
+async function createProject(ownerId) {
   console.log('📦 创建 GitHub Project...');
   const mutation = `
-    mutation($owner: String!, $title: String!, $description: String) {
-      createProjectV2(input: { owner: $owner, title: $title, description: $description }) {
+    mutation($ownerId: ID!, $title: String!, $description: String) {
+      createProjectV2(input: { ownerId: $ownerId, title: $title, description: $description }) {
         projectV2 {
           id
           number
@@ -100,10 +125,13 @@ async function createProject() {
     }
   `;
   const data = await githubGraphQL(mutation, {
-    owner: CONFIG.owner,
+    ownerId: ownerId,
     title: CONFIG.projectName,
     description: CONFIG.projectDesc,
   });
+  if (!data.createProjectV2) {
+    throw new Error('创建 Project 失败：' + JSON.stringify(data));
+  }
   const project = data.createProjectV2.projectV2;
   console.log(`✅ Project 已创建: ${project.url}`);
   return project;
@@ -280,8 +308,11 @@ async function main() {
   }
 
   try {
+    // 0. 获取 owner node ID（GitHub GraphQL 需要）
+    const ownerId = await getOwnerNodeId();
+    
     // 1. 创建 Project
-    const project = await createProject();
+    const project = await createProject(ownerId);
     
     // 2. 配置 Project 字段
     await setupProjectFields(project.id);
@@ -293,8 +324,10 @@ async function main() {
     console.log(`Project: ${project.url}`);
     console.log(`Issues: ${issueNumbers.length} 个`);
     console.log('\n下一步：在 GitHub Project 页面手动将 Issues 添加到看板');
+    console.log('提示：可在 Project 设置中创建看板视图（按状态分列）');
   } catch (err) {
     console.error('❌ 错误:', err.message);
+    if (err.response) console.error('响应详情:', err.response);
     process.exit(1);
   }
 }
