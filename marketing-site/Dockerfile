@@ -1,19 +1,14 @@
-# 营销网站 Dockerfile - 多阶段构建
-# Stage 1: 安装依赖
-FROM node:18-alpine AS deps
+# 营销网站 Dockerfile - 单阶段构建 + 精简运行
+# Stage 1: 构建应用（依赖安装 + 编译）
+FROM node:18-alpine AS builder
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
-
-# Stage 2: 构建应用
-FROM node:18-alpine AS builder
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN npm run build
 
-# Stage 3: 运行环境
+# Stage 2: 精简运行环境
 FROM node:18-alpine AS runner
 WORKDIR /app
 
