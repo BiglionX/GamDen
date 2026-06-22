@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { TerritoryNode } from './TerritoryNode';
 import { FogTile } from './FogTile';

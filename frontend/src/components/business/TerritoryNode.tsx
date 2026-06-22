@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { TerritoryIcon } from './TerritoryIcon';
 import { AgentAvatar, GuardianType } from './AgentAvatar';

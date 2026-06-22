@@ -1,6 +1,8 @@
+﻿'use client'
+
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import '../../admin.css';
+import '../admin.css';
 
 export default function AdminContentAudit() {
   const [auditList, setAuditList] = useState<any[]>([]);

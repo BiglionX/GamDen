@@ -1,10 +1,12 @@
-﻿import Link from 'next/link';
+﻿'use client';
+
+import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardBody } from '@/components/ui/card';
 import { TerritoryIcon } from '@/components/business/TerritoryIcon';
 import { AgentAvatar } from '@/components/business/AgentAvatar';
-import { AgentGuide } from '@/components/business/AgentGuide';
+import { HomeAgentGuide } from '@/components/business/HomeAgentGuide';
 
 export default function Home() {
   return (
@@ -124,20 +126,7 @@ export default function Home() {
       </motion.div>
 
       {/* 守护灵引导气泡（首次访问时显示） */}
-      <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-50">
-        <AgentGuide
-          type="elf"
-          message="欢迎来到 GamDen。在算法之外，建一座属于你的巢穴。"
-          delay={1500}
-          autoHide={8000}
-          cta={{
-            label: '开始探索',
-            onClick: () => {
-              window.location.href = '/auth/login';
-            },
-          }}
-        />
-      </div>
+      <HomeAgentGuide />
     </main>
   );
 }

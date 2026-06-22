@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { AgentAvatar, GuardianType, getGuardianName } from './AgentAvatar';
 import { Button } from '@/components/ui/button';

@@ -13,3 +13,4 @@ export type { MapTerritory } from './MapCanvas';
 export { GuardianSelectPage } from './GuardianSelectPage';
 export { TerritoryAllocation } from './TerritoryAllocation';
 export { AgentGuide } from './AgentGuide';
+export { HomeAgentGuide } from './HomeAgentGuide';
