@@ -8,6 +8,8 @@
 GamDen/
 ├── backend/              # 后端API（Node.js + Express + TypeScript）
 ├── frontend/            # 前端应用（Next.js + React）
+├── marketing-site/      # 营销网站（Next.js + React）
+├── deploy/              # 一键部署系统脚本和配置
 ├── docs/                # 项目文档
 ├── docker-compose.yml    # Docker编排配置
 └── .env                 # 环境变量配置
@@ -55,7 +57,32 @@ npm run dev:backend
 npm run dev:frontend
 ```
 
-### 生产部署
+### 🚀 一键SSH部署 (推荐)
+
+项目提供完整的SSH一键部署系统，支持快速将项目部署到远程服务器：
+
+```bash
+# 启动快速部署向导（推荐首次使用）
+./deploy/quick-start.sh
+
+# 或直接部署到服务器
+./deploy/scripts/ssh-deploy-main.sh
+
+# Windows用户使用PowerShell
+.\deploy\scripts\ssh-deploy.ps1
+```
+
+**npm快捷命令：**
+```bash
+npm run deploy:setup      # 配置SSH密钥
+npm run deploy:quick      # 启动部署向导
+npm run deploy:prod       # 生产环境部署
+npm run deploy:dry-run    # 预览部署步骤
+```
+
+详细部署文档请查看 [deploy/README.md](./deploy/README.md) 和 [deploy/INTEGRATION.md](./deploy/INTEGRATION.md)
+
+### 生产部署 (Docker)
 
 ```bash
 # 使用Docker Compose部署

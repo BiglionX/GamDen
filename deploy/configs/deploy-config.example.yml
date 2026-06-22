@@ -1,0 +1,220 @@
+# GamDen项目部署配置文件模板
+# 复制此文件为 deploy-config.yml 并根据实际情况修改
+
+# 服务器配置
+server:
+  # 服务器基本信息
+  user: "root"                    # 服务器用户名
+  host: "43.160.220.131"          # 服务器IP地址
+  port: 22                         # SSH端口
+  
+  # 项目部署路径
+  project_dir: "/var/www/gamden"  # 项目根目录
+  
+  # 权限配置
+  use_sudo: true                   # 是否需要sudo权限
+  www_user: "www-data"             # Web服务用户
+  www_group: "www-data"            # Web服务组
+
+# 服务端口配置
+ports:
+  backend: 3001                    # 后端服务端口
+  frontend: 3000                   # 前端服务端口  
+  marketing: 3002                  # 营销网站端口
+  
+  # 生产环境端口（当 production: true 时使用）
+  production:
+    backend: 8000
+    frontend: 80
+    marketing: 8080
+
+# 环境配置
+environments:
+  development:
+    node_env: "development"
+    log_level: "debug"
+    cors_origin: "http://localhost:*"
+    
+  staging:
+    node_env: "staging"
+    log_level: "info"
+    cors_origin: "http://staging.yourdomain.com"
+    
+  production:
+    node_env: "production"
+    log_level: "warn"
+    cors_origin: "https://yourdomain.com"
+
+# 数据库配置
+database:
+  host: "localhost"
+  port: 5432
+  name: "gamden_prod"
+  user: "gamden_user"
+  
+  # 密码可以通过环境变量或密钥文件管理
+  password_env: "GAMDEN_DB_PASSWORD"
+  password_file: "/etc/gamden/db_password"
+  
+  # SSL配置
+  ssl: false
+  
+  # 连接池配置
+  pool:
+    min: 2
+    max: 10
+    acquire: 30000
+    idle: 10000
+
+# Redis配置
+redis:
+  url: "redis://localhost:6379"
+  password_env: "GAMDEN_REDIS_PASSWORD"
+  
+# JWT配置
+jwt:
+  secret_env: "GAMDEN_JWT_SECRET"
+  secret_file: "/etc/gamden/jwt_secret"
+  expires_in: "7d"
+
+# 构建配置
+build:
+  # 排除文件模式（用于打包部署）
+  exclude_patterns:
+    - "node_modules"
+    - ".git"
+    - ".next"
+    - "dist"
+    - "build"
+    - ".env.local"
+    - "*.log"
+    - ".DS_Store"
+    - "coverage"
+    - ".nyc_output"
+    - "*.tmp"
+    
+  # 构建命令
+  commands:
+    backend: "npm run build"
+    frontend: "npm run build"
+    marketing: "npm run build"
+
+# 服务配置
+services:
+  backend:
+    name: "gamden-backend"
+    description: "GamDen Backend Service"
+    start_delay: 10
+    restart_policy: "always"
+    restart_sec: 10
+    
+  frontend:
+    name: "gamden-frontend" 
+    description: "GamDen Frontend Service"
+    start_delay: 5
+    restart_policy: "always"
+    restart_sec: 10
+    
+  marketing:
+    name: "gamden-marketing"
+    description: "GamDen Marketing Site Service"
+    start_delay: 5
+    restart_policy: "always"
+    restart_sec: 10
+
+# 日志配置
+logging:
+  level: "info"                    # debug, info, warn, error
+  
+  # 日志文件路径
+  paths:
+    backend: "/var/www/gamden/logs/backend"
+    frontend: "/var/www/gamden/logs/frontend"
+    marketing: "/var/www/gamden/logs/marketing"
+    nginx: "/var/www/gamden/logs/nginx"
+    
+  # 日志轮转配置
+  rotation:
+    max_size: "100M"
+    max_files: 10
+    compress: true
+
+# 监控配置
+monitoring:
+  health_check:
+    enabled: true
+    interval: 30                    # 健康检查间隔（秒）
+    timeout: 10                     # 超时时间（秒）
+    retries: 3                      # 重试次数
+    
+  metrics:
+    enabled: false
+    endpoint: "/metrics"
+    
+# 安全配置
+security:
+  # SSH密钥认证
+  ssh_key_auth: true
+  ssh_key_path: "~/.ssh/id_rsa"
+  
+  # 防火墙配置
+  firewall:
+    enabled: true
+    allowed_ports:
+      - 22      # SSH
+      - 80      # HTTP
+      - 443     # HTTPS
+      - 3000    # Frontend
+      - 3001    # Backend
+      - 3002    # Marketing
+      
+  # SSL证书
+  ssl:
+    enabled: false
+    cert_path: "/etc/ssl/certs/gamden.crt"
+    key_path: "/etc/ssl/private/gamden.key"
+    auto_renewal: true
+
+# 备份配置
+backup:
+  enabled: false
+  schedule: "0 2 * * *"            # 每天凌晨2点
+  retention_days: 30
+  backup_paths:
+    - "/var/www/gamden"
+    - "/etc/gamden"
+    - "/var/lib/postgresql"
+    
+# 通知配置
+notifications:
+  # 部署成功通知
+  on_success:
+    enabled: false
+    webhook_url: ""
+    
+  # 部署失败通知  
+  on_failure:
+    enabled: true
+    webhook_url: ""
+    
+# 部署选项
+deploy:
+  # 是否跳过某些组件
+  skip:
+    backend: false
+    frontend: false  
+    marketing: false
+    database: false
+    
+  # 预部署检查
+  pre_checks:
+    disk_space_mb: 1024             # 最少磁盘空间(MB)
+    memory_mb: 512                  # 最少内存(MB)
+    node_version: "18.0.0"          # 最低Node.js版本
+    npm_version: "8.0.0"            # 最低npm版本
+    
+  # 部署后操作
+  post_deploy:
+    clear_cache: true
+    warm_up_cache: true
+    run_tests: false
