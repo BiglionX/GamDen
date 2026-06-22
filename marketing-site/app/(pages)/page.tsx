@@ -1,6 +1,6 @@
 "use client"
 import { useState, useEffect } from 'react';
-type { NextPage } from 'next'
+import type { NextPage } from 'next';
 import Head from 'next/head'
 import { motion } from 'framer-motion'
 import { Castle, Handshake, Sword, Gamepad2, Star, Users, Shield, Zap } from 'lucide-react';
