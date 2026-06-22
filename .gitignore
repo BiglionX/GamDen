@@ -43,6 +43,9 @@ npm-debug.log*
 *.tmp
 *.temp
 
+# CodeBuddy
+.codebuddy/
+
 # Scripts containing secrets (don't commit)
 .github/scripts/create-project-v2.py
 .github/scripts/create-project-v3.py
