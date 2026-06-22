@@ -6,7 +6,9 @@ import {
   getClubDetail,
   createPost,
   getClubPosts,
-  createReply
+  createReply,
+  deletePost,
+  getPostReplies
 } from '../services/clubService';
 import { AppError } from '../middleware/errorHandler';
 
@@ -229,5 +231,76 @@ export const createReplyController = async (
     } else {
       next(error);
     }
+  }
+};
+
+/**
+ * 删除帖子
+ */
+export const deletePostController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const userId = (req as any).user?.userId;
+    const userRole = (req as any).user?.role || 'player';
+    const postId = parseInt(req.params.postId);
+
+    if (!userId) {
+      throw new AppError('未授权', 401, 401);
+    }
+
+    if (isNaN(postId)) {
+      throw new AppError('帖子ID无效', 400, 400);
+    }
+
+    await deletePost({
+      post_id: postId,
+      user_id: userId,
+      user_role: userRole
+    });
+
+    res.status(200).json({
+      code: 200,
+      message: '帖子已删除'
+    });
+  } catch (error: any) {
+    if (error.message === '帖子不存在') {
+      next(new AppError(error.message, 404, 404));
+    } else if (error.message === '无权限删除此帖子') {
+      next(new AppError(error.message, 403, 403));
+    } else {
+      next(error);
+    }
+  }
+};
+
+/**
+ * 获取帖子回复列表
+ */
+export const getPostRepliesController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const postId = parseInt(req.params.postId);
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 20;
+
+    if (isNaN(postId)) {
+      throw new AppError('帖子ID无效', 400, 400);
+    }
+
+    const result = await getPostReplies(postId, page, limit);
+
+    res.status(200).json({
+      code: 200,
+      message: 'success',
+      data: result
+    });
+  } catch (error) {
+    next(error);
   }
 };

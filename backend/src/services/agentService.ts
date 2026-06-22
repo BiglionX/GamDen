@@ -161,3 +161,61 @@ export const triggerDefendSuccess = async (userId: number): Promise<AgentMessage
 export const triggerDefendFail = async (userId: number): Promise<AgentMessage> => {
   return await sendAgentMessage(userId, 'defend_fail');
 };
+
+/**
+ * 定时任务：每日9:00发送签到提醒
+ * 查找今日未签到的活跃用户，推送Agent签到提醒话术
+ */
+export const startSignInReminderScheduler = (): void => {
+  console.log('🤖 Agent签到提醒定时任务启动...');
+
+  const sendReminders = async () => {
+    try {
+      // 查找今日未签到的活跃用户
+      const result: any = await dbPool.query(
+        `SELECT u.id, u.guardian_type
+         FROM users u
+         WHERE u.status = 'active'
+           AND u.id NOT IN (
+             SELECT user_id FROM sign_in_records WHERE sign_date = CURRENT_DATE
+           )`,
+        []
+      );
+
+      const users = result.rows;
+      console.log(`🤖 发现 ${users.length} 位未签到用户，发送提醒...`);
+
+      for (const user of users) {
+        try {
+          await sendAgentMessage(user.id, 'sign_in_remind');
+        } catch (err: any) {
+          logger.error('发送签到提醒失败', { userId: user.id, error: err.message });
+        }
+      }
+    } catch (error: any) {
+      logger.error('签到提醒定时任务失败', { error: error.message });
+    }
+  };
+
+  // 计算距离下一个9:00的毫秒数
+  const scheduleNextRun = () => {
+    const now = new Date();
+    const next9AM = new Date(now);
+    next9AM.setHours(9, 0, 0, 0);
+    if (next9AM <= now) {
+      next9AM.setDate(next9AM.getDate() + 1);
+    }
+    const msUntil9AM = next9AM.getTime() - now.getTime();
+
+    setTimeout(() => {
+      sendReminders();
+      // 之后每24小时执行一次
+      setInterval(() => sendReminders(), 24 * 60 * 60 * 1000);
+    }, msUntil9AM);
+
+    console.log(`🤖 签到提醒将在 ${next9AM.toLocaleString()} 首次执行`);
+  };
+
+  scheduleNextRun();
+  console.log('✅ Agent签到提醒定时任务已启动');
+};

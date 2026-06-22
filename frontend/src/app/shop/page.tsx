@@ -7,6 +7,9 @@ import { Button } from '@/components/ui/button';
 import { Card, CardBody, CardHeader } from '@/components/ui/card';
 import { LayoutShell } from '@/components/layout/LayoutShell';
 import { CoinBadge } from '@/components/business';
+import { useAuth } from '@/services/authStore';
+import { GuestGuideBubble } from '@/components/business/GuestGuideBubble';
+import { trackPageView } from '@/services/tracking';
 
 const items = [
   {
@@ -41,6 +44,7 @@ const coinSources = [
 
 export default function ShopPage() {
   const router = useRouter();
+  const { isLoggedIn } = useAuth();
   const [goldCoins, setGoldCoins] = useState(0);
   const [loading, setLoading] = useState(true);
   const [exchangeLoading, setExchangeLoading] = useState<string | null>(null);
@@ -65,12 +69,7 @@ export default function ShopPage() {
   };
 
   useEffect(() => {
-    const token = localStorage.getItem('gamden_token');
-    if (!token) {
-      router.push('/auth/login');
-      return;
-    }
-
+    trackPageView('shop');
     loadData();
   }, [router]);
 
@@ -114,7 +113,13 @@ export default function ShopPage() {
           巢穴<span className="text-brand-gold text-glow-gold">集市</span>
         </span>
       }
-      topBarRight={<CoinBadge amount={goldCoins} size="sm" />}
+      topBarRight={
+        isLoggedIn ? (
+          <CoinBadge amount={goldCoins} size="sm" />
+        ) : (
+          <div className="text-sm text-brand-paper-mute font-mono">???</div>
+        )
+      }
     >
       <div className="max-w-3xl mx-auto px-4 py-5 space-y-5">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -135,7 +140,8 @@ export default function ShopPage() {
                     size="sm"
                     onClick={() => handleExchange(item)}
                     loading={exchangeLoading === item.key}
-                    disabled={goldCoins < item.price}
+                    disabled={!isLoggedIn || goldCoins < item.price}
+                    className={!isLoggedIn ? 'opacity-50 cursor-not-allowed' : ''}
                   >
                     兑换
                   </Button>
@@ -171,6 +177,9 @@ export default function ShopPage() {
           </CardBody>
         </Card>
       </div>
+
+      {/* 游客态守护灵引导气泡 */}
+      <GuestGuideBubble />
     </LayoutShell>
   );
 }

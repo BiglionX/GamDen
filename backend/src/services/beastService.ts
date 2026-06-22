@@ -126,8 +126,8 @@ const processDefense = async (
       // 防御成功
       console.log(`🐺 用户 ${userId} 防御成功（Lv.${userLevel}）`);
       
-      // 计算奖励金币（根据野兽潮等级）
-      const rewardGold = 50 * beastLevel; // Lv.1=50, Lv.5=250
+      // 计算奖励金币（根据野兽潮等级：Lv.1=50, Lv.5=200，线性插值）
+      const rewardGold = Math.round(50 + (beastLevel - 1) * 37.5); // Lv.1=50, Lv.2=88, Lv.3=125, Lv.4=163, Lv.5=200
       
       // 更新用户金币
       await dbPool!.query(

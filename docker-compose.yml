@@ -66,6 +66,22 @@ services:
       - gamden-network
     restart: unless-stopped
 
+  # OpenIM Server（即时通讯）
+  openim-server:
+    image: openim/openim-server:latest
+    container_name: gamden-openim
+    ports:
+      - "18080:18080"
+      - "2443:2443"
+    environment:
+      - OPENIM_API_URL=http://openim-server:18080
+    volumes:
+      - openim_data:/data
+      - ./openim/config:/config
+    networks:
+      - gamden-network
+    restart: unless-stopped
+
   # Nginx反向代理
   nginx:
     image: nginx:alpine
@@ -90,3 +106,4 @@ networks:
 volumes:
   mysql_data:
   redis_data:
+  openim_data:

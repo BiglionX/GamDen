@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useRouter } from 'next/navigation';
 
 interface BottomTab {
   key: string;
@@ -15,6 +16,7 @@ interface LayoutShellProps {
   topBarRight?: React.ReactNode;
   topBarLeft?: React.ReactNode;
   showBottomTabs?: boolean;
+  isGuest?: boolean; // 是否为游客态
   className?: string;
 }
 
@@ -75,8 +77,13 @@ export const LayoutShell: React.FC<LayoutShellProps> = ({
   topBarRight,
   topBarLeft,
   showBottomTabs = true,
+  isGuest = false,
   className = '',
 }) => {
+  const router = useRouter();
+
+  // 游客态隐藏“我的”Tab
+  const tabs = isGuest ? defaultTabs.filter((tab) => tab.key !== 'mine') : defaultTabs;
   return (
     <div
       className={[
@@ -99,7 +106,7 @@ export const LayoutShell: React.FC<LayoutShellProps> = ({
       {showBottomTabs && (
         <nav className="fixed bottom-0 left-0 right-0 z-30 bg-brand-ink-deep/95 backdrop-blur border-t border-brand-gold-deep/40">
           <ul className="flex items-center justify-around px-2 py-1.5 max-w-md mx-auto">
-            {defaultTabs.map((tab) => {
+            {tabs.map((tab) => {
               const isActive = tab.key === activeTab;
               return (
                 <li key={tab.key} className="flex-1">

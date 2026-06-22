@@ -1,6 +1,8 @@
 import { dbPool } from '../config/database';
 import { logger } from '../utils/logger';
 import { auditText, processAuditResult } from './contentAuditService';
+import { triggerLevelUp } from './agentService';
+import { getInviteProgress } from './inviteService';
 
 export interface TerritoryInfo {
   user_id: number;
@@ -158,7 +160,7 @@ export const addExperience = async (
 ): Promise<{ level_up: boolean; new_level: number }> => {
   // 获取当前等级和经验
   const result: any = await dbPool.query(
-    'SELECT level, exp, guardian_type FROM users WHERE id = $1',
+    'SELECT level, exp, guardian_type, created_at FROM users WHERE id = $1',
     [userId]
   );
   
@@ -171,10 +173,37 @@ export const addExperience = async (
   let newExp = user.exp + exp;
   let newLevel = user.level;
   let levelUp = false;
-  
-  // 检查是否升级
+
+  // 检查是否升级（含等级解锁条件校验）
   while (newLevel < 5 && newExp >= LEVEL_EXP_THRESHOLDS[newLevel]) {
-    newLevel++;
+    const nextLevel = newLevel + 1;
+
+    // 校验等级解锁条件
+    if (nextLevel === 3) {
+      // Lv.3 需邀请1人
+      const progress = await getInviteProgress(userId);
+      if (progress.invited_count < 1) {
+        logger.info('经验已达标但邀请人数不足，无法升至Lv.3', { userId, invitedCount: progress.invited_count });
+        break;
+      }
+    } else if (nextLevel === 4) {
+      // Lv.4 需邀请3人
+      const progress = await getInviteProgress(userId);
+      if (progress.invited_count < 3) {
+        logger.info('经验已达标但邀请人数不足，无法升至Lv.4', { userId, invitedCount: progress.invited_count });
+        break;
+      }
+    } else if (nextLevel === 5) {
+      // Lv.5 需活跃14天+邀请5人
+      const progress = await getInviteProgress(userId);
+      const daysSinceRegister = Math.floor((Date.now() - new Date(user.created_at).getTime()) / (1000 * 60 * 60 * 24));
+      if (progress.invited_count < 5 || daysSinceRegister < 14) {
+        logger.info('经验已达标但不满足Lv.5条件', { userId, invitedCount: progress.invited_count, daysSinceRegister });
+        break;
+      }
+    }
+
+    newLevel = nextLevel;
     levelUp = true;
   }
   
@@ -191,7 +220,16 @@ export const addExperience = async (
       'INSERT INTO territory_evolution (user_id, level, icon_url) VALUES ($1, $2, $3)',
       [userId, newLevel, iconUrl]
     );
-    
+
+    // 触发Agent等级提升通知（异步）
+    setImmediate(async () => {
+      try {
+        await triggerLevelUp(userId);
+      } catch (err: any) {
+        logger.error('发送Agent等级提升通知失败', { userId, error: err.message });
+      }
+    });
+
     logger.info('用户升级', { userId, newLevel, source });
   }
   

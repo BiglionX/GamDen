@@ -13,9 +13,13 @@ import {
   MapTerritory,
   NeighborInfo,
 } from '@/components/business';
+import { useAuth } from '@/services/authStore';
+import { GuestGuideBubble } from '@/components/business/GuestGuideBubble';
+import { trackPageView, startDwellHeartbeat } from '@/services/tracking';
 
 export default function TerritoryPage() {
   const router = useRouter();
+  const { isLoggedIn } = useAuth();
   const [territoryInfo, setTerritoryInfo] = useState<any>(null);
   const [neighbors, setNeighbors] = useState<MapTerritory[]>([]);
   const [loading, setLoading] = useState(true);
@@ -25,20 +29,20 @@ export default function TerritoryPage() {
   const loadTerritoryData = async () => {
     try {
       const [territoryRes, neighborsRes] = await Promise.all([
-        territoryAPI.getInfo(),
+        territoryAPI.getInfo().catch(() => null), // 游客态会失败，忽略
         territoryAPI.getNearby(6),
       ]);
-
+  
       if (territoryRes?.code === 200 && territoryRes.data) {
         setTerritoryInfo(territoryRes.data);
       }
-
+  
       if (neighborsRes?.code === 200 && Array.isArray(neighborsRes.data)) {
         const selfInfo = territoryRes?.code === 200 ? territoryRes.data : null;
         const selfX = selfInfo?.territory_coord_x ?? 0;
         const selfY = selfInfo?.territory_coord_y ?? 0;
-
-        // 在邻居中加入"自己"作为地图中心
+  
+        // 在邻居中加入“自己”作为地图中心
         const allTerritories: MapTerritory[] = [
           {
             id: 'self',
@@ -64,24 +68,18 @@ export default function TerritoryPage() {
       }
     } catch (error: any) {
       console.error('加载领地数据失败:', error);
-      if (error.response?.status === 401) {
-        localStorage.removeItem('gamden_token');
-        localStorage.removeItem('gamden_refresh_token');
-        localStorage.removeItem('gamden_user');
-        router.push('/auth/login');
-      }
     }
   };
 
   useEffect(() => {
-    const token = localStorage.getItem('gamden_token');
-    if (!token) {
-      router.push('/auth/login');
-      return;
-    }
+    // 移除强制登录跳转，游客也可以浏览
+    trackPageView('territory');
+    const cleanup = startDwellHeartbeat('territory');
 
     setLoading(true);
     loadTerritoryData().finally(() => setLoading(false));
+
+    return cleanup;
   }, [router]);
 
   const handleSignIn = async () => {
@@ -155,8 +153,10 @@ export default function TerritoryPage() {
         </div>
       }
       topBarRight={
-        territoryInfo && (
-          <CoinBadge amount={territoryInfo.gold_coins || 0} size="sm" />
+        isLoggedIn ? (
+          territoryInfo && <CoinBadge amount={territoryInfo.gold_coins || 0} size="sm" />
+        ) : (
+          <div className="text-sm text-brand-paper-mute font-mono">???</div>
         )
       }
     >
@@ -179,29 +179,33 @@ export default function TerritoryPage() {
               onGreetNeighbor={handleGreetNeighbor}
             />
 
-            {/* 邀请入口 */}
-            <Card
-              variant="sunken"
-              className="cursor-pointer hover:border-brand-gold transition-colors mt-3"
-              onClick={() => router.push('/invite')}
-            >
-              <CardBody className="p-4 flex items-center gap-3">
-                <div className="text-2xl text-brand-gold">✉</div>
-                <div className="flex-1">
-                  <div className="font-serif text-brand-paper text-sm">
-                    邀请更多侠客
+            {/* 邀请入口（仅登录态显示） */}
+            {isLoggedIn && (
+              <Card
+                variant="sunken"
+                className="cursor-pointer hover:border-brand-gold transition-colors mt-3"
+                onClick={() => router.push('/invite')}
+              >
+                <CardBody className="p-4 flex items-center gap-3">
+                  <div className="text-2xl text-brand-gold">✉</div>
+                  <div className="flex-1">
+                    <div className="font-serif text-brand-paper text-sm">
+                      邀请更多侠客
+                    </div>
+                    <div className="text-xs text-brand-paper-mute mt-0.5">
+                      邀 3 位解锁你的专属小程序
+                    </div>
                   </div>
-                  <div className="text-xs text-brand-paper-mute mt-0.5">
-                    邀 3 位解锁你的专属小程序
-                  </div>
-                </div>
-                <div className="text-brand-gold text-lg">›</div>
-              </CardBody>
-            </Card>
+                  <div className="text-brand-gold text-lg">›</div>
+                </CardBody>
+              </Card>
+            )}
           </>
         ) : (
           <>
-            {/* 详情模式 */}
+            {/* 详情模式（仅登录态显示） */}
+            {isLoggedIn && (
+              <>
             <Card variant="scroll" className="overflow-hidden mb-3">
               <CardBody className="p-5">
                 <div className="flex items-center gap-4 mb-4">
@@ -267,9 +271,14 @@ export default function TerritoryPage() {
             >
               每日签到 · 领取补给
             </Button>
+              </>
+            )}
           </>
         )}
       </div>
+
+      {/* 游客态守护灵引导气泡 */}
+      <GuestGuideBubble />
     </LayoutShell>
   );
 }

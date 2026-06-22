@@ -485,9 +485,20 @@ const recordViolation = async (userId: number, violationType: string) => {
   if (violationCount === 1) {
     // 第一次：警告
     console.log(`用户${userId} 第一次违规，发送警告`);
+    // 发送Agent警告通知
+    try {
+      const { sendAgentMessage } = require('./agentService');
+      await sendAgentMessage(userId, 'defend_fail'); // 复用防御失败话术作为警告
+    } catch (e) {
+      console.error('发送警告通知失败:', e);
+    }
   } else if (violationCount === 2) {
     // 第二次：禁言24小时
     console.log(`用户${userId} 第二次违规，禁言24小时`);
+    await dbPool!.query(
+      `UPDATE users SET muted_until = NOW() + INTERVAL '24 hours' WHERE id = $1`,
+      [userId]
+    );
   } else if (violationCount >= 3) {
     // 第三次：冻结账号
     await freezeUser({

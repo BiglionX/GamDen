@@ -170,26 +170,36 @@ const recordAuditLog = async (params: {
 };
 
 /**
- * 检查内容是否包含敏感词（本地敏感词库）
+ * 检查内容是否包含敏感词（从数据库加载）
  * 作为AI审核的补充
  */
-export const checkSensitiveWords = (content: string): {
+export const checkSensitiveWords = async (content: string): Promise<{
   hasSensitive: boolean;
   matchedWords: string[];
-} => {
+}> => {
   try {
-    // 从数据库加载敏感词库
-    // 这里简化为硬编码，实际应从数据库动态加载
-    const sensitiveWords = ['敏感词1', '敏感词2', '广告'];
-    
+    // 从数据库加载激活的敏感词库
+    const { dbPool } = require('../config/database');
+
+    if (!dbPool) {
+      console.warn('⚠️ 数据库连接未初始化，跳过敏感词检查');
+      return { hasSensitive: false, matchedWords: [] };
+    }
+
+    const result = await dbPool.query(
+      "SELECT word FROM sensitive_words WHERE is_active = true"
+    );
+
+    const sensitiveWords = result.rows.map((row: any) => row.word);
+
     const matchedWords: string[] = [];
-    
+
     for (const word of sensitiveWords) {
       if (content.includes(word)) {
         matchedWords.push(word);
       }
     }
-    
+
     return {
       hasSensitive: matchedWords.length > 0,
       matchedWords,

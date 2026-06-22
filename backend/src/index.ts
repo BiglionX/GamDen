@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import dotenv from 'dotenv';
 import { logger } from './utils/logger';
 import { errorHandler } from './middleware/errorHandler';
+import { rateLimitMiddleware } from './middleware/rateLimitMiddleware';
 
 // 加载环境变量
 dotenv.config();
@@ -19,6 +20,9 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// API限流（每用户每分钟100次）
+app.use('/api', rateLimitMiddleware);
 
 // 请求日志
 app.use((req: Request, res: Response, next: NextFunction) => {
@@ -57,6 +61,7 @@ import agentRoutes from './routes/agentRoutes';
 import webhookRoutes from './routes/webhookRoutes';
 import adminRoutes from './routes/adminRoutes';
 import wechatRoutes from './routes/wechatRoutes';
+import trackingRoutes from './routes/trackingRoutes';
 
 app.use('/api/auth', authRoutes);
 app.use('/api', territoryRoutes);
@@ -67,6 +72,7 @@ app.use('/api/agent', agentRoutes);
 app.use('/webhook', webhookRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/wechat', wechatRoutes);
+app.use('/api/track', trackingRoutes);
 
 // 404处理
 app.use((req: Request, res: Response) => {
@@ -87,6 +93,18 @@ initContentAuditClient();
 // 启动野兽潮定时任务
 import { startBeastTideScheduler } from './services/beastService';
 startBeastTideScheduler();
+
+// 启动邀请活跃检查定时任务
+import { startInviteActivationScheduler } from './services/inviteService';
+startInviteActivationScheduler();
+
+// 启动Agent签到提醒定时任务（每日9:00）
+import { startSignInReminderScheduler } from './services/agentService';
+startSignInReminderScheduler();
+
+// 启动账号清理定时任务（删除已注销超过30天的账号）
+import { startAccountCleanupScheduler } from './services/authService';
+startAccountCleanupScheduler();
 
 // 启动服务器
 app.listen(PORT, () => {

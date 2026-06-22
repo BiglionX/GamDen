@@ -26,7 +26,21 @@ export interface CreateReplyParams {
  */
 export const createClub = async (params: CreateClubParams): Promise<{ club_id: number; openim_group_id: string }> => {
   const { name, game_name, description, owner_id } = params;
-  
+
+  // 检查用户等级（需Lv.2以上才能创建俱乐部）
+  const userResult: any = await dbPool.query(
+    'SELECT level FROM users WHERE id = $1 AND status = \'active\'',
+    [owner_id]
+  );
+
+  if (userResult.rows.length === 0) {
+    throw new Error('用户不存在或已被冻结');
+  }
+
+  if (userResult.rows[0].level < 2) {
+    throw new Error('需要Lv.2以上才能创建俱乐部');
+  }
+
   // 检查俱乐部名称是否已存在
   const existingResult: any = await dbPool.query(
     'SELECT id FROM clubs WHERE name = $1',
@@ -283,8 +297,100 @@ export const createReply = async (params: CreateReplyParams): Promise<{ reply_id
   );
   
   logger.info('回复发布成功', { replyId, post_id, user_id });
-  
+
   return {
     reply_id: replyId
+  };
+};
+
+/**
+ * 删除帖子
+ * 权限：帖子作者、俱乐部管理员、运营人员
+ */
+export const deletePost = async (params: {
+  post_id: number;
+  user_id: number;
+  user_role: string;
+  club_owner_id?: number;
+}): Promise<void> => {
+  const { post_id, user_id, user_role, club_owner_id } = params;
+
+  // 查询帖子信息
+  const postResult: any = await dbPool.query(
+    `SELECT p.*, c.owner_id as club_owner_id
+     FROM club_posts p
+     JOIN clubs c ON p.club_id = c.id
+     WHERE p.id = $1`,
+    [post_id]
+  );
+
+  if (postResult.rows.length === 0) {
+    throw new Error('帖子不存在');
+  }
+
+  const post = postResult.rows[0];
+
+  // 权限检查：作者本人、俱乐部管理员、运营/超级管理员
+  const isAuthor = post.user_id === user_id;
+  const isClubOwner = post.club_owner_id === user_id;
+  const isAdmin = user_role === 'operator' || user_role === 'super_admin';
+
+  if (!isAuthor && !isClubOwner && !isAdmin) {
+    throw new Error('无权限删除此帖子');
+  }
+
+  // 删除帖子（级联删除回复）
+  await dbPool.query('DELETE FROM club_posts WHERE id = $1', [post_id]);
+
+  // 更新俱乐部帖子数
+  await dbPool.query(
+    'UPDATE clubs SET post_count = GREATEST(0, post_count - 1) WHERE id = $1',
+    [post.club_id]
+  );
+
+  // 如果是作者删除，扣除经验值和金币
+  if (isAuthor) {
+    await dbPool.query(
+      'UPDATE users SET exp = GREATEST(0, exp - 5) WHERE id = $1',
+      [user_id]
+    );
+    await dbPool.query(
+      'UPDATE users SET gold_coins = GREATEST(0, gold_coins - 5) WHERE id = $1',
+      [user_id]
+    );
+  }
+
+  logger.info('帖子已删除', { postId: post_id, userId: user_id, isAuthor });
+};
+
+/**
+ * 获取帖子回复列表
+ */
+export const getPostReplies = async (
+  postId: number,
+  page: number = 1,
+  limit: number = 20
+): Promise<{ replies: any[]; total: number }> => {
+  const offset = (page - 1) * limit;
+
+  const rowsResult: any = await dbPool.query(
+    `SELECT
+      r.*, u.nickname, u.avatar, u.guardian_type
+    FROM post_replies r
+    LEFT JOIN users u ON r.user_id = u.id
+    WHERE r.post_id = $1 AND r.status = 'approved'
+    ORDER BY r.created_at ASC
+    LIMIT $2 OFFSET $3`,
+    [postId, limit, offset]
+  );
+
+  const countResult: any = await dbPool.query(
+    'SELECT COUNT(*) as total FROM post_replies WHERE post_id = $1 AND status = \'approved\'',
+    [postId]
+  );
+
+  return {
+    replies: rowsResult.rows,
+    total: parseInt(countResult.rows[0].total)
   };
 };

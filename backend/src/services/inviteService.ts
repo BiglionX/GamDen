@@ -1,6 +1,7 @@
 import { dbPool } from '../config/database';
 import { logger } from '../utils/logger';
 import { autoGenerateMiniProgram } from './wechatService';
+import { sendAgentMessage } from './agentService';
 
 export interface InviteProgress {
   invited_count: number;
@@ -120,6 +121,79 @@ export const activateInviteRecord = async (inviteeId: number): Promise<void> => 
       }
     }
   }
+};
+
+/**
+ * 定时任务：激活被邀请人活跃记录
+ * 每天检查被邀请人注册满7天且活跃的记录，将 is_active 设为 true
+ * 激活后通知邀请人并检查是否解锁小程序
+ */
+export const startInviteActivationScheduler = (): void => {
+  console.log('📋 邀请活跃检查定时任务启动...');
+
+  // 每天凌晨3点执行
+  const checkActivation = async () => {
+    try {
+      // 查找注册满7天且尚未激活的邀请记录
+      const result: any = await dbPool.query(
+        `SELECT ir.invitee_id, ir.inviter_id, u.created_at, u.last_login_at
+         FROM invite_records ir
+         JOIN users u ON ir.invitee_id = u.id
+         WHERE ir.is_active = false
+           AND u.status = 'active'
+           AND u.created_at <= NOW() - INTERVAL '7 days'
+           AND u.last_login_at IS NOT NULL`,
+        []
+      );
+
+      const records = result.rows;
+      console.log(`📋 发现 ${records.length} 条待激活的邀请记录`);
+
+      for (const record of records) {
+        // 激活邀请记录
+        await dbPool.query(
+          'UPDATE invite_records SET is_active = true WHERE invitee_id = $1',
+          [record.invitee_id]
+        );
+
+        logger.info('邀请记录已激活', {
+          inviterId: record.inviter_id,
+          inviteeId: record.invitee_id
+        });
+
+        // 通知邀请人（Agent话术：邀请成功）
+        try {
+          await sendAgentMessage(record.inviter_id, 'invite_success');
+        } catch (err: any) {
+          logger.error('发送邀请成功Agent消息失败', { error: err.message });
+        }
+
+        // 检查是否解锁小程序
+        const progress = await getInviteProgress(record.inviter_id);
+        if (progress.invited_count >= 3 && !progress.is_mini_program_unlocked) {
+          logger.info('邀请人已满足解锁条件，开始生成小程序', {
+            inviterId: record.inviter_id,
+            invitedCount: progress.invited_count
+          });
+          try {
+            await autoGenerateMiniProgram(record.inviter_id);
+          } catch (err: any) {
+            logger.error('自动生成小程序失败', { error: err.message });
+          }
+        }
+      }
+    } catch (error: any) {
+      logger.error('邀请活跃检查失败', { error: error.message });
+    }
+  };
+
+  // 启动时延迟执行一次（等待30秒让数据库就绪）
+  setTimeout(() => checkActivation(), 30000);
+
+  // 每天执行一次
+  setInterval(() => checkActivation(), 24 * 60 * 60 * 1000);
+
+  console.log('✅ 邀请活跃检查定时任务已启动');
 };
 
 /**

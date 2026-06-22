@@ -193,3 +193,87 @@ export const getGoldTransactions = async (
     total: parseInt(countResult.rows[0].total)
   };
 };
+
+// 道具列表（V1.0固定道具）
+const SHOP_ITEMS = [
+  {
+    item_id: 'avatar_frame',
+    name: '头像框',
+    description: '个性化头像框，永久使用',
+    price: 200,
+    currency: 'gold',
+    duration: 'permanent',
+    min_level: 1,
+    icon: '🖼️'
+  },
+  {
+    item_id: 'chat_bubble',
+    name: '聊天气泡',
+    description: '专属聊天气泡样式，永久使用',
+    price: 150,
+    currency: 'gold',
+    duration: 'permanent',
+    min_level: 1,
+    icon: '💬'
+  },
+  {
+    item_id: 'special_signature',
+    name: '特殊签名',
+    description: '解锁30字签名（普通为20字），有效期30天',
+    price: 300,
+    currency: 'gold',
+    duration: '30days',
+    min_level: 3,
+    icon: '✨'
+  }
+];
+
+/**
+ * 获取道具列表
+ */
+export const getItemList = async (userId?: number): Promise<{ items: any[] }> => {
+  let userLevel = 1;
+  if (userId) {
+    const result: any = await dbPool.query('SELECT level FROM users WHERE id = $1', [userId]);
+    if (result.rows.length > 0) {
+      userLevel = result.rows[0].level;
+    }
+  }
+
+  const items = SHOP_ITEMS.map(item => ({
+    ...item,
+    can_afford: userId ? true : false, // 前端可二次判断金币
+    locked: userLevel < item.min_level
+  }));
+
+  return { items };
+};
+
+/**
+ * 获取我的道具（已兑换的道具列表）
+ */
+export const getMyItems = async (userId: number): Promise<{ items: any[] }> => {
+  // 查询用户已消费的金币流水，提取兑换记录
+  const result: any = await dbPool.query(
+    `SELECT * FROM gold_transactions
+     WHERE user_id = $1 AND transaction_type = 'spend'
+     AND source LIKE 'exchange_%'
+     ORDER BY created_at DESC`,
+    [userId]
+  );
+
+  const items = result.rows.map((tx: any) => {
+    const itemDef = SHOP_ITEMS.find(i => i.item_id === tx.source.replace('exchange_', ''));
+    return {
+      transaction_id: tx.id,
+      item_id: tx.source.replace('exchange_', ''),
+      name: itemDef?.name || tx.description,
+      price: tx.amount,
+      description: tx.description,
+      purchased_at: tx.created_at,
+      icon: itemDef?.icon || '📦'
+    };
+  });
+
+  return { items };
+};

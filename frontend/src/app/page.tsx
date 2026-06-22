@@ -1,5 +1,7 @@
 ﻿'use client';
 
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
@@ -7,10 +9,23 @@ import { Card, CardBody } from '@/components/ui/card';
 import { TerritoryIcon } from '@/components/business/TerritoryIcon';
 import { AgentAvatar } from '@/components/business/AgentAvatar';
 import { HomeAgentGuide } from '@/components/business/HomeAgentGuide';
+import { useAuth } from '@/services/authStore';
 
 export default function Home() {
-  return (
-    <main className="min-h-screen flex flex-col items-center justify-center px-6 py-12 relative overflow-hidden">
+  const router = useRouter();
+  const { isLoggedIn } = useAuth();
+
+  // 游客态：自动跳转到地图（AC-01）
+  useEffect(() => {
+    if (!isLoggedIn) {
+      router.push('/territory');
+    }
+  }, [isLoggedIn, router]);
+
+  // 已登录：显示首页 CTA
+  if (isLoggedIn) {
+    return (
+      <main className="min-h-screen flex flex-col items-center justify-center px-6 py-12 relative overflow-hidden">
       {/* 装饰：远景光斑 */}
       <motion.div
         className="absolute inset-0 opacity-30 pointer-events-none"
@@ -127,6 +142,16 @@ export default function Home() {
 
       {/* 守护灵引导气泡（首次访问时显示） */}
       <HomeAgentGuide />
+    </main>
+    );
+  }
+
+  // 游客态：加载中（即将跳转）
+  return (
+    <main className="min-h-screen flex items-center justify-center">
+      <div className="text-brand-paper-mute font-serif italic animate-pulse-soft">
+        正在踏入巢穴...
+      </div>
     </main>
   );
 }

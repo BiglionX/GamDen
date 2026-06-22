@@ -8,6 +8,9 @@ import { Card, CardBody } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { LayoutShell } from '@/components/layout/LayoutShell';
+import { useAuth } from '@/services/authStore';
+import { GuestGuideBubble } from '@/components/business/GuestGuideBubble';
+import { trackPageView } from '@/services/tracking';
 
 const mockClubs = [
   {
@@ -38,6 +41,7 @@ const mockClubs = [
 
 export default function ClubPage() {
   const router = useRouter();
+  const { isLoggedIn } = useAuth();
   const [clubs, setClubs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -48,6 +52,7 @@ export default function ClubPage() {
   });
 
   useEffect(() => {
+    trackPageView('club');
     // 演示模式：使用模拟数据
     setClubs(mockClubs);
     setLoading(false);
@@ -90,13 +95,15 @@ export default function ClubPage() {
         </span>
       }
       topBarRight={
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => setShowCreateModal(true)}
-        >
-          立摊
-        </Button>
+        isLoggedIn && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setShowCreateModal(true)}
+          >
+            立摊
+          </Button>
+        )
       }
     >
       <div className="max-w-3xl mx-auto px-4 py-5">
@@ -220,6 +227,9 @@ export default function ClubPage() {
           </Card>
         </div>
       )}
+
+      {/* 游客态守护灵引导气泡 */}
+      <GuestGuideBubble />
     </LayoutShell>
   );
 }

@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS users (
   last_login_at TIMESTAMP,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  muted_until TIMESTAMP DEFAULT NULL,
   UNIQUE (territory_coord_x, territory_coord_y),
   CHECK (territory_coord_x >= -1000 AND territory_coord_x <= 1000),
   CHECK (territory_coord_y >= -1000 AND territory_coord_y <= 1000)

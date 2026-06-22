@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { getDeviceId } from '@/utils/deviceId';
 
 // 创建axios实例
 const api = axios.create({
@@ -12,6 +13,13 @@ const api = axios.create({
 // 请求拦截器
 api.interceptors.request.use(
   (config) => {
+    // 注入 device_id
+    const deviceId = getDeviceId();
+    if (deviceId) {
+      config.headers['X-Device-ID'] = deviceId;
+    }
+
+    // 注入 token（如果有）
     const token = localStorage.getItem('gamden_token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
@@ -25,11 +33,16 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response.data,
   (error) => {
+    // 游客态的 401 不强制跳转（需要登录的操作）
     if (error.response?.status === 401) {
-      localStorage.removeItem('gamden_token');
-      localStorage.removeItem('gamden_user');
-      if (typeof window !== 'undefined') {
-        window.location.href = '/auth/login';
+      const needLogin = error.response?.data?.need_login;
+      if (!needLogin) {
+        // 真正的认证失效，清除 token
+        localStorage.removeItem('gamden_token');
+        localStorage.removeItem('gamden_user');
+        if (typeof window !== 'undefined') {
+          window.location.href = '/auth/login';
+        }
       }
     }
     return Promise.reject(error);
@@ -51,6 +64,49 @@ export const authAPI = {
 
   refreshToken: (refresh_token: string) =>
     api.post('/api/auth/refresh', { refresh_token }) as Promise<any>,
+
+  // 新增：短信验证码相关
+  sendSms: (phone: string, purpose: 'register' | 'login' | 'reset_pwd') =>
+    api.post('/api/auth/sms/send', { phone, purpose }) as Promise<any>,
+
+  verifySms: (phone: string, code: string, purpose: 'register' | 'login' | 'reset_pwd') =>
+    api.post('/api/auth/sms/verify', { phone, code, purpose }) as Promise<any>,
+
+  registerByPhone: (data: {
+    phone: string;
+    sms_code: string;
+    invite_code: string;
+    guardian_type: string;
+    nickname?: string;
+    device_id?: string;
+  }) => api.post('/api/auth/register/phone', data) as Promise<any>,
+
+  loginByPhone: (data: { phone: string; sms_code: string; device_id?: string }) =>
+    api.post('/api/auth/login/phone', data) as Promise<any>,
+
+  changePassword: (data: { old_password: string; new_password: string }) =>
+    api.post('/api/auth/change-password', data) as Promise<any>,
+
+  resetPassword: (data: { phone: string; sms_code: string; new_password: string }) =>
+    api.post('/api/auth/reset-password', data) as Promise<any>,
+
+  deleteAccount: (password: string) =>
+    api.post('/api/auth/delete-account', { password }) as Promise<any>,
+};
+
+// 微信 API
+export const wechatAPI = {
+  miniLogin: (data: { code: string; device_id?: string }) =>
+    api.post('/api/wechat/mini-login', data) as Promise<any>,
+};
+
+// 埋点 API
+export const trackingAPI = {
+  trackEvent: (data: { event_name: string; event_data?: any }) =>
+    api.post('/api/track/event', data) as Promise<any>,
+
+  trackDwell: (data: { current_page: string; duration_seconds?: number }) =>
+    api.post('/api/track/dwell', data) as Promise<any>,
 };
 
 // 领地API
@@ -91,6 +147,12 @@ export const clubAPI = {
 
   createReply: (data: { post_id: number; content: string }) =>
     api.post('/api/club/reply', data) as Promise<any>,
+
+  deletePost: (postId: number) =>
+    api.delete(`/api/club/posts/${postId}`) as Promise<any>,
+
+  getPostReplies: (postId: number, params?: { page?: number; limit?: number }) =>
+    api.get(`/api/club/posts/${postId}/replies`, { params }) as Promise<any>,
 };
 
 // 商城API
@@ -110,6 +172,10 @@ export const shopAPI = {
 
   getTransactions: (params?: { page?: number; limit?: number }) =>
     api.get('/api/shop/transactions', { params }) as Promise<any>,
+
+  getItems: () => api.get('/api/shop/items') as Promise<any>,
+
+  getMyItems: () => api.get('/api/shop/my-items') as Promise<any>,
 };
 
 // Agent API

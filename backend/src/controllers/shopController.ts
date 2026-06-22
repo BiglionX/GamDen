@@ -7,7 +7,9 @@ import {
   exchangeAvatarFrame,
   exchangeChatBubble,
   exchangeSpecialSignature,
-  getGoldTransactions
+  getGoldTransactions,
+  getItemList,
+  getMyItems
 } from '../services/shopService';
 import { addExperience } from '../services/territoryService';
 import { AppError } from '../middleware/errorHandler';
@@ -249,6 +251,55 @@ export const getGoldTransactionsController = async (
     
     const result = await getGoldTransactions(userId, page, limit);
     
+    res.status(200).json({
+      code: 200,
+      message: 'success',
+      data: result
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * 获取道具列表
+ */
+export const getItemListController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const userId = (req as any).user?.userId;
+    const result = await getItemList(userId);
+
+    res.status(200).json({
+      code: 200,
+      message: 'success',
+      data: result
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * 获取我的道具
+ */
+export const getMyItemsController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const userId = (req as any).user?.userId;
+
+    if (!userId) {
+      throw new AppError('未授权', 401, 401);
+    }
+
+    const result = await getMyItems(userId);
+
     res.status(200).json({
       code: 200,
       message: 'success',
