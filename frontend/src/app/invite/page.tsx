@@ -12,31 +12,43 @@ export default function InvitePage() {
   const [inviteCode, setInviteCode] = useState('');
   const [progress, setProgress] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    loadData();
-  }, []);
-
-  const loadData = async () => {
-    try {
-      const [codeRes, progressRes] = await Promise.all([
-        inviteAPI.getCode(),
-        inviteAPI.getProgress()
-      ]);
-
-      if (codeRes.code === 200) {
-        setInviteCode(codeRes.data.invite_code);
-      }
-
-      if (progressRes.code === 200) {
-        setProgress(progressRes.data);
-      }
-    } catch (error) {
-      console.error('加载数据失败', error);
-    } finally {
-      setLoading(false);
+    // 检查登录状态
+    const token = localStorage.getItem('gamden_token');
+    if (!token) {
+      router.push('/auth/login');
+      return;
     }
-  };
+
+    // 加载邀请数据
+    const loadInviteData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        // 获取邀请码
+        const codeResponse = await inviteAPI.getCode();
+        if (codeResponse.code === 0 && codeResponse.data) {
+          setInviteCode(codeResponse.data.invite_code);
+        }
+
+        // 获取邀请进度
+        const progressResponse = await inviteAPI.getProgress();
+        if (progressResponse.code === 0 && progressResponse.data) {
+          setProgress(progressResponse.data);
+        }
+      } catch (err: any) {
+        console.error('加载邀请数据失败:', err);
+        setError(err.response?.data?.message || '加载失败，请重试');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadInviteData();
+  }, [router]);
 
   const copyInviteCode = () => {
     navigator.clipboard.writeText(inviteCode);
@@ -53,6 +65,17 @@ export default function InvitePage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-lg">加载中...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-lg text-red-600 mb-4">{error}</div>
+          <Button onClick={() => window.location.reload()}>重试</Button>
+        </div>
       </div>
     );
   }

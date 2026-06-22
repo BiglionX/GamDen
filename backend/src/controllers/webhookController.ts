@@ -53,9 +53,9 @@ export const openimUserLoginWebhook = async (
     logger.info('收到OpenIM用户登录Webhook', { userID });
     
     // 更新最后登录时间
-    await dbPool.execute(
-      'UPDATE users SET last_login_at = NOW() WHERE id = ?',
-      [userID]
+    await dbPool!.query(
+      'UPDATE users SET last_login_at = NOW() WHERE id = $1',
+      [parseInt(userID)]
     );
     
     res.status(200).json({

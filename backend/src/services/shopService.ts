@@ -13,11 +13,12 @@ export interface GoldTransaction {
  * 获取用户金币余额
  */
 export const getGoldCoins = async (userId: number): Promise<number> => {
-  const [rows]: any = await dbPool.execute(
-    'SELECT gold_coins FROM users WHERE id = ?',
+  const result: any = await dbPool.query(
+    'SELECT gold_coins FROM users WHERE id = $1',
     [userId]
   );
   
+  const rows = result.rows;
   if (rows.length === 0) {
     throw new Error('用户不存在');
   }
@@ -44,15 +45,15 @@ export const addGoldCoins = async (
   }
   
   // 更新余额
-  await dbPool.execute(
-    'UPDATE users SET gold_coins = ? WHERE id = ?',
+  await dbPool.query(
+    'UPDATE users SET gold_coins = $1 WHERE id = $2',
     [newBalance, userId]
   );
   
   // 记录流水
-  await dbPool.execute(
+  await dbPool.query(
     `INSERT INTO gold_transactions (user_id, transaction_type, amount, source, balance_after, description)
-    VALUES (?, 'earn', ?, ?, ?, ?)`,
+    VALUES ($1, 'earn', $2, $3, $4, $5)`,
     [userId, amount, source, newBalance, description || '']
   );
   
@@ -83,15 +84,15 @@ export const spendGoldCoins = async (
   const newBalance = currentBalance - amount;
   
   // 更新余额
-  await dbPool.execute(
-    'UPDATE users SET gold_coins = ? WHERE id = ?',
+  await dbPool.query(
+    'UPDATE users SET gold_coins = $1 WHERE id = $2',
     [newBalance, userId]
   );
   
   // 记录流水
-  await dbPool.execute(
+  await dbPool.query(
     `INSERT INTO gold_transactions (user_id, transaction_type, amount, source, balance_after, description)
-    VALUES (?, 'spend', ?, ?, ?, ?)`,
+    VALUES ($1, 'spend', $2, $3, $4, $5)`,
     [userId, amount, source, newBalance, description || '']
   );
   
@@ -146,12 +147,13 @@ export const exchangeSpecialSignature = async (
   days: number = 30
 ): Promise<{ success: boolean }> => {
   // 检查用户等级（需要Lv.3以上）
-  const [userRows]: any = await dbPool.execute(
-    'SELECT level FROM users WHERE id = ?',
+  const result: any = await dbPool.query(
+    'SELECT level FROM users WHERE id = $1',
     [userId]
   );
   
-  if (userRows.length === 0 || userRows[0].level < 3) {
+  const rows = result.rows;
+  if (rows.length === 0 || rows[0].level < 3) {
     throw new Error('需要Lv.3以上才能兑换特殊签名');
   }
   
@@ -176,18 +178,18 @@ export const getGoldTransactions = async (
 ): Promise<{ transactions: any[]; total: number }> => {
   const offset = (page - 1) * limit;
   
-  const [rows]: any = await dbPool.execute(
-    'SELECT * FROM gold_transactions WHERE user_id = ? ORDER BY created_at DESC LIMIT ? OFFSET ?',
+  const rowsResult: any = await dbPool.query(
+    'SELECT * FROM gold_transactions WHERE user_id = $1 ORDER BY created_at DESC LIMIT $2 OFFSET $3',
     [userId, limit, offset]
   );
   
-  const [countRows]: any = await dbPool.execute(
-    'SELECT COUNT(*) as total FROM gold_transactions WHERE user_id = ?',
+  const countResult: any = await dbPool.query(
+    'SELECT COUNT(*) as total FROM gold_transactions WHERE user_id = $1',
     [userId]
   );
   
   return {
-    transactions: rows,
-    total: countRows[0].total
+    transactions: rowsResult.rows,
+    total: parseInt(countResult.rows[0].total)
   };
 };

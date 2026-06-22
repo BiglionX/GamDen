@@ -55,6 +55,8 @@ import clubRoutes from './routes/clubRoutes';
 import shopRoutes from './routes/shopRoutes';
 import agentRoutes from './routes/agentRoutes';
 import webhookRoutes from './routes/webhookRoutes';
+import adminRoutes from './routes/adminRoutes';
+import wechatRoutes from './routes/wechatRoutes';
 
 app.use('/api/auth', authRoutes);
 app.use('/api', territoryRoutes);
@@ -63,6 +65,8 @@ app.use('/api/club', clubRoutes);
 app.use('/api/shop', shopRoutes);
 app.use('/api/agent', agentRoutes);
 app.use('/webhook', webhookRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/wechat', wechatRoutes);
 
 // 404处理
 app.use((req: Request, res: Response) => {
@@ -75,6 +79,14 @@ app.use((req: Request, res: Response) => {
 
 // 错误处理
 app.use(errorHandler);
+
+// 初始化内容审核客户端
+import { initContentAuditClient } from './services/contentAuditService';
+initContentAuditClient();
+
+// 启动野兽潮定时任务
+import { startBeastTideScheduler } from './services/beastService';
+startBeastTideScheduler();
 
 // 启动服务器
 app.listen(PORT, () => {

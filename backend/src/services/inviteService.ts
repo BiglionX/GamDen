@@ -1,5 +1,6 @@
 import { dbPool } from '../config/database';
 import { logger } from '../utils/logger';
+import { autoGenerateMiniProgram } from './wechatService';
 
 export interface InviteProgress {
   invited_count: number;
@@ -17,10 +18,12 @@ export interface InviteProgress {
  * 生成邀请码（获取个人邀请码）
  */
 export const getInviteCode = async (userId: number): Promise<{ invite_code: string }> => {
-  const [rows]: any = await dbPool.execute(
-    'SELECT invite_code, status FROM users WHERE id = ?',
+  const result: any = await dbPool.query(
+    'SELECT invite_code, status FROM users WHERE id = $1',
     [userId]
   );
+  
+  const rows = result.rows;
   
   if (rows.length === 0) {
     throw new Error('用户不存在');
@@ -36,33 +39,37 @@ export const getInviteCode = async (userId: number): Promise<{ invite_code: stri
  */
 export const getInviteProgress = async (userId: number): Promise<InviteProgress> => {
   // 获取邀请记录
-  const [records]: any = await dbPool.execute(
+  const recordsResult: any = await dbPool.query(
     `SELECT 
       ir.invitee_id, ir.invited_at, ir.is_active,
       u.nickname as invitee_nickname
     FROM invite_records ir
     LEFT JOIN users u ON ir.invitee_id = u.id
-    WHERE ir.inviter_id = ?
+    WHERE ir.inviter_id = $1
     ORDER BY ir.invited_at DESC
     LIMIT 10`,
     [userId]
   );
   
+  const records = recordsResult.rows;
+  
   // 统计活跃邀请数
-  const [countRows]: any = await dbPool.execute(
-    'SELECT COUNT(*) as count FROM invite_records WHERE inviter_id = ? AND is_active = true',
+  const countResult: any = await dbPool.query(
+    'SELECT COUNT(*) as count FROM invite_records WHERE inviter_id = $1 AND is_active = true',
     [userId]
   );
   
+  const countRows = countResult.rows;
   const invitedCount = countRows[0].count;
   const isUnlocked = invitedCount >= 3;
   
   // 检查是否已生成小程序
-  const [miniProgRows]: any = await dbPool.execute(
-    'SELECT id FROM mini_programs WHERE user_id = ?',
+  const miniProgResult: any = await dbPool.query(
+    'SELECT id FROM mini_programs WHERE user_id = $1',
     [userId]
   );
   
+  const miniProgRows = miniProgResult.rows;
   const isMiniProgramUnlocked = isUnlocked && miniProgRows.length > 0;
   
   const inviteList = records.map((record: any) => ({
@@ -84,16 +91,18 @@ export const getInviteProgress = async (userId: number): Promise<InviteProgress>
  * 激活邀请记录（被邀请人活跃7天后调用）
  */
 export const activateInviteRecord = async (inviteeId: number): Promise<void> => {
-  await dbPool.execute(
-    'UPDATE invite_records SET is_active = true WHERE invitee_id = ?',
+  await dbPool.query(
+    'UPDATE invite_records SET is_active = true WHERE invitee_id = $1',
     [inviteeId]
   );
   
   // 获取邀请人ID
-  const [rows]: any = await dbPool.execute(
-    'SELECT inviter_id FROM invite_records WHERE invitee_id = ?',
+  const result: any = await dbPool.query(
+    'SELECT inviter_id FROM invite_records WHERE invitee_id = $1',
     [inviteeId]
   );
+  
+  const rows = result.rows;
   
   if (rows.length > 0) {
     const inviterId = rows[0].inviter_id;
@@ -103,8 +112,12 @@ export const activateInviteRecord = async (inviteeId: number): Promise<void> => 
     
     if (progress.invited_count >= 3 && !progress.is_mini_program_unlocked) {
       // 触发生成小程序（异步任务）
-      logger.info('邀请人已满足解锁条件', { inviterId, invitedCount: progress.invited_count });
-      // TODO: 调用微信小程序API生成小程序码
+      logger.info('邀请人已满足解锁条件，开始生成小程序', { inviterId, invitedCount: progress.invited_count });
+      try {
+        await autoGenerateMiniProgram(inviterId);
+      } catch (error: any) {
+        logger.error('自动生成小程序失败', { inviterId, error: error.message });
+      }
     }
   }
 };
@@ -115,10 +128,12 @@ export const activateInviteRecord = async (inviteeId: number): Promise<void> => 
 export const validateInviteCodeService = async (
   inviteCode: string
 ): Promise<{ valid: boolean; inviter_id?: number }> => {
-  const [rows]: any = await dbPool.execute(
-    'SELECT id FROM users WHERE invite_code = ? AND status = "active"',
+  const result: any = await dbPool.query(
+    'SELECT id FROM users WHERE invite_code = $1 AND status = \'active\'',
     [inviteCode]
   );
+  
+  const rows = result.rows;
   
   if (rows.length === 0) {
     return { valid: false };

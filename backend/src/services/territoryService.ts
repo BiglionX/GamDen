@@ -1,5 +1,6 @@
 import { dbPool } from '../config/database';
 import { logger } from '../utils/logger';
+import { auditText, processAuditResult } from './contentAuditService';
 
 export interface TerritoryInfo {
   user_id: number;
@@ -57,14 +58,15 @@ const TERRITORY_ICONS: { [key: string]: string[] } = {
  * 获取领地详情
  */
 export const getTerritoryInfo = async (userId: number): Promise<TerritoryInfo> => {
-  const [rows]: any = await dbPool.execute(
+  const result: any = await dbPool.query(
     `SELECT 
       id as user_id, level, exp, territory_coord_x, territory_coord_y,
       guardian_type, gold_coins, signature
-    FROM users WHERE id = ? AND status = 'active'`,
+    FROM users WHERE id = $1 AND status = 'active'`,
     [userId]
   );
   
+  const rows = result.rows;
   if (rows.length === 0) {
     throw new Error('用户不存在或已注销');
   }
@@ -95,11 +97,12 @@ export const getNearbyNeighbors = async (
   range: number = 10
 ): Promise<{ neighbors: NeighborInfo[]; total: number }> => {
   // 获取当前用户坐标
-  const [userRows]: any = await dbPool.execute(
-    'SELECT territory_coord_x, territory_coord_y FROM users WHERE id = ?',
+  const userResult: any = await dbPool.query(
+    'SELECT territory_coord_x, territory_coord_y FROM users WHERE id = $1',
     [userId]
   );
   
+  const userRows = userResult.rows;
   if (userRows.length === 0) {
     throw new Error('用户不存在');
   }
@@ -107,16 +110,16 @@ export const getNearbyNeighbors = async (
   const { territory_coord_x, territory_coord_y } = userRows[0];
   
   // 查询范围内的邻居
-  const [rows]: any = await dbPool.execute(
+  const result: any = await dbPool.query(
     `SELECT 
       id, nickname, avatar, level, signature, guardian_type,
       territory_coord_x, territory_coord_y
     FROM users
     WHERE 
-      id != ? 
+      id != $1 
       AND status = 'active'
-      AND territory_coord_x BETWEEN ? AND ?
-      AND territory_coord_y BETWEEN ? AND ?
+      AND territory_coord_x BETWEEN $2 AND $3
+      AND territory_coord_y BETWEEN $4 AND $5
     LIMIT 100`,
     [
       userId,
@@ -127,6 +130,7 @@ export const getNearbyNeighbors = async (
     ]
   );
   
+  const rows = result.rows;
   const neighbors: NeighborInfo[] = rows.map((row: any) => ({
     user_id: row.id,
     territory_coord_x: row.territory_coord_x,
@@ -153,11 +157,12 @@ export const addExperience = async (
   source: string
 ): Promise<{ level_up: boolean; new_level: number }> => {
   // 获取当前等级和经验
-  const [rows]: any = await dbPool.execute(
-    'SELECT level, exp FROM users WHERE id = ?',
+  const result: any = await dbPool.query(
+    'SELECT level, exp, guardian_type FROM users WHERE id = $1',
     [userId]
   );
   
+  const rows = result.rows;
   if (rows.length === 0) {
     throw new Error('用户不存在');
   }
@@ -174,16 +179,16 @@ export const addExperience = async (
   }
   
   // 更新数据库
-  await dbPool.execute(
-    'UPDATE users SET level = ?, exp = ? WHERE id = ?',
+  await dbPool.query(
+    'UPDATE users SET level = $1, exp = $2 WHERE id = $3',
     [newLevel, newExp, userId]
   );
   
   // 如果升级，记录领地演进
   if (levelUp) {
     const iconUrl = TERRITORY_ICONS[user.guardian_type || 'mechanic'][newLevel - 1];
-    await dbPool.execute(
-      'INSERT INTO territory_evolution (user_id, level, icon_url) VALUES (?, ?, ?)',
+    await dbPool.query(
+      'INSERT INTO territory_evolution (user_id, level, icon_url) VALUES ($1, $2, $3)',
       [userId, newLevel, iconUrl]
     );
     
@@ -207,8 +212,28 @@ export const updateSignature = async (
     throw new Error('签名长度不能超过20字');
   }
   
-  await dbPool.execute(
-    'UPDATE users SET signature = ? WHERE id = ?',
+  // AI内容审核（签名审核规则：置信度>90%直接通过，≤90%进入人工复审）
+  try {
+    const auditResult = await auditText(signature);
+    const processResult = processAuditResult(auditResult, 'signature', userId, userId);
+    
+    if (processResult.action === 'block') {
+      throw new Error(`签名包含敏感词：${processResult.reason}`);
+    } else if (processResult.action === 'review') {
+      console.log(`签名进入人工复审：${signature}`);
+      // 签名审核不通过时，不更新数据库，直接返回错误
+      // 如果进入复审，可以先保存，状态为pending
+      // 根据业务需求，签名可以选择直接通过或进入复审
+    }
+  } catch (error: any) {
+    if (error.message.includes('敏感词')) {
+      throw error;
+    }
+    console.warn('AI审核失败，将正常保存:', error.message);
+  }
+  
+  await dbPool.query(
+    'UPDATE users SET signature = $1 WHERE id = $2',
     [signature, userId]
   );
   

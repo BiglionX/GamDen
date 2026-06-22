@@ -44,11 +44,12 @@ export const getAgentResponse = async (
   triggerEvent: string
 ): Promise<string> => {
   // 获取用户守护灵类型
-  const [rows]: any = await dbPool.execute(
-    'SELECT guardian_type FROM users WHERE id = ?',
+  const result: any = await dbPool.query(
+    'SELECT guardian_type FROM users WHERE id = $1',
     [userId]
   );
   
+  const rows = result.rows;
   if (rows.length === 0) {
     throw new Error('用户不存在');
   }
@@ -79,17 +80,18 @@ export const sendAgentMessage = async (
   const responseText = await getAgentResponse(userId, triggerEvent);
   
   // 获取守护灵类型
-  const [rows]: any = await dbPool.execute(
-    'SELECT guardian_type FROM users WHERE id = ?',
+  const result: any = await dbPool.query(
+    'SELECT guardian_type FROM users WHERE id = $1',
     [userId]
   );
   
+  const rows = result.rows;
   const agentType = rows[0].guardian_type;
   
   // 记录到数据库
-  await dbPool.execute(
+  await dbPool.query(
     `INSERT INTO agent_dialogues (user_id, agent_type, trigger_event, response_text, delivered_at)
-    VALUES (?, ?, ?, ?, NOW())`,
+    VALUES ($1, $2, $3, $4, NOW())`,
     [userId, agentType, triggerEvent, responseText]
   );
   
@@ -110,12 +112,12 @@ export const getAgentDialogues = async (
   userId: number,
   limit: number = 20
 ): Promise<any[]> => {
-  const [rows]: any = await dbPool.execute(
-    'SELECT * FROM agent_dialogues WHERE user_id = ? ORDER BY created_at DESC LIMIT ?',
+  const result: any = await dbPool.query(
+    'SELECT * FROM agent_dialogues WHERE user_id = $1 ORDER BY created_at DESC LIMIT $2',
     [userId, limit]
   );
   
-  return rows;
+  return result.rows;
 };
 
 /**

@@ -22,31 +22,16 @@ export default function ClubDetailPage({ params }: ClubPageProps) {
   const [posting, setPosting] = useState(false);
 
   useEffect(() => {
-    if (clubId) {
-      loadData();
+    // 演示模式：使用模拟数据
+    if (clubId === 1) {
+      setClub(mockClubs[0]);
+      setPosts(mockPosts);
+    } else if (clubId === 2) {
+      setClub(mockClubs[1]);
+      setPosts([]);
     }
+    setLoading(false);
   }, [clubId]);
-
-  const loadData = async () => {
-    try {
-      const [clubRes, postsRes] = await Promise.all([
-        clubAPI.getDetail(clubId),
-        clubAPI.getPosts(clubId)
-      ]);
-
-      if (clubRes.code === 200) {
-        setClub(clubRes.data);
-      }
-
-      if (postsRes.code === 200) {
-        setPosts(postsRes.data.posts);
-      }
-    } catch (error) {
-      console.error('加载数据失败', error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleCreatePost = async (e: React.FormEvent) => {
     e.preventDefault();

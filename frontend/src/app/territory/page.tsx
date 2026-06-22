@@ -15,29 +15,45 @@ export default function TerritoryPage() {
   const [signInLoading, setSignInLoading] = useState(false);
 
   useEffect(() => {
-    loadData();
-  }, []);
-
-  const loadData = async () => {
-    try {
-      const [infoRes, neighborsRes] = await Promise.all([
-        territoryAPI.getInfo(),
-        territoryAPI.getNearby(10)
-      ]);
-
-      if (infoRes.code === 200) {
-        setTerritoryInfo(infoRes.data);
-      }
-
-      if (neighborsRes.code === 200) {
-        setNeighbors(neighborsRes.data.neighbors);
-      }
-    } catch (error) {
-      console.error('加载数据失败', error);
-    } finally {
-      setLoading(false);
+    // 检查用户是否登录
+    const token = localStorage.getItem('gamden_token');
+    if (!token) {
+      router.push('/auth/login');
+      return;
     }
-  };
+
+    // 从API加载真实数据
+    const loadData = async () => {
+      try {
+        const [territoryRes, neighborsRes] = await Promise.all([
+          territoryAPI.getInfo(),
+          territoryAPI.getNearby(10)
+        ]);
+        
+        if (territoryRes.code === 200) {
+          setTerritoryInfo(territoryRes.data);
+        }
+        if (neighborsRes.code === 200) {
+          setNeighbors(neighborsRes.data || []);
+        }
+      } catch (error: any) {
+        console.error('加载领地数据失败:', error);
+        if (error.response?.status === 401) {
+          // Token过期或无效
+          localStorage.removeItem('gamden_token');
+          localStorage.removeItem('gamden_refresh_token');
+          localStorage.removeItem('gamden_user');
+          router.push('/auth/login');
+        } else {
+          alert('加载失败，请重试');
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData();
+  }, [router]);
 
   const handleSignIn = async () => {
     setSignInLoading(true);

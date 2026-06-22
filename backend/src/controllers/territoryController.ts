@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { getTerritoryInfo, getNearbyNeighbors, updateSignature } from '../services/territoryService';
+import { getBeastStatus } from '../services/beastService';
 import { AppError } from '../middleware/errorHandler';
 import { logger } from '../utils/logger';
 
@@ -107,7 +108,7 @@ export const updateSignatureController = async (
 };
 
 /**
- * 获取野兽潮状态（占位，V1.0仅展示）
+ * 获取野兽潮状态
  */
 export const getBeastStatusController = async (
   req: Request,
@@ -121,14 +122,13 @@ export const getBeastStatusController = async (
       throw new AppError('未授权', 401, 401);
     }
     
-    // V1.0仅返回静态状态
+    // 获取真实的野兽潮状态
+    const beastStatus = await getBeastStatus(userId);
+    
     res.status(200).json({
       code: 200,
       message: 'success',
-      data: {
-        has_beast_event: false,
-        nearby_events: []
-      }
+      data: beastStatus
     });
   } catch (error) {
     next(error);

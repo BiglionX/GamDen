@@ -19,21 +19,10 @@ export default function ClubPage() {
   });
 
   useEffect(() => {
-    loadClubs();
+    // 演示模式：使用模拟数据
+    setClubs(mockClubs);
+    setLoading(false);
   }, []);
-
-  const loadClubs = async () => {
-    try {
-      const response: any = await clubAPI.getList();
-      if (response.code === 200) {
-        setClubs(response.data.clubs);
-      }
-    } catch (error) {
-      console.error('加载俱乐部列表失败', error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleCreateClub = async (e: React.FormEvent) => {
     e.preventDefault();

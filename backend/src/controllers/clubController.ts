@@ -32,11 +32,12 @@ export const createClubController = async (
     }
     
     // 检查用户等级（需要Lv.2以上）
-    const [userRows]: any = await dbPool.execute(
-      'SELECT level FROM users WHERE id = ?',
+    const userResult: any = await dbPool!.query(
+      'SELECT level FROM users WHERE id = $1',
       [userId]
     );
     
+    const userRows = userResult.rows;
     if (userRows.length === 0 || userRows[0].level < 2) {
       throw new AppError('需要Lv.2以上才能创建俱乐部', 403, 403);
     }

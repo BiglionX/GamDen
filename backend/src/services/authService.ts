@@ -1,6 +1,6 @@
 import { dbPool } from '../config/database';
 import { hashPassword, comparePassword } from '../utils/password';
-import { generateToken, generateRefreshToken, JWTPayload } from '../utils/jwt';
+import { generateToken, generateRefreshToken, verifyToken, JWTPayload } from '../utils/jwt';
 import { logger } from '../utils/logger';
 
 export interface RegisterParams {
@@ -28,11 +28,12 @@ export interface AuthResult {
  * 验证邀请码
  */
 const validateInviteCode = async (inviteCode: string): Promise<number | null> => {
-  const [rows]: any = await dbPool.execute(
-    'SELECT id FROM users WHERE invite_code = ? AND status = "active"',
+  const result: any = await dbPool.query(
+    'SELECT id FROM users WHERE invite_code = $1 AND status = \'active\'',
     [inviteCode]
   );
   
+  const rows = result.rows;
   if (rows.length === 0) {
     return null;
   }
@@ -54,10 +55,11 @@ const generateInviteCode = async (): Promise<string> => {
       code += chars.charAt(Math.floor(Math.random() * chars.length));
     }
     
-    const [rows]: any = await dbPool.execute(
-      'SELECT id FROM users WHERE invite_code = ?',
+    const result: any = await dbPool.query(
+      'SELECT id FROM users WHERE invite_code = $1',
       [code]
     );
+    const rows = result.rows;
     exists = rows.length > 0;
   } while (exists);
   
@@ -68,18 +70,17 @@ const generateInviteCode = async (): Promise<string> => {
  * 分配领地坐标
  */
 const allocateTerritoryCoord = async (inviterId: number | null): Promise<{ x: number; y: number }> => {
-  // 简化版：随机分配，确保不重复
-  // 实际应该使用存储过程或更复杂的算法
   let x: number, y: number;
   let attempts = 0;
   
   do {
     if (inviterId) {
       // 获取邀请人坐标
-      const [inviterRows]: any = await dbPool.execute(
-        'SELECT territory_coord_x, territory_coord_y FROM users WHERE id = ?',
+      const result: any = await dbPool.query(
+        'SELECT territory_coord_x, territory_coord_y FROM users WHERE id = $1',
         [inviterId]
       );
+      const inviterRows = result.rows;
       
       if (inviterRows.length > 0) {
         const inviterX = inviterRows[0].territory_coord_x;
@@ -100,10 +101,11 @@ const allocateTerritoryCoord = async (inviterId: number | null): Promise<{ x: nu
     }
     
     // 检查坐标是否被占用
-    const [existingRows]: any = await dbPool.execute(
-      'SELECT id FROM users WHERE territory_coord_x = ? AND territory_coord_y = ?',
+    const result: any = await dbPool.query(
+      'SELECT id FROM users WHERE territory_coord_x = $1 AND territory_coord_y = $2',
       [x, y]
     );
+    const existingRows = result.rows;
     
     if (existingRows.length === 0) {
       break;
@@ -124,12 +126,12 @@ export const register = async (params: RegisterParams): Promise<AuthResult> => {
   const { phone, password, invite_code, guardian_type, nickname } = params;
   
   // 检查手机号是否已注册
-  const [existingUsers]: any = await dbPool.execute(
-    'SELECT id FROM users WHERE phone = ?',
+  const existingResult: any = await dbPool.query(
+    'SELECT id FROM users WHERE phone = $1',
     [phone]
   );
   
-  if (existingUsers.length > 0) {
+  if (existingResult.rows.length > 0) {
     throw new Error('手机号已注册');
   }
   
@@ -148,13 +150,13 @@ export const register = async (params: RegisterParams): Promise<AuthResult> => {
   // 分配领地坐标
   const { x, y } = await allocateTerritoryCoord(inviterId);
   
-  // 插入用户记录
-  const [result]: any = await dbPool.execute(
+  // 插入用户记录（PostgreSQL使用RETURNING获取插入的ID）
+  const insertResult: any = await dbPool.query(
     `INSERT INTO users (
       phone, password_hash, nickname, guardian_type, 
       invite_code, invited_by, 
       territory_coord_x, territory_coord_y
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id`,
     [
       phone,
       passwordHash,
@@ -167,11 +169,11 @@ export const register = async (params: RegisterParams): Promise<AuthResult> => {
     ]
   );
   
-  const userId = result.insertId;
+  const userId = insertResult.rows[0].id;
   
   // 记录邀请关系
-  await dbPool.execute(
-    'INSERT INTO invite_records (inviter_id, invitee_id) VALUES (?, ?)',
+  await dbPool.query(
+    'INSERT INTO invite_records (inviter_id, invitee_id) VALUES ($1, $2)',
     [inviterId, userId]
   );
   
@@ -203,11 +205,12 @@ export const login = async (params: LoginParams): Promise<AuthResult> => {
   const { phone, password } = params;
   
   // 查询用户
-  const [rows]: any = await dbPool.execute(
-    'SELECT id, phone, password_hash, role, territory_coord_x, territory_coord_y, status FROM users WHERE phone = ?',
+  const result: any = await dbPool.query(
+    'SELECT id, phone, password_hash, role, territory_coord_x, territory_coord_y, status FROM users WHERE phone = $1',
     [phone]
   );
   
+  const rows = result.rows;
   if (rows.length === 0) {
     throw new Error('用户不存在');
   }
@@ -230,8 +233,8 @@ export const login = async (params: LoginParams): Promise<AuthResult> => {
   }
   
   // 更新最后登录时间
-  await dbPool.execute(
-    'UPDATE users SET last_login_at = NOW() WHERE id = ?',
+  await dbPool.query(
+    'UPDATE users SET last_login_at = NOW() WHERE id = $1',
     [user.id]
   );
   
@@ -259,9 +262,9 @@ export const login = async (params: LoginParams): Promise<AuthResult> => {
 /**
  * 刷新Token
  */
-export const refreshToken = async (refreshToken: string): Promise<{ token: string; refresh_token: string }> => {
+export const refreshToken = async (refresh_Token: string): Promise<{ token: string; refresh_token: string }> => {
   // 验证refresh token
-  const payload = verifyToken(refreshToken);
+  const payload = verifyToken(refresh_Token);
   if (!payload) {
     throw new Error('Refresh Token无效或已过期');
   }

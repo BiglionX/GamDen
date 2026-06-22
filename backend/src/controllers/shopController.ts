@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import { dbPool } from '../config/database';
 import {
   getGoldCoins,
   addGoldCoins,
@@ -8,6 +9,7 @@ import {
   exchangeSpecialSignature,
   getGoldTransactions
 } from '../services/shopService';
+import { addExperience } from '../services/territoryService';
 import { AppError } from '../middleware/errorHandler';
 
 /**
@@ -58,19 +60,20 @@ export const signInController = async (
       throw new AppError('未授权', 401, 401);
     }
     
-    // 检查今天是否已签到
-    const [existingRecords]: any = await dbPool.execute(
-      'SELECT id FROM sign_in_records WHERE user_id = ? AND DATE(sign_date) = CURDATE()',
+    // 检查今天是否已签到（PostgreSQL语法）
+    const existingResult: any = await dbPool!.query(
+      'SELECT id FROM sign_in_records WHERE user_id = $1 AND DATE(sign_date) = CURRENT_DATE',
       [userId]
     );
     
-    if (existingRecords.length > 0) {
+    if (existingResult.rows.length > 0) {
       throw new Error('今天已经签到过了');
     }
     
-    // 获取连续签到天数
-    const [yesterdayRecords]: any = await dbPool.execute(
-      'SELECT continuous_days FROM sign_in_records WHERE user_id = ? AND DATE(sign_date) = DATE_SUB(CURDATE(), INTERVAL 1 DAY)',
+    // 获取连续签到天数（PostgreSQL语法）
+    const yesterdayResult: any = await dbPool!.query(
+      `SELECT continuous_days FROM sign_in_records 
+       WHERE user_id = $1 AND DATE(sign_date) = CURRENT_DATE - INTERVAL '1 day'`,
       [userId]
     );
     
@@ -78,8 +81,8 @@ export const signInController = async (
     let rewardGold = 10;
     let rewardExp = 10;
     
-    if (yesterdayRecords.length > 0) {
-      continuousDays = yesterdayRecords[0].continuous_days + 1;
+    if (yesterdayResult.rows.length > 0) {
+      continuousDays = yesterdayResult.rows[0].continuous_days + 1;
       // 连续签到额外奖励
       if (continuousDays <= 3) {
         rewardGold += continuousDays * 5;
@@ -87,10 +90,10 @@ export const signInController = async (
       }
     }
     
-    // 插入签到记录
-    await dbPool.execute(
+    // 插入签到记录（PostgreSQL语法）
+    await dbPool!.query(
       `INSERT INTO sign_in_records (user_id, sign_date, continuous_days, reward_gold, reward_exp)
-      VALUES (?, CURDATE(), ?, ?, ?)`,
+      VALUES ($1, CURRENT_DATE, $2, $3, $4)`,
       [userId, continuousDays, rewardGold, rewardExp]
     );
     
@@ -98,7 +101,6 @@ export const signInController = async (
     const goldResult = await addGoldCoins(userId, rewardGold, 'sign_in', `签到奖励（连续${continuousDays}天）`);
     
     // 添加经验
-    const { addExperience } = require('../services/territoryService');
     const expResult = await addExperience(userId, rewardExp, 'sign_in');
     
     res.status(200).json({

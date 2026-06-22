@@ -1,40 +1,57 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { agentAPI } from '@/services/api';
 import { territoryAPI } from '@/services/api';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 
 export default function AgentPage() {
+  const router = useRouter();
   const [agentType, setAgentType] = useState<string>('');
   const [dialogues, setDialogues] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    loadData();
-  }, []);
-
-  const loadData = async () => {
-    try {
-      const [territoryRes, dialoguesRes] = await Promise.all([
-        territoryAPI.getInfo(),
-        agentAPI.getDialogues(20)
-      ]);
-
-      if (territoryRes.code === 200) {
-        setAgentType(territoryRes.data.guardian_type);
-      }
-
-      if (dialoguesRes.code === 200) {
-        setDialogues(dialoguesRes.data.dialogues);
-      }
-    } catch (error) {
-      console.error('加载数据失败', error);
-    } finally {
-      setLoading(false);
+    // 检查用户是否登录
+    const token = localStorage.getItem('gamden_token');
+    if (!token) {
+      router.push('/auth/login');
+      return;
     }
-  };
+
+    // 从API加载真实数据
+    const loadData = async () => {
+      try {
+        // 获取用户信息（包含守护灵类型）
+        const territoryRes: any = await territoryAPI.getInfo();
+        if (territoryRes.code === 200) {
+          setAgentType(territoryRes.data.guardian_type);
+        }
+
+        // 获取守护灵对话历史
+        const dialoguesRes: any = await agentAPI.getDialogues(20);
+        if (dialoguesRes.code === 200) {
+          setDialogues(dialoguesRes.data || []);
+        }
+      } catch (error: any) {
+        console.error('加载守护灵数据失败:', error);
+        if (error.response?.status === 401) {
+          localStorage.removeItem('gamden_token');
+          localStorage.removeItem('gamden_refresh_token');
+          localStorage.removeItem('gamden_user');
+          router.push('/auth/login');
+        } else {
+          alert('加载失败，请重试');
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData();
+  }, [router]);
 
   const getAgentEmoji = (type: string) => {
     switch (type) {

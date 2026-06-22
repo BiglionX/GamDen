@@ -1,31 +1,49 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { shopAPI } from '@/services/api';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 
 export default function ShopPage() {
+  const router = useRouter();
   const [goldCoins, setGoldCoins] = useState(0);
   const [loading, setLoading] = useState(true);
   const [exchangeLoading, setExchangeLoading] = useState<string | null>(null);
 
   useEffect(() => {
-    loadGoldCoins();
-  }, []);
-
-  const loadGoldCoins = async () => {
-    try {
-      const response: any = await shopAPI.getGold();
-      if (response.code === 200) {
-        setGoldCoins(response.data.gold_coins);
-      }
-    } catch (error) {
-      console.error('加载金币余额失败', error);
-    } finally {
-      setLoading(false);
+    // 检查用户是否登录
+    const token = localStorage.getItem('gamden_token');
+    if (!token) {
+      router.push('/auth/login');
+      return;
     }
-  };
+
+    // 从API加载真实数据
+    const loadData = async () => {
+      try {
+        const response: any = await shopAPI.getGold();
+        if (response.code === 200) {
+          setGoldCoins(response.data.gold_coins);
+        }
+      } catch (error: any) {
+        console.error('加载金币余额失败:', error);
+        if (error.response?.status === 401) {
+          localStorage.removeItem('gamden_token');
+          localStorage.removeItem('gamden_refresh_token');
+          localStorage.removeItem('gamden_user');
+          router.push('/auth/login');
+        } else {
+          alert('加载失败，请重试');
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData();
+  }, [router]);
 
   const handleExchange = async (item: string, price: number) => {
     if (!confirm(`确定要花费 ${price} 金币兑换吗？`)) {
