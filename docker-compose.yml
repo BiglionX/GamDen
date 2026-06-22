@@ -82,6 +82,18 @@ services:
       - gamden-network
     restart: unless-stopped
 
+  # 营销网站 (gamden.matux.tech)
+  gamden-marketing:
+    build:
+      context: ./marketing-site
+      dockerfile: Dockerfile
+    container_name: gamden-marketing
+    ports:
+      - "3002:3000"
+    networks:
+      - gamden-network
+    restart: unless-stopped
+
   # Nginx反向代理
   nginx:
     image: nginx:alpine
@@ -95,6 +107,7 @@ services:
     depends_on:
       - gamden-backend
       - gamden-frontend
+      - gamden-marketing
     networks:
       - gamden-network
     restart: unless-stopped
