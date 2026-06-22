@@ -1,18 +1,56 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { clubAPI } from '@/services/api';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
+import { Card, CardBody, CardHeader } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
+import { LayoutShell } from '@/components/layout/LayoutShell';
+import { AgentAvatar } from '@/components/business';
 
-interface ClubPageProps {
-  params: { clubId: string };
-}
+const mockClubs = [
+  {
+    id: 1,
+    name: '原神茶摊',
+    game_name: '原神',
+    description: '提瓦特大陆的旅行者聚集地，欢迎一切冒险故事。',
+    member_count: 158,
+    post_count: 42,
+  },
+  {
+    id: 2,
+    name: '王者峡谷',
+    game_name: '王者荣耀',
+    description: '五排开黑、攻略分享、皮肤鉴赏。',
+    member_count: 87,
+    post_count: 23,
+  },
+];
 
-export default function ClubDetailPage({ params }: ClubPageProps) {
+const mockPosts = [
+  {
+    id: 1,
+    nickname: '测试玩家',
+    guardian_type: 'mechanic',
+    content: '刚刚抽到雷神，分享一波玄学，祝大家好运！',
+    like_count: 12,
+    reply_count: 5,
+    created_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+  },
+  {
+    id: 2,
+    nickname: '玩家B',
+    guardian_type: 'elf',
+    content: '有组队一起打周本的吗？UID 在签名里。',
+    like_count: 3,
+    reply_count: 1,
+    created_at: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(),
+  },
+];
+
+export default function ClubDetailPage({ params }: { params: { clubId: string } }) {
   const router = useRouter();
   const clubId = parseInt(params.clubId);
   const [club, setClub] = useState<any>(null);
@@ -35,26 +73,19 @@ export default function ClubDetailPage({ params }: ClubPageProps) {
 
   const handleCreatePost = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!newPost.trim()) {
-      alert('请输入帖子内容');
-      return;
-    }
+    if (!newPost.trim()) return;
 
     setPosting(true);
     try {
       const response: any = await clubAPI.createPost({
         club_id: clubId,
-        content: newPost
+        content: newPost,
       });
-
       if (response.code === 200) {
-        alert('发帖成功，待审核');
         setNewPost('');
-        loadData();
       }
     } catch (error: any) {
-      alert(error.response?.data?.message || '发帖失败');
+      console.error(error.response?.data?.message || '发帖失败');
     } finally {
       setPosting(false);
     }
@@ -62,104 +93,128 @@ export default function ClubDetailPage({ params }: ClubPageProps) {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-lg">加载中...</div>
-      </div>
+      <LayoutShell activeTab="club">
+        <div className="flex items-center justify-center min-h-[60vh] text-brand-paper-mute font-serif italic animate-pulse-soft">
+          加载中...
+        </div>
+      </LayoutShell>
     );
   }
 
   if (!club) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-lg">俱乐部不存在</div>
-      </div>
+      <LayoutShell activeTab="club">
+        <div className="flex items-center justify-center min-h-[60vh] text-brand-paper-mute">
+          茶摊已打烊
+        </div>
+      </LayoutShell>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="max-w-6xl mx-auto">
-        {/* 顶部导航 */}
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <Link href="/club">
-              <Button variant="outline" size="sm">← 返回列表</Button>
-            </Link>
-            <h1 className="text-3xl font-bold mt-4">{club.name}</h1>
-            <p className="text-gray-600">游戏：{club.game_name}</p>
+    <LayoutShell
+      activeTab="club"
+      topBarLeft={
+        <button
+          onClick={() => router.back()}
+          className="text-brand-paper-mute hover:text-brand-gold transition-colors"
+          aria-label="返回"
+        >
+          ‹
+        </button>
+      }
+      topBarRight={
+        <span className="text-xs px-2 py-1 bg-brand-gold/15 text-brand-gold rounded-nest-sm border border-brand-gold/30">
+          {club.game_name}
+        </span>
+      }
+    >
+      <div className="max-w-2xl mx-auto px-4 py-5 space-y-5">
+        {/* 俱乐部头部 */}
+        <div className="text-center pb-2">
+          <h1 className="font-serif text-2xl text-brand-paper mb-1">
+            {club.name}
+          </h1>
+          <p className="text-sm text-brand-paper-mute font-serif italic">
+            {club.description}
+          </p>
+          <div className="flex justify-center gap-6 mt-3 text-xs text-brand-paper-mute">
+            <span>
+              <span className="text-brand-gold font-mono">
+                {club.member_count}
+              </span>{' '}
+              位侠客
+            </span>
+            <span>
+              <span className="text-brand-paper font-mono">{club.post_count}</span>{' '}
+              篇帖子
+            </span>
           </div>
-          <Link href="/territory">
-            <Button variant="outline">返回领地</Button>
-          </Link>
         </div>
 
-        {/* 俱乐部信息 */}
-        <Card className="p-6 mb-8">
-          <p className="text-gray-700 mb-4">{club.description}</p>
-          <div className="flex space-x-6 text-sm text-gray-500">
-            <span>成员：{club.member_count}</span>
-            <span>帖子：{club.post_count}</span>
-            <span>创建时间：{new Date(club.created_at).toLocaleDateString()}</span>
-          </div>
-        </Card>
-
         {/* 发帖表单 */}
-        <Card className="p-6 mb-8">
-          <h2 className="text-xl font-semibold mb-4">发布帖子</h2>
-          <form onSubmit={handleCreatePost}>
-            <Textarea
-              value={newPost}
-              onChange={(e) => setNewPost(e.target.value)}
-              placeholder="分享你的游戏心得..."
-              maxLength={500}
-              rows={4}
-              className="mb-4"
-            />
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-500">
-                {newPost.length}/500 字
-              </span>
-              <Button type="submit" loading={posting}>
-                发布帖子
-              </Button>
-            </div>
-          </form>
+        <Card>
+          <CardBody>
+            <form onSubmit={handleCreatePost}>
+              <Textarea
+                value={newPost}
+                onChange={(e) => setNewPost(e.target.value)}
+                placeholder="分享你的游戏心得..."
+                maxLength={500}
+                rows={3}
+              />
+              <div className="flex justify-between items-center mt-3">
+                <span className="text-xs text-brand-mute font-mono">
+                  {newPost.length}/500
+                </span>
+                <Button type="submit" variant="primary" loading={posting}>
+                  发布
+                </Button>
+              </div>
+            </form>
+          </CardBody>
         </Card>
 
         {/* 帖子列表 */}
-        <div className="space-y-6">
-          <h2 className="text-2xl font-bold">帖子列表</h2>
-          
+        <div className="space-y-3">
+          <h2 className="font-serif text-sm text-brand-paper-mute px-1">
+            最近的茶话
+          </h2>
           {posts.length === 0 ? (
-            <Card className="p-8 text-center text-gray-500">
-              暂无帖子，快来发布第一条吧！
+            <Card variant="sunken">
+              <CardBody className="text-center py-10 text-brand-paper-mute">
+                <p className="font-serif italic">茶摊尚静</p>
+                <p className="text-xs mt-1 text-brand-mute">来开个头吧</p>
+              </CardBody>
             </Card>
           ) : (
             posts.map((post) => (
-              <Card key={post.id} className="p-6">
-                <div className="flex items-center mb-3">
-                  <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center mr-3">
-                    {post.guardian_type === 'mechanic' && '⚙️'}
-                    {post.guardian_type === 'elf' && '🌱'}
-                    {post.guardian_type === 'astrologer' && '🔮'}
-                  </div>
-                  <div>
-                    <div className="font-medium">{post.nickname}</div>
-                    <div className="text-sm text-gray-500">
-                      {new Date(post.created_at).toLocaleString()}
+              <Card key={post.id}>
+                <CardBody>
+                  <div className="flex items-center gap-3 mb-3">
+                    <AgentAvatar type={post.guardian_type} size="sm" animated={false} />
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm font-medium text-brand-paper">
+                        {post.nickname}
+                      </div>
+                      <div className="text-xs text-brand-mute">
+                        {new Date(post.created_at).toLocaleString()}
+                      </div>
                     </div>
                   </div>
-                </div>
-                <p className="text-gray-700 mb-3">{post.content}</p>
-                <div className="flex space-x-4 text-sm text-gray-500">
-                  <span>👍 {post.like_count}</span>
-                  <span>💬 {post.reply_count}</span>
-                </div>
+                  <p className="text-brand-paper-mute leading-relaxed whitespace-pre-wrap mb-3">
+                    {post.content}
+                  </p>
+                  <div className="flex gap-4 text-xs text-brand-paper-mute pt-2 border-t border-brand-gold-deep/20">
+                    <span>赞 {post.like_count}</span>
+                    <span>回复 {post.reply_count}</span>
+                  </div>
+                </CardBody>
               </Card>
             ))
           )}
         </div>
       </div>
-    </div>
+    </LayoutShell>
   );
 }

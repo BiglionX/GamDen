@@ -2,6 +2,182 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ===== GamDen 古风巢穴 - 全局主题 ===== */
+:root {
+  /* 品牌色变量 */
+  --gd-ink: #1E241F;
+  --gd-ink-deep: #161B17;
+  --gd-ink-raised: #2A322B;
+  --gd-gold: #C9A87C;
+  --gd-gold-light: #D9BC93;
+  --gd-gold-deep: #A8865E;
+  --gd-paper: #F5F0E6;
+  --gd-paper-mute: #D8D2C4;
+  --gd-beacon: #C0392B;
+  --gd-vitality: #5A8F6C;
+  --gd-mute: #8A8A8A;
+
+  /* 兼容旧变量 */
+  --foreground-rgb: 245, 240, 230;
+  --background-start-rgb: 30, 36, 31;
+  --background-end-rgb: 22, 27, 23;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  background-color: var(--gd-ink);
+  color: var(--gd-paper);
+  font-family: 'Noto Sans SC', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+}
+
+body {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.85' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0.95 0 0 0 0 0.94 0 0 0 0 0.90 0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-attachment: fixed;
+}
+
+/* 滚动条暗化 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--gd-ink-deep);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--gd-gold-deep);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gd-gold);
+}
+
+/* 选区颜色 */
+::selection {
+  background: rgba(201, 168, 124, 0.4);
+  color: var(--gd-paper);
+}
+
+/* ===== 复用样式层 ===== */
+@layer components {
+  /* 古风卷轴边框 */
+  .nest-border {
+    position: relative;
+    border: 1px solid var(--gd-gold-deep);
+  }
+
+  .nest-border::before,
+  .nest-border::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      var(--gd-gold) 20%,
+      var(--gd-gold-deep) 50%,
+      var(--gd-gold) 80%,
+      transparent 100%
+    );
+  }
+
+  .nest-border::before {
+    top: -1px;
+  }
+
+  .nest-border::after {
+    bottom: -1px;
+  }
+
+  /* 像素风格 */
+  .pixel-corners {
+    clip-path: polygon(
+      0 4px, 4px 4px, 4px 0,
+      calc(100% - 4px) 0, calc(100% - 4px) 4px, 100% 4px,
+      100% calc(100% - 4px), calc(100% - 4px) calc(100% - 4px), calc(100% - 4px) 100%,
+      4px 100%, 4px calc(100% - 4px), 0 calc(100% - 4px)
+    );
+  }
+
+  /* 凹陷输入框 */
+  .nest-input {
+    background-color: var(--gd-ink-deep);
+    border: 1px solid var(--gd-gold-deep);
+    color: var(--gd-paper);
+    transition: all 0.2s ease;
+  }
+
+  .nest-input:focus {
+    outline: none;
+    border-color: var(--gd-gold);
+    box-shadow: 0 0 0 2px rgba(201, 168, 124, 0.2);
+  }
+
+  .nest-input::placeholder {
+    color: var(--gd-mute);
+  }
+
+  /* 古风文本阴影 */
+  .text-glow-gold {
+    text-shadow: 0 0 8px rgba(201, 168, 124, 0.5);
+  }
+
+  /* 加载占位 */
+  .nest-skeleton {
+    background: linear-gradient(
+      90deg,
+      var(--gd-ink-deep) 0%,
+      var(--gd-ink-raised) 50%,
+      var(--gd-ink-deep) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 4px;
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -200% 0;
+    }
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* 字体加载提示 - 系统无 Noto 时降级 */
+.font-serif {
+  font-family: 'Noto Serif SC', 'STSong', 'SimSun', Georgia, serif;
+}@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;

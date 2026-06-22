@@ -23,7 +23,7 @@ export default function AdminDashboard() {
         const data = await response.json();
         setDashboardData(data.data);
       } else {
-        alert('获取数 
+        console.error('获取数据看板失败');
       }
     } catch (error) {
       console.error('获取数据看板失败:', error);

@@ -1,58 +1,70 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import { territoryAPI } from '@/services/api';
 import { shopAPI } from '@/services/api';
 import { Button } from '@/components/ui/button';
+import { Card, CardBody, CardHeader } from '@/components/ui/card';
+import { LayoutShell } from '@/components/layout/LayoutShell';
+import {
+  TerritoryIcon,
+  CoinBadge,
+  ProgressBar,
+  AgentAvatar,
+} from '@/components/business';
+
+interface Neighbor {
+  user_id: number;
+  territory_coord_x: number;
+  territory_coord_y: number;
+  level: number;
+  signature: string;
+  guardian_type: string;
+  nickname: string;
+  avatar?: string;
+}
 
 export default function TerritoryPage() {
   const router = useRouter();
   const [territoryInfo, setTerritoryInfo] = useState<any>(null);
-  const [neighbors, setNeighbors] = useState<any[]>([]);
+  const [neighbors, setNeighbors] = useState<Neighbor[]>([]);
   const [loading, setLoading] = useState(true);
   const [signInLoading, setSignInLoading] = useState(false);
 
+  const loadTerritoryData = async () => {
+    try {
+      const [territoryRes, neighborsRes] = await Promise.all([
+        territoryAPI.getInfo(),
+        territoryAPI.getNearby(10),
+      ]);
+
+      if (territoryRes?.code === 200) {
+        setTerritoryInfo(territoryRes.data);
+      }
+      if (neighborsRes?.code === 200) {
+        setNeighbors(neighborsRes.data || []);
+      }
+    } catch (error: any) {
+      console.error('加载领地数据失败:', error);
+      if (error.response?.status === 401) {
+        localStorage.removeItem('gamden_token');
+        localStorage.removeItem('gamden_refresh_token');
+        localStorage.removeItem('gamden_user');
+        router.push('/auth/login');
+      }
+    }
+  };
+
   useEffect(() => {
-    // 检查用户是否登录
     const token = localStorage.getItem('gamden_token');
     if (!token) {
       router.push('/auth/login');
       return;
     }
 
-    // 从API加载真实数据
-    const loadData = async () => {
-      try {
-        const [territoryRes, neighborsRes] = await Promise.all([
-          territoryAPI.getInfo(),
-          territoryAPI.getNearby(10)
-        ]);
-        
-        if (territoryRes.code === 200) {
-          setTerritoryInfo(territoryRes.data);
-        }
-        if (neighborsRes.code === 200) {
-          setNeighbors(neighborsRes.data || []);
-        }
-      } catch (error: any) {
-        console.error('加载领地数据失败:', error);
-        if (error.response?.status === 401) {
-          // Token过期或无效
-          localStorage.removeItem('gamden_token');
-          localStorage.removeItem('gamden_refresh_token');
-          localStorage.removeItem('gamden_user');
-          router.push('/auth/login');
-        } else {
-          alert('加载失败，请重试');
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadData();
+    setLoading(true);
+    loadTerritoryData().finally(() => setLoading(false));
   }, [router]);
 
   const handleSignIn = async () => {
@@ -60,11 +72,10 @@ export default function TerritoryPage() {
     try {
       const response: any = await shopAPI.signIn();
       if (response.code === 200) {
-        alert('签到成功！');
-        loadData();
+        loadTerritoryData();
       }
     } catch (error: any) {
-      alert(error.response?.data?.message || '签到失败');
+      console.error('签到失败', error);
     } finally {
       setSignInLoading(false);
     }
@@ -72,127 +83,162 @@ export default function TerritoryPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-lg">加载中...</div>
-      </div>
+      <LayoutShell activeTab="map">
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="text-brand-paper-mute font-serif italic animate-pulse-soft">
+            正在踏入巢穴...
+          </div>
+        </div>
+      </LayoutShell>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="max-w-6xl mx-auto">
-        {/* 顶部导航 */}
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold">我的领地</h1>
-          <div className="space-x-4">
-            <Link href="/club">
-              <Button variant="outline">俱乐部</Button>
-            </Link>
-            <Link href="/shop">
-              <Button variant="outline">商城</Button>
-            </Link>
-            <Link href="/agent">
-              <Button variant="outline">守护灵</Button>
-            </Link>
-          </div>
-        </div>
-
-        {/* 领地信息卡片 */}
+    <LayoutShell
+      activeTab="map"
+      topBarLeft={
+        <span className="font-serif text-lg text-brand-paper">
+          我的<span className="text-brand-gold text-glow-gold">领地</span>
+        </span>
+      }
+      topBarRight={
+        territoryInfo && (
+          <CoinBadge amount={territoryInfo.gold_coins || 0} size="sm" />
+        )
+      }
+    >
+      <div className="max-w-3xl mx-auto px-4 py-5 space-y-5">
         {territoryInfo && (
-          <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <div className="flex items-center mb-4">
-                  <div className="w-20 h-20 bg-blue-100 rounded-lg flex items-center justify-center text-4xl">
-                    {territoryInfo.guardian_type === 'mechanic' && '⚙️'}
-                    {territoryInfo.guardian_type === 'elf' && '🌱'}
-                    {territoryInfo.guardian_type === 'astrologer' && '🔮'}
+          <Card variant="scroll" className="overflow-hidden">
+            <CardBody className="p-6">
+              <div className="flex items-start gap-5">
+                <TerritoryIcon
+                  level={territoryInfo.level || 1}
+                  size="lg"
+                />
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-baseline gap-2 mb-1">
+                    <h2 className="font-serif text-2xl text-brand-paper">
+                      Lv.{territoryInfo.level || 1} 领地
+                    </h2>
+                    <span className="text-xs text-brand-mute font-mono">
+                      ({territoryInfo.territory_coord_x},{' '}
+                      {territoryInfo.territory_coord_y})
+                    </span>
                   </div>
-                  <div className="ml-4">
-                    <h2 className="text-2xl font-semibold">Lv.{territoryInfo.level} 领地</h2>
-                    <p className="text-gray-600">{territoryInfo.signature || '暂无签名'}</p>
+                  <p className="text-sm text-brand-paper-mute italic font-serif mb-4 line-clamp-2">
+                    "{territoryInfo.signature || '尚未留下印记'}"
+                  </p>
+
+                  <ProgressBar
+                    value={territoryInfo.exp || 0}
+                    max={territoryInfo.next_level_exp || 100}
+                    label="经验"
+                    size="sm"
+                  />
+                </div>
+              </div>
+
+              <div className="mt-5 pt-5 border-t border-brand-gold-deep/30 grid grid-cols-3 gap-3">
+                <div className="text-center">
+                  <div className="text-xs text-brand-paper-mute mb-1">金币</div>
+                  <div className="font-mono text-brand-gold font-semibold">
+                    {territoryInfo.gold_coins || 0}
                   </div>
                 </div>
-
-                <div className="mt-4 space-y-2">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">经验值</span>
-                    <span>{territoryInfo.exp} / {territoryInfo.next_level_exp}</span>
+                <div className="text-center">
+                  <div className="text-xs text-brand-paper-mute mb-1">等级</div>
+                  <div className="font-mono text-brand-paper font-semibold">
+                    Lv.{territoryInfo.level || 1}
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div
-                      className="bg-blue-600 h-2 rounded-full"
-                      style={{
-                        width: `${(territoryInfo.exp / territoryInfo.next_level_exp) * 100}%`
-                      }}
-                    />
+                </div>
+                <div className="text-center">
+                  <div className="text-xs text-brand-paper-mute mb-1">邻居</div>
+                  <div className="font-mono text-brand-paper font-semibold">
+                    {neighbors.length}
                   </div>
                 </div>
               </div>
 
-              <div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-gray-50 p-4 rounded-lg">
-                    <div className="text-sm text-gray-600">金币</div>
-                    <div className="text-2xl font-bold text-yellow-600">
-                      {territoryInfo.gold_coins}
-                    </div>
-                  </div>
-                  <div className="bg-gray-50 p-4 rounded-lg">
-                    <div className="text-sm text-gray-600">领地坐标</div>
-                    <div className="text-lg font-mono">
-                      ({territoryInfo.territory_coord_x}, {territoryInfo.territory_coord_y})
-                    </div>
-                  </div>
-                </div>
-
-                <Button
-                  onClick={handleSignIn}
-                  loading={signInLoading}
-                  className="w-full mt-4"
-                >
-                  每日签到
-                </Button>
-              </div>
-            </div>
-          </div>
+              <Button
+                onClick={handleSignIn}
+                variant="primary"
+                size="lg"
+                fullWidth
+                loading={signInLoading}
+                className="mt-5"
+              >
+                每日签到 · 领取补给
+              </Button>
+            </CardBody>
+          </Card>
         )}
 
-        {/* 邻居列表 */}
-        <div className="bg-white rounded-lg shadow-lg p-6">
-          <h3 className="text-xl font-semibold mb-4">
-            周围邻居（±10格）- 共 {neighbors.length} 人
-          </h3>
-          
-          {neighbors.length === 0 ? (
-            <p className="text-gray-500 text-center py-8">暂无邻居，邀请好友入驻吧！</p>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {neighbors.map((neighbor) => (
-                <div key={neighbor.user_id} className="border rounded-lg p-4 hover:shadow-md transition">
-                  <div className="flex items-center">
-                    <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
-                      {neighbor.guardian_type === 'mechanic' && '⚙️'}
-                      {neighbor.guardian_type === 'elf' && '🌱'}
-                      {neighbor.guardian_type === 'astrologer' && '🔮'}
-                    </div>
-                    <div className="ml-3">
-                      <div className="font-medium">{neighbor.nickname}</div>
-                      <div className="text-sm text-gray-600">Lv.{neighbor.level}</div>
-                    </div>
-                  </div>
-                  <div className="mt-2 text-sm text-gray-600">
-                    {neighbor.signature || '暂无签名'}
-                  </div>
-                  <div className="mt-1 text-xs text-gray-500">
-                    坐标: ({neighbor.territory_coord_x}, {neighbor.territory_coord_y})
-                  </div>
-                </div>
-              ))}
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <span>周边邻居</span>
+              <span className="text-xs text-brand-paper-mute font-normal">
+                {neighbors.length} 位侠客
+              </span>
             </div>
-          )}
-        </div>
+          </CardHeader>
+          <CardBody className="p-0">
+            {neighbors.length === 0 ? (
+              <div className="py-12 text-center text-brand-paper-mute">
+                <div className="text-3xl mb-2 text-brand-gold opacity-60">✦</div>
+                <p className="font-serif italic">周边仍是荒地</p>
+                <p className="text-xs mt-1 text-brand-mute">邀请好友来此定居吧</p>
+              </div>
+            ) : (
+              <ul className="divide-y divide-brand-gold-deep/20">
+                {neighbors.map((neighbor) => (
+                  <li
+                    key={neighbor.user_id}
+                    className="flex items-center gap-3 px-5 py-3 hover:bg-brand-ink-deep/40 transition-colors"
+                  >
+                    <TerritoryIcon
+                      level={neighbor.level || 1}
+                      size="sm"
+                    />
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium text-brand-paper truncate">
+                          {neighbor.nickname}
+                        </span>
+                        <span className="text-xs text-brand-gold">
+                          Lv.{neighbor.level || 1}
+                        </span>
+                      </div>
+                      <div className="text-xs text-brand-paper-mute truncate">
+                        {neighbor.signature || '侠客尚未留言'}
+                      </div>
+                    </div>
+                    <AgentAvatar type={neighbor.guardian_type} size="sm" animated={false} />
+                  </li>
+                ))}
+              </ul>
+            )}
+          </CardBody>
+        </Card>
+
+        <Card
+          variant="sunken"
+          className="cursor-pointer hover:border-brand-gold transition-colors"
+          onClick={() => router.push('/invite')}
+        >
+          <CardBody className="p-5 flex items-center gap-4">
+            <div className="text-3xl text-brand-gold">✉</div>
+            <div className="flex-1">
+              <div className="font-serif text-brand-paper">邀请好友</div>
+              <div className="text-xs text-brand-paper-mute mt-0.5">
+                邀请 3 位即可解锁你的专属小程序
+              </div>
+            </div>
+            <div className="text-brand-gold text-xl">›</div>
+          </CardBody>
+        </Card>
       </div>
-    </div>
+    </LayoutShell>
   );
 }

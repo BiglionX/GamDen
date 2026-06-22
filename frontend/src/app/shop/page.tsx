@@ -1,10 +1,43 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { shopAPI } from '@/services/api';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
+import { Card, CardBody, CardHeader } from '@/components/ui/card';
+import { LayoutShell } from '@/components/layout/LayoutShell';
+import { CoinBadge } from '@/components/business';
+
+const items = [
+  {
+    key: 'avatar_frame',
+    name: '头像框',
+    desc: '个性化你的头像，展示独特风格',
+    price: 200,
+    icon: '◐',
+  },
+  {
+    key: 'chat_bubble',
+    name: '古风聊天气泡',
+    desc: '卷轴样式的消息气泡',
+    price: 150,
+    icon: '✉',
+  },
+  {
+    key: 'special_signature',
+    name: '特殊签名',
+    desc: '30 字签名权限（30 天）',
+    price: 300,
+    icon: '✦',
+  },
+];
+
+const coinSources = [
+  { icon: '☀', title: '每日签到', desc: '+10 金币（连续签到额外 +5/天）' },
+  { icon: '✎', title: '发帖', desc: '+5 金币（每日上限 50）' },
+  { icon: '☷', title: '回帖', desc: '+2 金币（每日上限 20）' },
+  { icon: '☍', title: '邀请好友', desc: '+50 金币（好友需活跃 7 天）' },
+];
 
 export default function ShopPage() {
   const router = useRouter();
@@ -12,61 +45,52 @@ export default function ShopPage() {
   const [loading, setLoading] = useState(true);
   const [exchangeLoading, setExchangeLoading] = useState<string | null>(null);
 
+  const loadData = async () => {
+    try {
+      const response: any = await shopAPI.getGold();
+      if (response.code === 200) {
+        setGoldCoins(response.data.gold_coins);
+      }
+    } catch (error: any) {
+      console.error('加载金币余额失败:', error);
+      if (error.response?.status === 401) {
+        localStorage.removeItem('gamden_token');
+        localStorage.removeItem('gamden_refresh_token');
+        localStorage.removeItem('gamden_user');
+        router.push('/auth/login');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    // 检查用户是否登录
     const token = localStorage.getItem('gamden_token');
     if (!token) {
       router.push('/auth/login');
       return;
     }
 
-    // 从API加载真实数据
-    const loadData = async () => {
-      try {
-        const response: any = await shopAPI.getGold();
-        if (response.code === 200) {
-          setGoldCoins(response.data.gold_coins);
-        }
-      } catch (error: any) {
-        console.error('加载金币余额失败:', error);
-        if (error.response?.status === 401) {
-          localStorage.removeItem('gamden_token');
-          localStorage.removeItem('gamden_refresh_token');
-          localStorage.removeItem('gamden_user');
-          router.push('/auth/login');
-        } else {
-          alert('加载失败，请重试');
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-
     loadData();
   }, [router]);
 
-  const handleExchange = async (item: string, price: number) => {
-    if (!confirm(`确定要花费 ${price} 金币兑换吗？`)) {
-      return;
-    }
-
-    setExchangeLoading(item);
+  const handleExchange = async (item: typeof items[number]) => {
+    if (goldCoins < item.price) return;
+    setExchangeLoading(item.key);
     try {
       let response;
-      if (item === 'avatar_frame') {
+      if (item.key === 'avatar_frame') {
         response = await shopAPI.exchangeAvatarFrame(`frame_${Date.now()}`);
-      } else if (item === 'chat_bubble') {
+      } else if (item.key === 'chat_bubble') {
         response = await shopAPI.exchangeChatBubble(`bubble_${Date.now()}`);
-      } else if (item === 'special_signature') {
+      } else if (item.key === 'special_signature') {
         response = await shopAPI.exchangeSpecialSignature(30);
       }
-
       if (response?.code === 200) {
-        alert('兑换成功！');
-        loadGoldCoins();
+        loadData();
       }
     } catch (error: any) {
-      alert(error.response?.data?.message || '兑换失败');
+      console.error(error.response?.data?.message || '兑换失败');
     } finally {
       setExchangeLoading(null);
     }
@@ -74,117 +98,79 @@ export default function ShopPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-lg">加载中...</div>
-      </div>
+      <LayoutShell activeTab="shop">
+        <div className="flex items-center justify-center min-h-[60vh] text-brand-paper-mute font-serif italic animate-pulse-soft">
+          集市开张中...
+        </div>
+      </LayoutShell>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="max-w-6xl mx-auto">
-        {/* 顶部导航 */}
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold">百货商城</h1>
-          <div className="flex items-center space-x-4">
-            <div className="bg-yellow-100 px-4 py-2 rounded-lg">
-              <span className="text-yellow-800 font-bold">💰 金币：{goldCoins}</span>
-            </div>
-            <a href="/territory">
-              <Button variant="outline">返回领地</Button>
-            </a>
-          </div>
+    <LayoutShell
+      activeTab="shop"
+      topBarLeft={
+        <span className="font-serif text-lg text-brand-paper">
+          巢穴<span className="text-brand-gold text-glow-gold">集市</span>
+        </span>
+      }
+      topBarRight={<CoinBadge amount={goldCoins} size="sm" />}
+    >
+      <div className="max-w-3xl mx-auto px-4 py-5 space-y-5">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {items.map((item) => (
+            <Card key={item.key} variant="scroll">
+              <CardBody>
+                <div className="text-3xl text-brand-gold mb-3">{item.icon}</div>
+                <h3 className="font-serif text-lg text-brand-paper mb-1">
+                  {item.name}
+                </h3>
+                <p className="text-sm text-brand-paper-mute mb-4 line-clamp-2 leading-relaxed">
+                  {item.desc}
+                </p>
+                <div className="flex items-center justify-between">
+                  <CoinBadge amount={item.price} size="sm" />
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    onClick={() => handleExchange(item)}
+                    loading={exchangeLoading === item.key}
+                    disabled={goldCoins < item.price}
+                  >
+                    兑换
+                  </Button>
+                </div>
+              </CardBody>
+            </Card>
+          ))}
         </div>
 
-        {/* 商城商品列表 */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* 头像框 */}
-          <Card className="p-6">
-            <div className="text-4xl mb-4">🎨</div>
-            <h3 className="text-xl font-semibold mb-2">头像框</h3>
-            <p className="text-gray-600 mb-4">个性化你的头像，展示独特风格</p>
-            <div className="flex justify-between items-center">
-              <span className="text-2xl font-bold text-yellow-600">200 💰</span>
-              <Button
-                onClick={() => handleExchange('avatar_frame', 200)}
-                loading={exchangeLoading === 'avatar_frame'}
-                disabled={goldCoins < 200}
-              >
-                兑换
-              </Button>
-            </div>
-          </Card>
-
-          {/* 聊天气泡 */}
-          <Card className="p-6">
-            <div className="text-4xl mb-4">💬</div>
-            <h3 className="text-xl font-semibold mb-2">聊天气泡</h3>
-            <p className="text-gray-600 mb-4">自定义聊天消息气泡样式</p>
-            <div className="flex justify-between items-center">
-              <span className="text-2xl font-bold text-yellow-600">150 💰</span>
-              <Button
-                onClick={() => handleExchange('chat_bubble', 150)}
-                loading={exchangeLoading === 'chat_bubble'}
-                disabled={goldCoins < 150}
-              >
-                兑换
-              </Button>
-            </div>
-          </Card>
-
-          {/* 特殊签名 */}
-          <Card className="p-6">
-            <div className="text-4xl mb-4">✍️</div>
-            <h3 className="text-xl font-semibold mb-2">特殊签名</h3>
-            <p className="text-gray-600 mb-4">30字签名权限（30天）</p>
-            <div className="flex justify-between items-center">
-              <span className="text-2xl font-bold text-yellow-600">300 💰</span>
-              <Button
-                onClick={() => handleExchange('special_signature', 300)}
-                loading={exchangeLoading === 'special_signature'}
-                disabled={goldCoins < 300}
-              >
-                兑换
-              </Button>
-            </div>
-          </Card>
-        </div>
-
-        {/* 金币获取途径说明 */}
-        <div className="mt-12 bg-white rounded-lg shadow-lg p-6">
-          <h2 className="text-2xl font-bold mb-4">如何获取金币？</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
-              <div className="text-2xl">📅</div>
-              <div>
-                <div className="font-medium">每日签到</div>
-                <div className="text-sm text-gray-600">+10金币（连续签到额外+5/天）</div>
-              </div>
-            </div>
-            <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
-              <div className="text-2xl">✍️</div>
-              <div>
-                <div className="font-medium">发帖</div>
-                <div className="text-sm text-gray-600">+5金币（每日上限50）</div>
-              </div>
-            </div>
-            <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
-              <div className="text-2xl">💬</div>
-              <div>
-                <div className="font-medium">回帖</div>
-                <div className="text-sm text-gray-600">+2金币（每日上限20）</div>
-              </div>
-            </div>
-            <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
-              <div className="text-2xl">👥</div>
-              <div>
-                <div className="font-medium">邀请好友</div>
-                <div className="text-sm text-gray-600">+50金币（好友需活跃7天）</div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <Card>
+          <CardHeader>如何获取金币</CardHeader>
+          <CardBody className="p-0">
+            <ul className="divide-y divide-brand-gold-deep/20">
+              {coinSources.map((src) => (
+                <li
+                  key={src.title}
+                  className="flex items-center gap-3 px-5 py-3"
+                >
+                  <span className="text-2xl text-brand-gold w-8 text-center">
+                    {src.icon}
+                  </span>
+                  <div className="flex-1">
+                    <div className="text-sm font-medium text-brand-paper">
+                      {src.title}
+                    </div>
+                    <div className="text-xs text-brand-paper-mute">
+                      {src.desc}
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </CardBody>
+        </Card>
       </div>
-    </div>
+    </LayoutShell>
   );
 }

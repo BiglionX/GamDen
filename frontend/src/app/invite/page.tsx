@@ -1,11 +1,12 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import { inviteAPI } from '@/services/api';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
+import { Card, CardBody, CardHeader } from '@/components/ui/card';
+import { LayoutShell } from '@/components/layout/LayoutShell';
+import { ProgressBar } from '@/components/business';
 
 export default function InvitePage() {
   const router = useRouter();
@@ -15,26 +16,22 @@ export default function InvitePage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // 检查登录状态
     const token = localStorage.getItem('gamden_token');
     if (!token) {
       router.push('/auth/login');
       return;
     }
 
-    // 加载邀请数据
     const loadInviteData = async () => {
       try {
         setLoading(true);
         setError(null);
 
-        // 获取邀请码
         const codeResponse = await inviteAPI.getCode();
         if (codeResponse.code === 0 && codeResponse.data) {
           setInviteCode(codeResponse.data.invite_code);
         }
 
-        // 获取邀请进度
         const progressResponse = await inviteAPI.getProgress();
         if (progressResponse.code === 0 && progressResponse.data) {
           setProgress(progressResponse.data);
@@ -51,143 +48,167 @@ export default function InvitePage() {
   }, [router]);
 
   const copyInviteCode = () => {
+    if (!inviteCode) return;
     navigator.clipboard.writeText(inviteCode);
-    alert('邀请码已复制！');
   };
 
   const copyShareLink = () => {
     const shareLink = `${window.location.origin}/invite?code=${inviteCode}`;
     navigator.clipboard.writeText(shareLink);
-    alert('分享链接已复制！');
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-lg">加载中...</div>
-      </div>
+      <LayoutShell showBottomTabs={false}>
+        <div className="flex items-center justify-center min-h-[60vh] text-brand-paper-mute font-serif italic animate-pulse-soft">
+          召唤盟友中...
+        </div>
+      </LayoutShell>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="text-lg text-red-600 mb-4">{error}</div>
-          <Button onClick={() => window.location.reload()}>重试</Button>
+      <LayoutShell showBottomTabs={false}>
+        <div className="flex items-center justify-center min-h-[60vh] text-center px-4">
+          <div>
+            <div className="text-brand-beacon mb-4">{error}</div>
+            <Button onClick={() => window.location.reload()}>重试</Button>
+          </div>
         </div>
-      </div>
+      </LayoutShell>
     );
   }
 
+  const invitedCount = progress?.invited_count || 0;
+  const unlocked = invitedCount >= 3;
+
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="max-w-4xl mx-auto">
-        {/* 顶部导航 */}
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold">邀请好友</h1>
-          <Link href="/territory">
-            <Button variant="outline">返回领地</Button>
-          </Link>
+    <LayoutShell
+      showBottomTabs={false}
+      topBarLeft={
+        <button
+          onClick={() => router.back()}
+          className="text-brand-paper-mute hover:text-brand-gold transition-colors"
+          aria-label="返回"
+        >
+          ‹
+        </button>
+      }
+      topBarRight={
+        <span className="font-serif text-sm text-brand-paper-mute">邀请</span>
+      }
+    >
+      <div className="max-w-xl mx-auto px-4 py-6 space-y-5">
+        <div className="text-center mb-2">
+          <h1 className="font-serif text-3xl text-brand-paper mb-2">
+            召唤<span className="text-brand-gold text-glow-gold">盟友</span>
+          </h1>
+          <p className="text-sm text-brand-paper-mute font-serif italic">
+            邀 3 位好友，解锁你的专属领地小程序
+          </p>
         </div>
 
-        {/* 邀请进度卡片 */}
-        <Card className="p-6 mb-8">
-          <h2 className="text-2xl font-bold mb-4">邀请进度</h2>
-          
-          <div className="mb-6">
-            <div className="flex justify-between mb-2">
-              <span>已邀请 {progress?.invited_count || 0} 人</span>
-              <span>目标 10 人</span>
-            </div>
-            <div className="w-full bg-gray-200 rounded-full h-4">
-              <div
-                className="bg-blue-600 h-4 rounded-full transition-all"
-                style={{
-                  width: `${Math.min((progress?.invited_count || 0) / 10 * 100, 100)}%`
-                }}
-              />
-            </div>
-            <p className="mt-2 text-sm text-gray-600">
-              {progress?.invited_count >= 3 
-                ? '🎉 已解锁个人小程序！' 
-                : `还需邀请 ${3 - (progress?.invited_count || 0)} 人解锁小程序`}
+        <Card variant="scroll">
+          <CardBody className="p-6">
+            <ProgressBar
+              value={Math.min(invitedCount, 3)}
+              max={3}
+              label="进度"
+              size="lg"
+            />
+            <p className="text-sm text-brand-paper-mute mt-3 font-serif italic">
+              {unlocked
+                ? '✦ 已解锁小程序码，可保存分享'
+                : `还差 ${3 - invitedCount} 位盟友，巢穴的边界即可再扩`}
             </p>
-          </div>
-
-          {/* 邀请码和分享链接 */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <div className="text-sm text-gray-600 mb-1">你的邀请码</div>
-              <div className="flex items-center justify-between">
-                <span className="text-2xl font-mono font-bold">{inviteCode}</span>
-                <Button onClick={copyInviteCode} size="sm">
-                  复制
-                </Button>
-              </div>
-            </div>
-
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <div className="text-sm text-gray-600 mb-1">分享链接</div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm truncate">点击复制链接</span>
-                <Button onClick={copyShareLink} size="sm">
-                  复制
-                </Button>
-              </div>
-            </div>
-          </div>
+          </CardBody>
         </Card>
 
-        {/* 邀请列表 */}
-        <Card className="p-6">
-          <h3 className="text-xl font-semibold mb-4">邀请记录</h3>
-          
-          {!progress?.invite_list || progress.invite_list.length === 0 ? (
-            <p className="text-gray-500 text-center py-8">暂无邀请记录</p>
-          ) : (
-            <div className="space-y-3">
-              {progress.invite_list.map((invite: any) => (
-                <div
-                  key={invite.invitee_id}
-                  className="flex items-center justify-between border-b pb-3"
-                >
-                  <div>
-                    <div className="font-medium">{invite.invitee_nickname}</div>
-                    <div className="text-sm text-gray-500">
-                      邀请时间：{new Date(invite.invited_at).toLocaleDateString()}
+        <Card>
+          <CardBody className="space-y-4">
+            <div>
+              <div className="text-xs text-brand-paper-mute mb-2 font-medium uppercase tracking-wider">
+                你的邀请码
+              </div>
+              <div className="flex items-center justify-between bg-brand-ink-deep rounded-nest-md p-3 border border-brand-gold-deep/30">
+                <span className="text-2xl font-mono text-brand-gold tracking-widest text-glow-gold">
+                  {inviteCode || '------'}
+                </span>
+                <Button variant="outline" size="sm" onClick={copyInviteCode}>
+                  复制
+                </Button>
+              </div>
+            </div>
+
+            <div>
+              <div className="text-xs text-brand-paper-mute mb-2 font-medium uppercase tracking-wider">
+                分享链接
+              </div>
+              <div className="flex items-center justify-between bg-brand-ink-deep rounded-nest-md p-3 border border-brand-gold-deep/30">
+                <span className="text-sm text-brand-paper-mute truncate flex-1 mr-3">
+                  点击复制完整链接
+                </span>
+                <Button variant="outline" size="sm" onClick={copyShareLink}>
+                  复制
+                </Button>
+              </div>
+            </div>
+          </CardBody>
+        </Card>
+
+        {progress?.invite_list && progress.invite_list.length > 0 && (
+          <Card>
+            <CardHeader>盟友记录</CardHeader>
+            <CardBody className="p-0">
+              <ul className="divide-y divide-brand-gold-deep/20">
+                {progress.invite_list.map((invite: any) => (
+                  <li
+                    key={invite.invitee_id}
+                    className="flex items-center justify-between px-5 py-3"
+                  >
+                    <div>
+                      <div className="text-sm font-medium text-brand-paper">
+                        {invite.invitee_nickname}
+                      </div>
+                      <div className="text-xs text-brand-mute">
+                        邀请于{' '}
+                        {new Date(invite.invited_at).toLocaleDateString()}
+                      </div>
                     </div>
-                  </div>
-                  <div>
                     {invite.is_active ? (
-                      <span className="text-green-600 text-sm">✓ 已活跃</span>
+                      <span className="text-xs px-2 py-0.5 rounded-nest-sm bg-brand-vitality/20 text-brand-vitality border border-brand-vitality/40">
+                        ✓ 已活跃
+                      </span>
                     ) : (
-                      <span className="text-yellow-600 text-sm">等待活跃中...</span>
+                      <span className="text-xs text-brand-mute font-serif italic">
+                        等待活跃
+                      </span>
                     )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </Card>
+                  </li>
+                ))}
+              </ul>
+            </CardBody>
+          </Card>
+        )}
 
-        {/* 邀请规则说明 */}
-        <div className="mt-8 bg-white rounded-lg shadow-lg p-6">
-          <h2 className="text-2xl font-bold mb-4">邀请规则</h2>
-          <div className="space-y-3 text-gray-700">
-            <p>1. 分享你的邀请码或分享链接给好友</p>
-            <p>2. 好友使用邀请码注册成功</p>
-            <p>3. 好友活跃7天后，计入你的邀请进度</p>
-            <p>4. 邀请满3人，自动解锁个人小程序</p>
-            <p>5. 小程序是引流工具，所有深度交互引导回App</p>
-            <div className="mt-4 p-4 bg-yellow-50 rounded-lg">
-              <p className="text-sm text-yellow-800">
-                ⚠️ 防止刷邀请：同一设备不可重复注册，被邀请人需活跃7天才计入进度
+        <Card variant="sunken">
+          <CardBody className="p-5">
+            <h3 className="font-serif text-sm text-brand-paper mb-3">邀请规则</h3>
+            <ol className="text-xs text-brand-paper-mute space-y-1.5 list-decimal list-inside leading-relaxed">
+              <li>将邀请码或分享链接发给好友</li>
+              <li>好友凭邀请码完成注册</li>
+              <li>好友活跃 7 天后，计入你的进度</li>
+              <li>满 3 人，自动解锁你的小程序</li>
+            </ol>
+            <div className="mt-4 p-3 bg-brand-beacon/10 border border-brand-beacon/30 rounded-nest-sm">
+              <p className="text-xs text-brand-beacon">
+                ⚠ 防刷机制：同设备不可重复注册，被邀请人需活跃 7 天计入进度
               </p>
             </div>
-          </div>
-        </div>
+          </CardBody>
+        </Card>
       </div>
-    </div>
+    </LayoutShell>
   );
 }

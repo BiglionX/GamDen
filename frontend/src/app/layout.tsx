@@ -1,22 +1,21 @@
-import './globals.css'
-import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
-
-const inter = Inter({ subsets: ['latin'] })
+import './globals.css';
+import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'GamDen - 游戏巢穴社区',
-  description: '一个独立于算法的游戏社交平台',
-}
+  title: 'GamDen · 游戏巢穴社区',
+  description: '在算法之外，建一座游戏巢穴',
+};
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <html lang="zh-CN">
-      <body className={inter.className}>{children}</body>
+      <body className="bg-brand-ink text-brand-paper antialiased">
+        {children}
+      </body>
     </html>
-  )
+  );
 }

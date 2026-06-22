@@ -12,29 +12,25 @@ const api = axios.create({
 // 请求拦截器
 api.interceptors.request.use(
   (config) => {
-    // 从localStorage获取Token
     const token = localStorage.getItem('gamden_token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
-// 响应拦截器
+// 响应拦截器：解包 axios response，直接返回业务数据
 api.interceptors.response.use(
-  (response) => {
-    return response.data;
-  },
+  (response) => response.data,
   (error) => {
-    // Token过期处理
     if (error.response?.status === 401) {
       localStorage.removeItem('gamden_token');
       localStorage.removeItem('gamden_user');
-      window.location.href = '/auth/login';
+      if (typeof window !== 'undefined') {
+        window.location.href = '/auth/login';
+      }
     }
     return Promise.reject(error);
   }
@@ -42,110 +38,87 @@ api.interceptors.response.use(
 
 // 认证API
 export const authAPI = {
-  // 注册
   register: (data: {
     phone: string;
     password: string;
     invite_code: string;
     guardian_type: string;
     nickname?: string;
-  }) => api.post('/api/auth/register', data),
-  
-  // 登录
+  }) => api.post('/api/auth/register', data) as Promise<any>,
+
   login: (data: { phone: string; password: string }) =>
-    api.post('/api/auth/login', data),
-  
-  // 刷新Token
+    api.post('/api/auth/login', data) as Promise<any>,
+
   refreshToken: (refresh_token: string) =>
-    api.post('/api/auth/refresh', { refresh_token }),
+    api.post('/api/auth/refresh', { refresh_token }) as Promise<any>,
 };
 
 // 领地API
 export const territoryAPI = {
-  // 获取领地详情
-  getInfo: () => api.get('/api/territory/info'),
-  
-  // 查看周围邻居
+  getInfo: () => api.get('/api/territory/info') as Promise<any>,
+
   getNearby: (range?: number) =>
-    api.get(`/api/map/nearby?range=${range || 10}`),
-  
-  // 更新签名
+    api.get(`/api/map/nearby?range=${range || 10}`) as Promise<any>,
+
   updateSignature: (signature: string) =>
-    api.put('/api/territory/signature', { signature }),
+    api.put('/api/territory/signature', { signature }) as Promise<any>,
 };
 
 // 邀请API
 export const inviteAPI = {
-  // 获取邀请码
-  getCode: () => api.get('/api/invite/code'),
-  
-  // 查看邀请进度
-  getProgress: () => api.get('/api/invite/progress'),
-  
-  // 获取分享链接
-  getShareLink: () => api.get('/api/invite/share'),
+  getCode: () => api.get('/api/invite/code') as Promise<any>,
+
+  getProgress: () => api.get('/api/invite/progress') as Promise<any>,
+
+  getShareLink: () => api.get('/api/invite/share') as Promise<any>,
 };
 
 // 俱乐部API
 export const clubAPI = {
-  // 创建俱乐部
   create: (data: { name: string; game_name: string; description?: string }) =>
-    api.post('/api/club/create', data),
-  
-  // 获取俱乐部列表
+    api.post('/api/club/create', data) as Promise<any>,
+
   getList: (params?: { page?: number; limit?: number; game_name?: string }) =>
-    api.get('/api/club/list', { params }),
-  
-  // 获取俱乐部详情
-  getDetail: (clubId: number) => api.get(`/api/club/${clubId}`),
-  
-  // 发帖
+    api.get('/api/club/list', { params }) as Promise<any>,
+
+  getDetail: (clubId: number) => api.get(`/api/club/${clubId}`) as Promise<any>,
+
   createPost: (data: { club_id: number; content: string }) =>
-    api.post('/api/club/post', data),
-  
-  // 获取帖子列表
+    api.post('/api/club/post', data) as Promise<any>,
+
   getPosts: (clubId: number, params?: { page?: number; limit?: number }) =>
-    api.get(`/api/club/${clubId}/posts`, { params }),
-  
-  // 回复帖子
+    api.get(`/api/club/${clubId}/posts`, { params }) as Promise<any>,
+
   createReply: (data: { post_id: number; content: string }) =>
-    api.post('/api/club/reply', data),
+    api.post('/api/club/reply', data) as Promise<any>,
 };
 
 // 商城API
 export const shopAPI = {
-  // 获取金币余额
-  getGold: () => api.get('/api/shop/gold'),
-  
-  // 签到
-  signIn: () => api.post('/api/shop/sign-in'),
-  
-  // 兑换头像框
+  getGold: () => api.get('/api/shop/gold') as Promise<any>,
+
+  signIn: () => api.post('/api/shop/sign-in') as Promise<any>,
+
   exchangeAvatarFrame: (item_id: string) =>
-    api.post('/api/shop/exchange/avatar-frame', { item_id }),
-  
-  // 兑换聊天气泡
+    api.post('/api/shop/exchange/avatar-frame', { item_id }) as Promise<any>,
+
   exchangeChatBubble: (item_id: string) =>
-    api.post('/api/shop/exchange/chat-bubble', { item_id }),
-  
-  // 兑换特殊签名
+    api.post('/api/shop/exchange/chat-bubble', { item_id }) as Promise<any>,
+
   exchangeSpecialSignature: (days?: number) =>
-    api.post('/api/shop/exchange/special-signature', { days }),
-  
-  // 获取金币流水
+    api.post('/api/shop/exchange/special-signature', { days }) as Promise<any>,
+
   getTransactions: (params?: { page?: number; limit?: number }) =>
-    api.get('/api/shop/transactions', { params }),
+    api.get('/api/shop/transactions', { params }) as Promise<any>,
 };
 
 // Agent API
 export const agentAPI = {
-  // 获取守护灵回复
   getResponse: (trigger_event: string) =>
-    api.get(`/api/agent/response?trigger_event=${trigger_event}`),
-  
-  // 获取对话历史
+    api.get(`/api/agent/response?trigger_event=${trigger_event}`) as Promise<any>,
+
   getDialogues: (limit?: number) =>
-    api.get(`/api/agent/dialogues?limit=${limit || 20}`),
+    api.get(`/api/agent/dialogues?limit=${limit || 20}`) as Promise<any>,
 };
 
 export default api;
