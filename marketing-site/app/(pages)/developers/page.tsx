@@ -1,3 +1,4 @@
+"use client"
 import { motion } from 'framer-motion';
 import { Code, BookOpen, Users, Gamepad2, Shield, Zap } from 'lucide-react';
 

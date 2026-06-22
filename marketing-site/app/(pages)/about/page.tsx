@@ -1,3 +1,4 @@
+"use client"
 import { motion } from 'framer-motion';
 import { Users, Calendar, Target, Award, Heart, Rocket } from 'lucide-react';
 
