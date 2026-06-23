@@ -9,3 +9,6 @@ coverage/
 .idea/
 .vscode/
 *.tsbuildinfo
+
+# NestJS backend 需要 package-lock.json 做可重复构建
+!package-lock.json
