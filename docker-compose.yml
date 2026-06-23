@@ -1,10 +1,10 @@
 version: '3.8'
 
 services:
-  # GamDen后端服务
+  # GamDen 后端服务 (NestJS)
   gamden-backend:
     build:
-      context: ./backend
+      context: ./gamden-backend
       dockerfile: Dockerfile
     container_name: gamden-backend
     ports:
@@ -12,15 +12,15 @@ services:
     env_file:
       - .env
     depends_on:
-      - mysql
+      - gamden-postgres
       - redis
     networks:
       - gamden-network
     restart: unless-stopped
     volumes:
-      - ./backend/logs:/app/logs
+      - ./gamden-backend/logs:/app/logs
 
-  # GamDen前端服务（Next.js）
+  # GamDen 前端服务 (Next.js)
   gamden-frontend:
     build:
       context: ./frontend
@@ -34,26 +34,30 @@ services:
       - gamden-network
     restart: unless-stopped
 
-  # MySQL数据库
-  mysql:
-    image: mysql:8.0
-    container_name: gamden-mysql
+  # PostgreSQL 数据库 (NestJS 后端使用)
+  gamden-postgres:
+    image: postgres:16-alpine
+    container_name: gamden-postgres
     environment:
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
-      MYSQL_DATABASE: ${DB_NAME}
-      MYSQL_CHARACTER_SET_SERVER: utf8mb4
-      MYSQL_COLLATION_SERVER: utf8mb4_unicode_ci
+      POSTGRES_USER: ${DB_USERNAME:-gamden}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-gamden_secret}
+      POSTGRES_DB: ${DB_DATABASE:-gamden}
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=C"
     ports:
-      - "3306:3306"
+      - "5432:5432"
     volumes:
-      - mysql_data:/var/lib/mysql
-      - ./backend/sql:/docker-entrypoint-initdb.d
+      - postgres_data:/var/lib/postgresql/data
+      - ./gamden-backend/src/entities/init:/docker-entrypoint-initdb.d:ro
     networks:
       - gamden-network
     restart: unless-stopped
-    command: --default-authentication-plugin=mysql_native_password
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-gamden} -d ${DB_DATABASE:-gamden}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-  # Redis缓存
+  # Redis 缓存
   redis:
     image: redis:6.0
     container_name: gamden-redis
@@ -94,7 +98,7 @@ services:
       - gamden-network
     restart: unless-stopped
 
-  # Nginx反向代理
+  # Nginx 反向代理
   nginx:
     image: nginx:alpine
     container_name: gamden-nginx
@@ -117,6 +121,6 @@ networks:
     driver: bridge
 
 volumes:
-  mysql_data:
+  postgres_data:
   redis_data:
   openim_data:
