@@ -1,0 +1,8 @@
+# 占位文件 - 业务组件后续在此目录扩展
+# 建议目录结构：
+#   components/
+#     ├── AppHeader.vue          顶部导航
+#     ├── TerritoryNode.vue      地图领地节点
+#     ├── NeighborPopover.vue    邻居弹出卡
+#     ├── GuardianDialog.vue     守护灵话术气泡
+#     └── ClubCard.vue           俱乐部卡片

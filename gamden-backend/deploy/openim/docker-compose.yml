@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: openim-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: openim_root_2026
+      MYSQL_DATABASE: openim_v2
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - openim_mysql:/var/lib/mysql
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 200M
+
+  redis:
+    image: redis:6-alpine
+    container_name: openim-redis
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 80M
+
+  openim-server:
+    image: openim/openim-server:latest
+    container_name: openim-server
+    ports:
+      - 10002:10002
+      - 10001:10001
+    volumes:
+      - openim_data:/data
+      - ./skip-memory-check.sh:/openim-server/_output/bin/tools/linux/amd64/check-free-memory:ro
+    environment:
+      - MYSQL_ADDRESS=openim-mysql:3306
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=openim_root_2026
+      - MYSQL_DATABASE=openim_v2
+      - REDIS_ADDRESS=openim-redis:6379
+      - OPENIM_IP=43.160.220.131
+    depends_on:
+      - mysql
+      - redis
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 700M
+
+volumes:
+  openim_mysql:
+  openim_data:

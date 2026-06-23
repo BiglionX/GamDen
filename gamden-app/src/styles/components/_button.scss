@@ -1,0 +1,213 @@
+/**
+ * GamDen 古风按钮 mixin
+ *
+ * 设计特点：
+ *  - 金色渐变背景（#c9a87c → #a8895f）
+ *  - 双向细线纹理（古风织锦感）
+ *  - 金色光晕阴影
+ *  - 三种尺寸：sm / base / lg
+ *
+ * 用法：
+ *   @include ancient-btn;
+ *   @include ancient-btn($size: 'lg');
+ *   @include ghost-btn;  // 次按钮（透明）
+ */
+@use '../variables' as *;
+
+@mixin ancient-btn(
+  $size: 'base',
+  $full-width: true,
+  $disabled: false
+) {
+  @if $size == 'sm' {
+    height: $gamden-button-height-sm;
+    padding: 0 $gamden-spacing-md;
+    font-size: $gamden-font-size-sm;
+    border-radius: $gamden-radius-round;
+  } @else if $size == 'lg' {
+    height: $gamden-button-height-lg;
+    padding: 0 $gamden-spacing-xl;
+    font-size: $gamden-font-size-lg;
+    border-radius: $gamden-radius-xl;
+  } @else {
+    height: $gamden-button-height-base;
+    padding: 0 $gamden-spacing-lg;
+    font-size: $gamden-font-size-md;
+    border-radius: $gamden-radius-round;
+  }
+
+  @if $full-width {
+    width: 100%;
+  }
+
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: $gamden-font-weight-semibold;
+  letter-spacing: 4rpx;
+  color: $gamden-text-on-gold;
+  background: linear-gradient(135deg, $gamden-gold 0%, $gamden-gold-dark 100%);
+  border: none;
+  box-shadow: $gamden-shadow-gold;
+  transition: all $gamden-duration-fast $gamden-ease-ancient;
+
+  // 古风织锦纹理（双向细线）
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background-image:
+      repeating-linear-gradient(
+        45deg,
+        rgba(255, 255, 255, 0.06) 0,
+        rgba(255, 255, 255, 0.06) 1rpx,
+        transparent 1rpx,
+        transparent 5rpx
+      ),
+      repeating-linear-gradient(
+        -45deg,
+        rgba(0, 0, 0, 0.06) 0,
+        rgba(0, 0, 0, 0.06) 1rpx,
+        transparent 1rpx,
+        transparent 5rpx
+      );
+    pointer-events: none;
+  }
+
+  // 高光（顶部）
+  &::after {
+    content: '';
+    position: absolute;
+    top: 4rpx;
+    left: 10%;
+    right: 10%;
+    height: 1rpx;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.5) 50%,
+      transparent 100%
+    );
+    pointer-events: none;
+  }
+
+  text {
+    color: inherit;
+    z-index: 1;
+  }
+
+  &:active:not([disabled]) {
+    transform: scale(0.97);
+    box-shadow: $gamden-shadow-xs;
+  }
+
+  @if $disabled {
+    background: $gamden-color-disabled;
+    color: $gamden-text-placeholder;
+    box-shadow: none;
+    cursor: not-allowed;
+    &::before {
+      opacity: 0;
+    }
+  }
+}
+
+/**
+ * 次按钮（透明 + 金色描边）
+ */
+@mixin ghost-btn(
+  $size: 'base',
+  $full-width: true
+) {
+  @if $size == 'sm' {
+    height: $gamden-button-height-sm;
+    padding: 0 $gamden-spacing-md;
+    font-size: $gamden-font-size-sm;
+    border-radius: $gamden-radius-round;
+  } @else if $size == 'lg' {
+    height: $gamden-button-height-lg;
+    padding: 0 $gamden-spacing-xl;
+    font-size: $gamden-font-size-lg;
+    border-radius: $gamden-radius-xl;
+  } @else {
+    height: $gamden-button-height-base;
+    padding: 0 $gamden-spacing-lg;
+    font-size: $gamden-font-size-md;
+    border-radius: $gamden-radius-round;
+  }
+
+  @if $full-width {
+    width: 100%;
+  }
+
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: $gamden-font-weight-semibold;
+  letter-spacing: 4rpx;
+  color: $gamden-text-secondary;
+  background: transparent;
+  border: $gamden-border-width-base solid $gamden-border-strong;
+  transition: all $gamden-duration-fast $gamden-ease-ancient;
+
+  text {
+    color: inherit;
+  }
+
+  &:active {
+    background: $gamden-gold-soft;
+    border-color: $gamden-border-active;
+    color: $gamden-text-primary;
+  }
+}
+
+/**
+ * 危险按钮（烽火红）
+ */
+@mixin fire-btn(
+  $size: 'base',
+  $full-width: true
+) {
+  @if $size == 'sm' {
+    height: $gamden-button-height-sm;
+    padding: 0 $gamden-spacing-md;
+    font-size: $gamden-font-size-sm;
+    border-radius: $gamden-radius-round;
+  } @else if $size == 'lg' {
+    height: $gamden-button-height-lg;
+    padding: 0 $gamden-spacing-xl;
+    font-size: $gamden-font-size-lg;
+    border-radius: $gamden-radius-xl;
+  } @else {
+    height: $gamden-button-height-base;
+    padding: 0 $gamden-spacing-lg;
+    font-size: $gamden-font-size-md;
+    border-radius: $gamden-radius-round;
+  }
+
+  @if $full-width {
+    width: 100%;
+  }
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: $gamden-font-weight-semibold;
+  letter-spacing: 4rpx;
+  color: $gamden-paper;
+  background: linear-gradient(135deg, $gamden-fire-light 0%, $gamden-fire 100%);
+  border: none;
+  box-shadow: 0 4rpx 16rpx rgba(192, 57, 43, 0.4);
+  transition: all $gamden-duration-fast $gamden-ease-ancient;
+
+  text {
+    color: inherit;
+  }
+
+  &:active {
+    transform: scale(0.97);
+  }
+}

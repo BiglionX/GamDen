@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  GamDen 巢穴暗纹聊天背景（SVG）
+  ----------------------------------------------------------------------
+  用于 OpenIM 聊天页背景，替代默认 talk_bg.jpeg
+
+  设计要点：
+  - 巢穴墨基底：#1E241F
+  - 径向点阵纹理（模拟巢穴洞穴感）
+  - 金色点缀：#C9A87C（领地金，低透明度）
+  - 轻微纸张纹理感
+
+  使用方式：
+  - H5/Web: 直接作为 background-image
+  - 小程序/App: 可转为 base64 或直接引用
+
+  尺寸：750 x 2000 rpx（适配 UniApp rpx 单位）
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 2000" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <!-- 主背景渐变 -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1E241F"/>
+      <stop offset="50%" stop-color="#1a1f1b"/>
+      <stop offset="100%" stop-color="#161a15"/>
+    </linearGradient>
+
+    <!-- 金色点缀点 -->
+    <radialGradient id="goldDot">
+      <stop offset="0%" stop-color="rgba(201, 168, 124, 0.06)"/>
+      <stop offset="100%" stop-color="transparent"/>
+    </radialGradient>
+
+    <!-- 纸张纹理 -->
+    <pattern id="paperGrain" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect width="4" height="4" fill="#1E241F"/>
+      <circle cx="1" cy="1" r="0.3" fill="rgba(201, 168, 124, 0.02)"/>
+      <circle cx="3" cy="3" r="0.2" fill="rgba(201, 168, 124, 0.015)"/>
+    </pattern>
+
+    <!-- 巢穴纹理（大点） -->
+    <pattern id="nestPattern" width="48" height="48" patternUnits="userSpaceOnUse">
+      <circle cx="12" cy="12" r="1" fill="rgba(201, 168, 124, 0.04)"/>
+      <circle cx="36" cy="36" r="1" fill="rgba(201, 168, 124, 0.03)"/>
+      <circle cx="24" cy="24" r="1.5" fill="rgba(201, 168, 124, 0.02)"/>
+    </pattern>
+
+    <!-- 对角线纹理 -->
+    <pattern id="diagonalLines" width="96" height="96" patternUnits="userSpaceOnUse">
+      <line x1="0" y1="0" x2="96" y2="96" stroke="rgba(201, 168, 124, 0.015)" stroke-width="0.5"/>
+      <line x1="96" y1="0" x2="0" y2="96" stroke="rgba(201, 168, 124, 0.01)" stroke-width="0.5"/>
+    </pattern>
+  </defs>
+
+  <!-- 主背景 -->
+  <rect width="100%" height="100%" fill="url(#bgGrad)"/>
+
+  <!-- 纸张纹理层 -->
+  <rect width="100%" height="100%" fill="url(#paperGrain)"/>
+
+  <!-- 巢穴点阵层 -->
+  <rect width="100%" height="100%" fill="url(#nestPattern)"/>
+
+  <!-- 对角线纹理层 -->
+  <rect width="100%" height="100%" fill="url(#diagonalLines)"/>
+
+  <!-- 额外的氛围光效（顶部） -->
+  <ellipse cx="375" cy="0" rx="500" ry="200" fill="url(#goldDot)" opacity="0.3"/>
+
+  <!-- 底部氛围光效 -->
+  <ellipse cx="375" cy="2000" rx="400" ry="150" fill="rgba(201, 168, 124, 0.02)"/>
+</svg>

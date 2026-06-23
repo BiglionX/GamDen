@@ -1,0 +1,103 @@
+/**
+ * GamDen 古风卡片 mixin
+ *
+ * 设计特点：
+ *  - 墨色渐变底（#2a3128 → #1e241f）
+ *  - 金色边框（1-2rpx）
+ *  - 多层径向点阵纹理（模拟纸张暗纹）
+ *  - 角落古风装饰（四角小方块）
+ *
+ * 用法：
+ *   @include ancient-card;
+ *   @include ancient-card($padding: 32rpx, $radius: 24rpx);
+ */
+@use '../variables' as *;
+
+@mixin ancient-card(
+  $padding: $gamden-spacing-base,
+  $radius: $gamden-radius-lg,
+  $border-alpha: 0.35,
+  $with-paper: true
+) {
+  position: relative;
+  padding: $padding;
+  border-radius: $radius;
+  background: $gamden-bg-card;
+  border: $gamden-border-width-base solid rgba(201, 168, 124, $border-alpha);
+  box-shadow: $gamden-shadow-base;
+
+  @if $with-paper {
+    background-image:
+      // 纸张纤维 - 横向细线
+      repeating-linear-gradient(
+        0deg,
+        rgba(245, 240, 230, 0.015) 0,
+        rgba(245, 240, 230, 0.015) 1rpx,
+        transparent 1rpx,
+        transparent 4rpx
+      ),
+      // 金色暗纹 - 左上点阵
+      radial-gradient(
+        circle at 15% 15%,
+        rgba(201, 168, 124, 0.04) 1rpx,
+        transparent 1rpx
+      ),
+      // 金色暗纹 - 右下点阵
+      radial-gradient(
+        circle at 85% 85%,
+        rgba(201, 168, 124, 0.04) 1rpx,
+        transparent 1rpx
+      );
+    background-size:
+      100% 4rpx,
+      32rpx 32rpx,
+      32rpx 32rpx;
+  }
+
+  // 四角古风装饰（小方框）
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    width: 16rpx;
+    height: 16rpx;
+    border: 2rpx solid $gamden-gold;
+    opacity: 0.5;
+    pointer-events: none;
+  }
+  &::before {
+    top: 8rpx;
+    left: 8rpx;
+    border-right: none;
+    border-bottom: none;
+  }
+  &::after {
+    bottom: 8rpx;
+    right: 8rpx;
+    border-left: none;
+    border-top: none;
+  }
+}
+
+/**
+ * 轻量级卡片（无四角装饰，用于密集列表）
+ */
+@mixin paper-card(
+  $padding: $gamden-spacing-md,
+  $radius: $gamden-radius-md
+) {
+  padding: $padding;
+  border-radius: $radius;
+  background: $gamden-bg-card-flat;
+  border: $gamden-border-width-thin solid $gamden-border-soft;
+  box-shadow: $gamden-shadow-xs;
+}
+
+/**
+ * 凸起卡片（hover/active 状态）
+ */
+@mixin raised-card {
+  transform: translateY(-4rpx);
+  box-shadow: $gamden-shadow-lg, $gamden-shadow-gold;
+  border-color: $gamden-border-strong;
+}

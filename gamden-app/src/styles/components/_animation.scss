@@ -1,0 +1,148 @@
+/**
+ * GamDen 动画工具 mixin
+ *
+ * 设计原则：
+ *  - 古风韵律（缓入缓出 + 弹性）
+ *  - 微交互（200-300ms）
+ *  - 减少动画（尊重 prefers-reduced-motion）
+ *
+ * 用法：
+ *   @include fade-in($duration: 300ms);
+ *   @include slide-up(20rpx);
+ *   @include pulse-glow;
+ */
+@use '../variables' as *;
+
+@keyframes gamden-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes gamden-fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes gamden-slide-up {
+  from { transform: translateY(40rpx); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes gamden-slide-down {
+  from { transform: translateY(-40rpx); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes gamden-scale-pop {
+  from { transform: scale(0.85); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes gamden-pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 $gamden-gold-soft;
+  }
+  50% {
+    box-shadow: 0 0 24rpx 8rpx $gamden-gold-glow;
+  }
+}
+
+@keyframes gamden-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes gamden-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/**
+ * 淡入
+ */
+@mixin fade-in($duration: $gamden-duration-base) {
+  animation: gamden-fade-in $duration $gamden-ease-out both;
+}
+
+@mixin fade-out($duration: $gamden-duration-base) {
+  animation: gamden-fade-out $duration $gamden-ease-out both;
+}
+
+/**
+ * 滑入（从下）
+ */
+@mixin slide-up($distance: 40rpx, $duration: $gamden-duration-base) {
+  animation: gamden-slide-up $duration $gamden-ease-ancient both;
+  @if $distance != 40rpx {
+    @keyframes gamden-slide-up {
+      from { transform: translateY($distance); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+  }
+}
+
+/**
+ * 滑入（从上）
+ */
+@mixin slide-down($distance: 40rpx, $duration: $gamden-duration-base) {
+  animation: gamden-slide-down $duration $gamden-ease-ancient both;
+}
+
+/**
+ * 弹出（古风弹性）
+ */
+@mixin pop($duration: $gamden-duration-base) {
+  animation: gamden-scale-pop $duration $gamden-ease-bounce both;
+}
+
+/**
+ * 金色脉冲光晕（按钮/重要元素）
+ */
+@mixin pulse-glow($duration: 2s) {
+  animation: gamden-pulse-glow $duration ease-in-out infinite;
+}
+
+/**
+ * 流光（loading / 加载中）
+ */
+@mixin shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(201, 168, 124, 0.3) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: gamden-shimmer 1.5s linear infinite;
+}
+
+/**
+ * 旋转（loading）
+ */
+@mixin spin($duration: 1s) {
+  animation: gamden-spin $duration linear infinite;
+}
+
+/**
+ * 减少动画偏好（a11y）
+ * - 尊重用户的系统设置
+ * - 所有动画立即完成
+ */
+@mixin reduce-motion {
+  @media (prefers-reduced-motion: reduce) {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/**
+ * 通用过渡
+ */
+@mixin transition-base {
+  transition: all $gamden-duration-base $gamden-ease-ancient;
+}
+
+@mixin transition-fast {
+  transition: all $gamden-duration-fast $gamden-ease-out;
+}

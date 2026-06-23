@@ -1,0 +1,17 @@
+/**
+ * GamDen 样式系统统一入口
+ *
+ * 用法：
+ *   @use '@/styles/index' as *;
+ *   // 现在可以访问所有变量、mixin、class
+ *
+ * 此文件仅作为聚合入口（forward）
+ * 真正的样式效果通过 App.vue 的 <style lang="scss"> 引入 global.scss 来生效
+ */
+
+@forward './variables';
+@forward './components/card';
+@forward './components/button';
+@forward './components/text';
+@forward './components/safe-area';
+@forward './components/animation';

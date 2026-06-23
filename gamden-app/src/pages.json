@@ -1,0 +1,173 @@
+﻿{
+  "easycom": {
+    "autoscan": true,
+    "custom": {
+      "^u-(.*)": "uview-plus/components/u-$1/u-$1.vue"
+    }
+  },
+  "pages": [
+    {
+      "path": "pages/map/index",
+      "style": {
+        "navigationBarTitleText": "领地地图",
+        "navigationStyle": "custom",
+        "disableScroll": false
+      }
+    },
+    {
+      "path": "pages/club/index",
+      "style": {
+        "navigationBarTitleText": "俱乐部",
+        "enablePullDownRefresh": true
+      }
+    },
+    {
+      "path": "pages/club/detail",
+      "style": {
+        "navigationBarTitleText": "俱乐部详情"
+      }
+    },
+    {
+      "path": "pages/market/index",
+      "style": {
+        "navigationBarTitleText": "集市",
+        "enablePullDownRefresh": true
+      }
+    },
+    {
+      "path": "pages/profile/index",
+      "style": {
+        "navigationBarTitleText": "我的巢穴"
+      }
+    },
+    {
+      "path": "pages/auth/login",
+      "style": {
+        "navigationBarTitleText": "入驻巢穴",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/im/messages",
+      "style": {
+        "navigationBarTitleText": "消息中心",
+        "enablePullDownRefresh": true
+      }
+    },
+    {
+      "path": "pages/im/chat",
+      "style": {
+        "navigationBarTitleText": "私聊",
+        "enablePullDownRefresh": true,
+        "disableScroll": false
+      }
+    },
+    {
+      "path": "pages/invite/poster",
+      "style": {
+        "navigationBarTitleText": "分享邀请",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/invite/mini-program",
+      "style": {
+        "navigationBarTitleText": "我的小程序",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/invite/certification-type",
+      "style": {
+        "navigationBarTitleText": "选择主体类型",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/celebration/index",
+      "style": {
+        "navigationBarTitleText": "里程碑解锁",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/admin/login",
+      "style": {
+        "navigationBarTitleText": "管理员登录",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/admin/index",
+      "style": {
+        "navigationBarTitleText": "运营后台",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/admin/user-list",
+      "style": {
+        "navigationBarTitleText": "用户申请列表"
+      }
+    },
+    {
+      "path": "pages/admin/user-detail",
+      "style": {
+        "navigationBarTitleText": "用户申请详情"
+      }
+    },
+    {
+      "path": "pages/admin/tutorials",
+      "style": {
+        "navigationBarTitleText": "教程管理"
+      }
+    },
+    {
+      "path": "pages/admin/faqs",
+      "style": {
+        "navigationBarTitleText": "FAQ 管理"
+      }
+    }
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "GamDen · 游戏巢穴",
+    "navigationBarBackgroundColor": "#1E241F",
+    "backgroundColor": "#1E241F",
+    "backgroundTextStyle": "dark"
+  },
+  "tabBar": {
+    "color": "#A89E85",
+    "selectedColor": "#C9A87C",
+    "backgroundColor": "#1E241F",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/map/index",
+        "text": "领地"
+      },
+      {
+        "pagePath": "pages/club/index",
+        "text": "俱乐部"
+      },
+      {
+        "pagePath": "pages/market/index",
+        "text": "集市"
+      },
+      {
+        "pagePath": "pages/profile/index",
+        "text": "我的"
+      }
+    ]
+  },
+  "condition": {
+    "current": 0,
+    "list": [
+      {
+        "name": "map",
+        "path": "pages/map/index",
+        "query": ""
+      }
+    ]
+  }
+}

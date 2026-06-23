@@ -1,0 +1,219 @@
+/**
+ * GamDen 全局样式变量（SCSS Tokens）
+ *
+ * 设计原则：
+ *  1. 单一事实源 - 所有颜色/字号/间距/动画都从此处导出
+ *  2. 语义化命名 - 业务侧用 $color-text-primary 而非 $color-1
+ *  3. 古风主题 - 配色与古风元素呼应（墨/金/宣纸/烽火/生机）
+ *  4. rpx 单位 - 全部使用 rpx 自动适配不同屏幕宽度（750rpx = iPhone6 屏宽）
+ *
+ * 与 uni.scss 的关系：
+ *  - uni.scss 仍然维护 uview-plus 主题兼容（$u-* 系列）
+ *  - 本文件定义 GamDen 业务级 tokens（$gamden-* 系列），两者并存
+ *  - 业务页面/组件统一引用本文件的变量，避免硬编码
+ */
+
+/* ============================================================
+ * 品牌色（5 色核心系统）
+ * ============================================================ */
+
+// 巢穴墨 - 主背景 / 夜色基调
+$gamden-ink: #1e241f;
+$gamden-ink-light: #262d27;
+$gamden-ink-grey: #2f3830;
+$gamden-ink-deep: #14181a;
+
+// 领地金 - 品牌色 / 主按钮 / 强调
+$gamden-gold: #c9a87c;
+$gamden-gold-light: #d8be95;
+$gamden-gold-dark: #a8895f;
+$gamden-gold-soft: rgba(201, 168, 124, 0.15);
+$gamden-gold-glow: rgba(201, 168, 124, 0.4);
+
+// 宣纸白 - 主文字 / 卡片底色
+$gamden-paper: #f5f0e6;
+$gamden-paper-soft: #d6cfc0;
+$gamden-paper-mute: #a89e85;
+$gamden-paper-dim: #8a7f63;
+
+// 烽火红 - 警告 / 未读 / 危险
+$gamden-fire: #c0392b;
+$gamden-fire-light: #e25548;
+$gamden-fire-soft: rgba(192, 57, 43, 0.15);
+
+// 生机绿 - 成功 / 升级 / 在线
+$gamden-verdant: #5a8f6c;
+$gamden-verdant-light: #7ab088;
+$gamden-verdant-soft: rgba(90, 143, 108, 0.15);
+
+/* ============================================================
+ * 语义化颜色（业务层直接使用）
+ * ============================================================ */
+
+// 文字
+$gamden-text-primary: $gamden-paper;
+$gamden-text-regular: $gamden-paper-soft;
+$gamden-text-secondary: $gamden-paper-mute;
+$gamden-text-placeholder: $gamden-paper-dim;
+$gamden-text-on-gold: $gamden-ink-deep; // 金色背景上的文字（深墨）
+$gamden-text-link: $gamden-gold-light;
+
+// 背景
+$gamden-bg-page: $gamden-ink; // 页面底色
+$gamden-bg-card: linear-gradient(180deg, #2a3128 0%, #1e241f 100%); // 卡片底色
+$gamden-bg-card-flat: $gamden-ink-light; // 扁平卡片
+$gamden-bg-overlay: rgba(0, 0, 0, 0.65); // 蒙层
+
+// 边框
+$gamden-border-default: rgba(201, 168, 124, 0.25);
+$gamden-border-strong: rgba(201, 168, 124, 0.5);
+$gamden-border-soft: rgba(201, 168, 124, 0.12);
+$gamden-border-active: $gamden-gold;
+
+// 状态色
+$gamden-color-primary: $gamden-gold;
+$gamden-color-success: $gamden-verdant;
+$gamden-color-warning: $gamden-fire;
+$gamden-color-danger: $gamden-fire;
+$gamden-color-info: #8a8a8a;
+$gamden-color-disabled: #5a5a5a;
+
+/* ============================================================
+ * 字号梯度（rpx）
+ * ============================================================ */
+$gamden-font-size-xs: 20rpx; // 辅助说明
+$gamden-font-size-sm: 24rpx; // 次要文字
+$gamden-font-size-base: 28rpx; // 正文
+$gamden-font-size-md: 30rpx; // 重要正文
+$gamden-font-size-lg: 34rpx; // 小标题
+$gamden-font-size-xl: 40rpx; // 卡片标题
+$gamden-font-size-xxl: 48rpx; // 页面大标题
+$gamden-font-size-display: 64rpx; // 启动屏/Splash
+
+/* ============================================================
+ * 字重
+ * ============================================================ */
+$gamden-font-weight-light: 300;
+$gamden-font-weight-regular: 400;
+$gamden-font-weight-medium: 500;
+$gamden-font-weight-semibold: 600;
+$gamden-font-weight-bold: 700;
+
+/* ============================================================
+ * 行高
+ * ============================================================ */
+$gamden-line-height-tight: 1.2;
+$gamden-line-height-base: 1.5;
+$gamden-line-height-loose: 1.8;
+
+/* ============================================================
+ * 间距（rpx）- 8 倍数体系
+ * ============================================================ */
+$gamden-spacing-2xs: 4rpx;
+$gamden-spacing-xs: 8rpx;
+$gamden-spacing-sm: 12rpx;
+$gamden-spacing-md: 16rpx;
+$gamden-spacing-base: 24rpx;
+$gamden-spacing-lg: 32rpx;
+$gamden-spacing-xl: 48rpx;
+$gamden-spacing-2xl: 64rpx;
+$gamden-spacing-3xl: 96rpx;
+
+/* ============================================================
+ * 圆角（rpx）
+ * ============================================================ */
+$gamden-radius-none: 0;
+$gamden-radius-xs: 4rpx;
+$gamden-radius-sm: 8rpx;
+$gamden-radius-md: 16rpx;
+$gamden-radius-base: 24rpx;
+$gamden-radius-lg: 32rpx;
+$gamden-radius-xl: 48rpx;
+$gamden-radius-round: 9999rpx; // 圆形（按钮/头像）
+
+/* ============================================================
+ * 边框宽度
+ * ============================================================ */
+$gamden-border-width-thin: 1rpx;
+$gamden-border-width-base: 2rpx;
+$gamden-border-width-thick: 4rpx;
+
+/* ============================================================
+ * z-index 层级
+ * ============================================================ */
+$gamden-z-base: 0;
+$gamden-z-elevated: 100;
+$gamden-z-dropdown: 500;
+$gamden-z-sticky: 1000;
+$gamden-z-fixed: 2000;
+$gamden-z-modal: 5000;
+$gamden-z-popover: 7000;
+$gamden-z-toast: 8000;
+$gamden-z-bubble: 8500;
+$gamden-z-tooltip: 9000;
+$gamden-z-guide-bubble: 8000; // 游客软引导气泡
+$gamden-z-guide-modal: 9500; // 游客引导弹窗
+$gamden-z-dialog: 9800;
+$gamden-z-loading: 9900;
+
+/* ============================================================
+ * 阴影（古风晕染效果）
+ * ============================================================ */
+$gamden-shadow-xs: 0 2rpx 8rpx rgba(0, 0, 0, 0.2);
+$gamden-shadow-sm: 0 4rpx 12rpx rgba(0, 0, 0, 0.3);
+$gamden-shadow-base: 0 6rpx 20rpx rgba(0, 0, 0, 0.4);
+$gamden-shadow-lg: 0 12rpx 32rpx rgba(0, 0, 0, 0.5);
+$gamden-shadow-gold: 0 4rpx 16rpx rgba(201, 168, 124, 0.35);
+$gamden-shadow-gold-strong: 0 8rpx 32rpx rgba(201, 168, 124, 0.5);
+$gamden-shadow-inset: inset 0 2rpx 8rpx rgba(0, 0, 0, 0.3);
+
+/* ============================================================
+ * 动画时长
+ * ============================================================ */
+$gamden-duration-instant: 100ms;
+$gamden-duration-fast: 200ms;
+$gamden-duration-base: 300ms;
+$gamden-duration-slow: 500ms;
+$gamden-duration-slower: 800ms;
+
+/* ============================================================
+ * 缓动函数（古风：缓入缓出，避免突兀）
+ * ============================================================ */
+$gamden-ease-linear: linear;
+$gamden-ease-in: cubic-bezier(0.4, 0, 1, 1);
+$gamden-ease-out: cubic-bezier(0, 0, 0.2, 1);
+$gamden-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+$gamden-ease-ancient: cubic-bezier(0.22, 1, 0.36, 1); // 古风弹性
+$gamden-ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1); // 弹性
+
+/* ============================================================
+ * 字体栈（古风：思源宋体 + 系统衬线降级）
+ * ============================================================ */
+$gamden-font-serif: 'Noto Serif SC', 'Source Han Serif SC', 'Songti SC',
+  'STSong', 'SimSun', '宋体', serif;
+$gamden-font-sans: -apple-system, BlinkMacSystemFont, 'PingFang SC',
+  'Helvetica Neue', 'Microsoft YaHei', sans-serif;
+$gamden-font-mono: 'SF Mono', Menlo, Monaco, Consolas, 'Liberation Mono',
+  monospace;
+$gamden-font-fantasy: 'STKaiti', 'KaiTi', '楷体', cursive; // 楷体（点缀用）
+
+/* ============================================================
+ * 古风专有尺寸（特殊场景）
+ * ============================================================ */
+$gamden-card-min-height: 200rpx;
+$gamden-button-height-sm: 56rpx;
+$gamden-button-height-base: 80rpx;
+$gamden-button-height-lg: 96rpx;
+$gamden-avatar-sm: 64rpx;
+$gamden-avatar-base: 96rpx;
+$gamden-avatar-lg: 128rpx;
+$gamden-avatar-xl: 200rpx;
+
+/* ============================================================
+ * 安全区域（iPhone 刘海/灵动岛/底部 Home Indicator）
+ * 通过 env(safe-area-inset-*) 运行时获取真实值
+ * ============================================================ */
+$gamden-safe-area-top: env(safe-area-inset-top);
+$gamden-safe-area-bottom: env(safe-area-inset-bottom);
+$gamden-safe-area-left: env(safe-area-inset-left);
+$gamden-safe-area-right: env(safe-area-inset-right);

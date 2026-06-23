@@ -1,0 +1,367 @@
+{
+  "_comment": "GamDen OpenIM 气泡皮肤配置 / Bubble Skin Configuration",
+  "_version": 2,
+  "_updated": "2026-06-23",
+  "_for": "wxo_bubble_customize (UniApp / Web)",
+  "_design_spec": "GamDen 领地金 / 巢穴墨 / 宣纸白 / 烽火红 / 生机绿 视觉体系",
+  "_architecture_note": "OpenIM 核心源码未修改；皮肤仅通过本配置 + 前端组件实现扩展",
+
+  "skin": {
+    "id": "gamden_nest_v2",
+    "name": "GamDen 巢穴皮肤 v2",
+    "version": 2,
+
+    "themeColor": "#C9A87C",
+    "themeColorDark": "#A8895F",
+    "themeColorLight": "#D8BE95",
+
+    "bgColor": "#1E241F",
+    "textColor": "#F5F0E6",
+    "subTextColor": "#A89E85",
+
+    "accentColors": {
+      "guardian.mechanical": "#8B7355",
+      "guardian.elf": "#7AA06E",
+      "guardian.astrologer": "#9B8AC4",
+      "fire": "#C0392B",
+      "verdant": "#5A8F6C"
+    }
+  },
+
+  "background": {
+    "type": "image+pattern",
+    "image": "/static/themes/talk_bg.svg",
+    "imageFallback": "/static/themes/talk_bg.css",
+    "patternId": "nest_dim",
+    "baseColor": "#1E241F",
+    "secondaryColor": "#262D27",
+    "accentColor": "#C9A87C",
+    "cssBackground": "radial-gradient(circle at 20% 20%, rgba(201, 168, 124, 0.05) 1rpx, transparent 1rpx), radial-gradient(circle at 80% 80%, rgba(201, 168, 124, 0.05) 1rpx, transparent 1rpx), radial-gradient(circle at 50% 50%, rgba(201, 168, 124, 0.03) 2rpx, transparent 2rpx)",
+    "backgroundSize": "48rpx 48rpx, 48rpx 48rpx, 96rpx 96rpx",
+    "_migration_note": "原 OpenIM 默认的 talk_bg.jpeg 已被替换为 GamDen 巢穴暗纹背景；优先加载 SVG，失败回退 CSS pattern"
+  },
+
+  "navigationBar": {
+    "_comment": "导航栏（iOS / 小程序原生导航 + H5 自绘导航共用）",
+    "background": "#1E241F",
+    "titleColor": "#F5F0E6",
+    "titleFontFamily": "Noto Serif SC, Source Han Serif SC, Songti SC, serif",
+    "titleFontSize": "34rpx",
+    "titleFontWeight": 600,
+    "backButtonColor": "#C9A87C",
+    "backButtonSize": "44rpx",
+    "borderBottom": "1rpx solid rgba(201, 168, 124, 0.25)",
+    "shadow": "0 2rpx 12rpx rgba(0, 0, 0, 0.4)",
+    "rightButtons": {
+      "color": "#C9A87C",
+      "size": "36rpx"
+    }
+  },
+
+  "bubbles": {
+    "text_others": {
+      "_comment": "左气泡（他人消息）—— 浅灰 + 古风边框",
+      "id": "bubble_text_others",
+      "alignment": "left",
+      "maxWidth": "70%",
+      "padding": "20rpx 28rpx",
+      "borderRadius": "16rpx",
+      "fill": {
+        "type": "linear-gradient",
+        "value": "linear-gradient(180deg, #4A5250 0%, #3D4544 100%)",
+        "_comment": "浅灰渐变（适配古风暗色调，比右气泡明显浅一档，区分发送方向）",
+        "pattern": "radial-gradient(circle at 20% 30%, rgba(201, 168, 124, 0.05) 1rpx, transparent 1rpx), radial-gradient(circle at 80% 70%, rgba(201, 168, 124, 0.04) 1rpx, transparent 1rpx)",
+        "patternSize": "32rpx 32rpx"
+      },
+      "border": {
+        "outer": {
+          "width": "6rpx",
+          "color": "linear-gradient(135deg, #8B7355 0%, #6B5840 50%, #8B7355 100%)",
+          "_comment": "古风边框（机械师色，外层金属描边）",
+          "radius": "20rpx"
+        },
+        "inner": {
+          "width": "2rpx",
+          "color": "rgba(245, 240, 230, 0.18)",
+          "inset": "4rpx",
+          "radius": "16rpx"
+        },
+        "texture": {
+          "type": "repeating-linear-gradient",
+          "pattern": "repeating-linear-gradient(45deg, rgba(201,168,124,0.18) 0 2rpx, transparent 2rpx 6rpx), repeating-linear-gradient(-45deg, rgba(201,168,124,0.12) 0 2rpx, transparent 2rpx 6rpx)",
+          "_comment": "古风织锦纹理（双向 45° 细线）"
+        }
+      },
+      "textColor": "#F5F0E6",
+      "textWeight": 400,
+      "shadow": "0 2rpx 12rpx rgba(0, 0, 0, 0.4)"
+    },
+
+    "text_self": {
+      "_comment": "右气泡（自己消息）—— 领地金 + 古风边框",
+      "id": "bubble_text_self",
+      "alignment": "right",
+      "maxWidth": "70%",
+      "padding": "20rpx 28rpx",
+      "borderRadius": "16rpx",
+      "fill": {
+        "type": "linear-gradient",
+        "value": "linear-gradient(135deg, #C9A87C 0%, #A8895F 100%)",
+        "_comment": "领地金渐变（品牌色）",
+        "pattern": "radial-gradient(circle at 30% 30%, rgba(255, 245, 220, 0.22) 1rpx, transparent 1rpx), radial-gradient(circle at 70% 80%, rgba(255, 245, 220, 0.16) 1rpx, transparent 1rpx)",
+        "patternSize": "32rpx 32rpx"
+      },
+      "border": {
+        "outer": {
+          "width": "6rpx",
+          "color": "linear-gradient(135deg, #D8BE95 0%, #C9A87C 50%, #D8BE95 100%)",
+          "_comment": "古风边框（金色高亮外层）",
+          "radius": "20rpx"
+        },
+        "inner": {
+          "width": "2rpx",
+          "color": "rgba(245, 240, 230, 0.35)",
+          "inset": "4rpx",
+          "radius": "16rpx"
+        },
+        "texture": {
+          "type": "repeating-linear-gradient",
+          "pattern": "repeating-linear-gradient(45deg, rgba(255, 245, 220, 0.25) 0 2rpx, transparent 2rpx 6rpx), repeating-linear-gradient(-45deg, rgba(168, 124, 75, 0.18) 0 2rpx, transparent 2rpx 6rpx)"
+        }
+      },
+      "textColor": "#1E241F",
+      "textWeight": 500,
+      "shadow": "0 2rpx 12rpx rgba(201, 168, 124, 0.35)"
+    },
+
+    "emoji": {
+      "_comment": "大表情气泡",
+      "id": "bubble_emoji",
+      "alignment": "left",
+      "maxWidth": "70%",
+      "padding": "16rpx 24rpx",
+      "fontSize": "80rpx",
+      "fill": {
+        "type": "linear-gradient",
+        "value": "linear-gradient(180deg, #4A5250 0%, #3D4544 100%)"
+      },
+      "border": {
+        "outer": {
+          "width": "6rpx",
+          "color": "linear-gradient(135deg, #8B7355 0%, #6B5840 50%, #8B7355 100%)",
+          "radius": "20rpx"
+        }
+      }
+    },
+
+    "guardian": {
+      "_comment": "守护灵系统通知气泡",
+      "id": "bubble_guardian_notice",
+      "alignment": "center",
+      "layout": "horizontal",
+      "padding": "20rpx 24rpx",
+      "borderRadius": "16rpx",
+      "borderLeft": {
+        "width": "6rpx",
+        "style": "solid",
+        "color": "var(--guardian-color, #C9A87C)"
+      },
+      "fill": {
+        "type": "linear-gradient",
+        "value": "linear-gradient(180deg, rgba(201, 168, 124, 0.08) 0%, rgba(201, 168, 124, 0.02) 100%)",
+        "pattern": "radial-gradient(circle at 20% 20%, rgba(201, 168, 124, 0.06) 1rpx, transparent 1rpx), radial-gradient(circle at 80% 80%, rgba(201, 168, 124, 0.06) 1rpx, transparent 1rpx)",
+        "patternSize": "40rpx 40rpx"
+      },
+      "shadow": "0 2rpx 12rpx rgba(0, 0, 0, 0.3)",
+      "avatar": {
+        "size": "80rpx",
+        "shape": "circle",
+        "borderWidth": "3rpx",
+        "glow": true,
+        "glowColor": "var(--guardian-color)"
+      },
+      "title": {
+        "fontSize": "30rpx",
+        "color": "#F5F0E6",
+        "fontWeight": 600
+      },
+      "subtitle": {
+        "fontSize": "24rpx",
+        "color": "var(--guardian-color)",
+        "fontWeight": 600,
+        "letterSpacing": "2rpx"
+      },
+      "content": {
+        "fontSize": "26rpx",
+        "color": "#D6CFC0",
+        "lineHeight": 1.5
+      },
+      "levelTag": {
+        "fontSize": "18rpx",
+        "padding": "2rpx 10rpx",
+        "borderRadius": "10rpx",
+        "bgColor": "var(--guardian-color)",
+        "textColor": "#1E241F"
+      }
+    },
+
+    "welcome": {
+      "_comment": "入群欢迎气泡",
+      "id": "bubble_welcome",
+      "alignment": "center",
+      "layout": "vertical",
+      "padding": "4rpx",
+      "borderRadius": "20rpx",
+      "outerFrame": {
+        "type": "linear-gradient",
+        "value": "linear-gradient(135deg, rgba(201, 168, 124, 0.4), rgba(201, 168, 124, 0.1))"
+      },
+      "inner": {
+        "padding": "24rpx",
+        "borderRadius": "16rpx",
+        "fill": {
+          "type": "linear-gradient",
+          "value": "linear-gradient(180deg, #2A3128 0%, #1E241F 100%)",
+          "pattern": "radial-gradient(circle at 25% 25%, rgba(201, 168, 124, 0.08) 1rpx, transparent 1rpx), radial-gradient(circle at 75% 75%, rgba(201, 168, 124, 0.08) 1rpx, transparent 1rpx)",
+          "patternSize": "40rpx 40rpx"
+        }
+      },
+      "shadow": "0 4rpx 16rpx rgba(0, 0, 0, 0.35)",
+      "avatar": {
+        "size": "72rpx",
+        "shape": "circle",
+        "borderColor": "var(--guardian-color)",
+        "borderWidth": "3rpx"
+      },
+      "nameText": {
+        "fontSize": "30rpx",
+        "color": "#F5F0E6",
+        "fontWeight": 600
+      },
+      "actionText": {
+        "fontSize": "22rpx",
+        "color": "var(--guardian-color)",
+        "text": "加入巢穴 ✦",
+        "letterSpacing": "2rpx"
+      },
+      "greetingText": {
+        "fontSize": "28rpx",
+        "fontWeight": 500,
+        "gradient": "linear-gradient(135deg, #F5F0E6 0%, #C9A87C 100%)",
+        "lineHeight": 1.55
+      },
+      "footerDivider": {
+        "type": "dashed",
+        "color": "rgba(201, 168, 124, 0.3)"
+      }
+    }
+  },
+
+  "avatar": {
+    "_comment": "用户头像通用样式",
+    "size": "72rpx",
+    "shape": "circle",
+    "background": "rgba(201, 168, 124, 0.15)",
+    "borderWidth": "2rpx",
+    "borderColor": "rgba(201, 168, 124, 0.45)",
+    "shadow": "0 2rpx 8rpx rgba(0, 0, 0, 0.35)"
+  },
+
+  "inputBar": {
+    "_comment": "消息输入栏",
+    "background": "linear-gradient(180deg, #2C3A2F 0%, #1E241F 100%)",
+    "borderTop": "1rpx solid rgba(201, 168, 124, 0.3)",
+    "padding": "16rpx 24rpx",
+    "safeAreaBottom": true,
+    "textarea": {
+      "background": "#2C3A2F",
+      "border": "1rpx solid rgba(201, 168, 124, 0.35)",
+      "borderRadius": "16rpx",
+      "padding": "16rpx 20rpx",
+      "fontSize": "28rpx",
+      "color": "#F5F0E6",
+      "placeholderColor": "#A89E85",
+      "lineHeight": 1.5,
+      "minHeight": "72rpx",
+      "maxHeight": "200rpx"
+    },
+    "sendButton": {
+      "_comment": "发送按钮（领地金色 + 古风金属感）",
+      "background": "linear-gradient(135deg, #C9A87C 0%, #A8895F 100%)",
+      "color": "#1E241F",
+      "fontWeight": 600,
+      "borderRadius": "32rpx",
+      "padding": "12rpx 28rpx",
+      "shadow": "0 2rpx 8rpx rgba(201, 168, 124, 0.4)",
+      "border": "none"
+    },
+    "emojiButton": {
+      "background": "rgba(201, 168, 124, 0.1)",
+      "borderColor": "rgba(201, 168, 124, 0.35)",
+      "iconColor": "#C9A87C",
+      "size": "56rpx"
+    },
+    "moreButton": {
+      "background": "rgba(201, 168, 124, 0.1)",
+      "borderColor": "rgba(201, 168, 124, 0.35)",
+      "iconColor": "#C9A87C",
+      "size": "56rpx"
+    }
+  },
+
+  "memberPanel": {
+    "_comment": "右侧成员面板（侧滑抽屉）",
+    "width": "78%",
+    "maxWidth": "600rpx",
+    "background": "linear-gradient(180deg, #1E241F 0%, #161A15 100%)",
+    "backgroundPattern": "radial-gradient(circle at 20% 20%, rgba(201, 168, 124, 0.06) 1rpx, transparent 1rpx), radial-gradient(circle at 80% 80%, rgba(201, 168, 124, 0.06) 1rpx, transparent 1rpx)",
+    "backgroundSize": "48rpx 48rpx",
+    "shadow": "-8rpx 0 32rpx rgba(0, 0, 0, 0.6)",
+    "headerBackground": "#262D27",
+    "headerTextColor": "#F5F0E6",
+    "roleBadge": {
+      "owner": {
+        "background": "linear-gradient(135deg, #C9A87C, #A8895F)",
+        "color": "#1E241F",
+        "text": "群主"
+      },
+      "admin": {
+        "background": "linear-gradient(135deg, #9B8AC4, #7B6BA4)",
+        "color": "#1E241F",
+        "text": "管理"
+      }
+    },
+    "onlineDot": {
+      "color": "#5A8F6C",
+      "border": "2rpx solid #1E241F"
+    }
+  },
+
+  "header": {
+    "_comment": "顶部头（兼容老字段，新字段请使用 navigationBar）",
+    "background": "#1E241F",
+    "borderBottom": "1rpx solid rgba(201, 168, 124, 0.3)",
+    "backdropFilter": "blur(10rpx)"
+  },
+
+  "customMessageTypes": {
+    "_comment": "GamDen 自定义 contentType（与 OpenIM 协议对齐）",
+    "TEXT": 101,
+    "IMAGE": 102,
+    "VOICE": 103,
+    "VIDEO": 104,
+    "FILE": 105,
+    "AT": 106,
+    "REVOKE": 110,
+    "EMOJI": 115,
+    "GUARDIAN_NOTICE": 200,
+    "WELCOME": 201
+  },
+
+  "_platform_notes": {
+    "UniApp_Web": "JSON 是主配置；前端组件读取 skin.* 全局字段 + bubbles.* + inputBar.*",
+    "iOS_Native": "PLIST 与 JSON 字段一一对应；通过 wxo_bubble_customize.plist 加载",
+    "Android_Native": "OpenIM Android SDK 不直接支持 PLIST；可读 JSON 后动态注入 native 主题",
+    "MiniProgram": "JSON 字段直接使用；样式 token 已在 im-theme.scss 同步"
+  }
+}

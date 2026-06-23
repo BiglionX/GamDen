@@ -1,0 +1,239 @@
+/**
+ * GamDen IM 主题样式（OpenIM 定制皮肤）
+ * ----------------------------------------------------------------------
+ * 与 wxo_bubble_customize.json / .plist 配置同步的 SCSS 变量与 mixin
+ *
+ * 设计体系：
+ * - 巢穴墨 #1E241F（主背景 / 导航栏）
+ * - 领地金 #C9A87C（品牌色 / 主按钮 / 右气泡）
+ * - 宣纸白 #F5F0E6（主文字 / 标题）
+ * - 烽火红 #C0392B（警告 / 未读）
+ * - 生机绿 #5A8F6C（成功 / 在线）
+ */
+
+/* ============================================================
+ * CSS 变量（运行时可覆盖）
+ * ============================================================ */
+:root {
+  /* 品牌色 */
+  --im-theme-color: #C9A87C;
+  --im-theme-color-dark: #A8895F;
+  --im-theme-color-light: #D8BE95;
+
+  /* 背景色 */
+  --im-bg-page: #1E241F;
+  --im-bg-card: linear-gradient(180deg, #2A3128 0%, #1E241F 100%);
+  --im-bg-input: #2C3A2F;
+
+  /* 文字色 */
+  --im-text-primary: #F5F0E6;
+  --im-text-secondary: #A89E85;
+  --im-text-on-gold: #1E241F;
+
+  /* 边框色 */
+  --im-border-gold: rgba(201, 168, 124, 0.35);
+  --im-border-gold-strong: rgba(201, 168, 124, 0.6);
+
+  /* 守护灵色 */
+  --im-guardian-mechanical: #8B7355;
+  --im-guardian-elf: #7AA06E;
+  --im-guardian-astrologer: #9B8AC4;
+
+  /* 功能色 */
+  --im-color-fire: #C0392B;
+  --im-color-verdant: #5A8F6C;
+
+  /* 导航栏 */
+  --im-navbar-bg: #1E241F;
+  --im-navbar-title-color: #F5F0E6;
+  --im-navbar-back-color: #C9A87C;
+
+  /* 气泡 */
+  --im-bubble-others-bg: linear-gradient(180deg, #4A5250 0%, #3D4544 100%);
+  --im-bubble-self-bg: linear-gradient(135deg, #C9A87C 0%, #A8895F 100%);
+  --im-bubble-others-text: #F5F0E6;
+  --im-bubble-self-text: #1E241F;
+
+  /* 输入栏 */
+  --im-inputbar-bg: linear-gradient(180deg, #2C3A2F 0%, #1E241F 100%);
+  --im-input-bg: #2C3A2F;
+  --im-input-text: #F5F0E6;
+  --im-send-btn-bg: linear-gradient(135deg, #C9A87C 0%, #A8895F 100%);
+
+  /* 阴影 */
+  --im-shadow-base: 0 2rpx 12rpx rgba(0, 0, 0, 0.4);
+  --im-shadow-gold: 0 2rpx 12rpx rgba(201, 168, 124, 0.35);
+}
+
+/* ============================================================
+ * SCSS 变量（编译时）
+ * ============================================================ */
+
+/* 品牌色 */
+$im-theme-color: #C9A87C;
+$im-theme-color-dark: #A8895F;
+$im-theme-color-light: #D8BE95;
+
+/* 背景色 */
+$im-bg-page: #1E241F;
+$im-bg-card: linear-gradient(180deg, #2A3128 0%, #1E241F 100%);
+$im-bg-input: #2C3A2F;
+
+/* 文字色 */
+$im-text-primary: #F5F0E6;
+$im-text-secondary: #A89E85;
+$im-text-on-gold: #1E241F;
+
+/* 边框色 */
+$im-border-gold: rgba(201, 168, 124, 0.35);
+$im-border-gold-strong: rgba(201, 168, 124, 0.6);
+
+/* 守护灵色 */
+$im-guardian-mechanical: #8B7355;
+$im-guardian-elf: #7AA06E;
+$im-guardian-astrologer: #9B8AC4;
+
+/* 功能色 */
+$im-color-fire: #C0392B;
+$im-color-verdant: #5A8F6C;
+
+/* ============================================================
+ * Mixin：气泡样式
+ * ============================================================ */
+
+/**
+ * 他人消息气泡（左）
+ */
+@mixin im-bubble-others {
+  background: $im-bubble-others-bg;
+  border-radius: 16rpx;
+  padding: 20rpx 28rpx;
+  color: $im-text-primary;
+  box-shadow: var(--im-shadow-base);
+
+  /* 古风边框 */
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -6rpx;
+    border-radius: 20rpx;
+    background: linear-gradient(135deg, #8B7355 0%, #6B5840 50%, #8B7355 100%);
+    z-index: -1;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 16rpx;
+    border: 2rpx solid rgba(245, 240, 230, 0.18);
+    pointer-events: none;
+  }
+}
+
+/**
+ * 自己消息气泡（右）
+ */
+@mixin im-bubble-self {
+  background: $im-bubble-self-bg;
+  border-radius: 16rpx;
+  padding: 20rpx 28rpx;
+  color: $im-text-on-gold;
+  font-weight: 500;
+  box-shadow: var(--im-shadow-gold);
+
+  /* 古风边框 */
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -6rpx;
+    border-radius: 20rpx;
+    background: linear-gradient(135deg, #D8BE95 0%, #C9A87C 50%, #D8BE95 100%);
+    z-index: -1;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 16rpx;
+    border: 2rpx solid rgba(245, 240, 230, 0.35);
+    pointer-events: none;
+  }
+}
+
+/* ============================================================
+ * Mixin：导航栏
+ * ============================================================ */
+
+@mixin im-navbar {
+  background: $im-bg-page;
+  border-bottom: 1rpx solid $im-border-gold;
+
+  .navbar-title {
+    color: $im-text-primary;
+    font-family: 'Noto Serif SC', 'Source Han Serif SC', serif;
+    font-size: 34rpx;
+    font-weight: 600;
+  }
+
+  .navbar-back {
+    color: $im-theme-color;
+  }
+}
+
+/* ============================================================
+ * Mixin：输入栏
+ * ============================================================ */
+
+@mixin im-inputbar {
+  background: var(--im-inputbar-bg);
+  border-top: 1rpx solid $im-border-gold;
+  padding: 16rpx 24rpx;
+
+  .input-textarea {
+    background: $im-bg-input;
+    border: 1rpx solid $im-border-gold;
+    border-radius: 16rpx;
+    padding: 16rpx 20rpx;
+    color: $im-text-primary;
+    font-size: 28rpx;
+
+    &::placeholder {
+      color: $im-text-secondary;
+    }
+  }
+
+  .send-btn {
+    background: var(--im-send-btn-bg);
+    color: $im-text-on-gold;
+    font-weight: 600;
+    border-radius: 32rpx;
+    padding: 12rpx 28rpx;
+    box-shadow: var(--im-shadow-gold);
+  }
+}
+
+/* ============================================================
+ * 工具类
+ * ============================================================ */
+
+.im-bubble-others {
+  @include im-bubble-others;
+}
+
+.im-bubble-self {
+  @include im-bubble-self;
+}
+
+.im-navbar {
+  @include im-navbar;
+}
+
+.im-inputbar {
+  @include im-inputbar;
+}

@@ -1,0 +1,118 @@
+/**
+ * GamDen 巢穴暗纹聊天背景（CSS 渐变兜底）
+ * ----------------------------------------------------------------------
+ * 当 SVG 无法加载时，使用纯 CSS 渐变实现类似效果
+ *
+ * 使用方式：
+ *   @import '@/static/themes/talk_bg.css';
+ *   .chat-bg { background: var(--gamden-talk-bg); }
+ *
+ * 或直接在组件中：
+ *   background: var(--gamden-talk-bg);
+ */
+
+:root {
+  /* 主背景色 */
+  --gamden-talk-bg-base: #1E241F;
+  --gamden-talk-bg-secondary: #1a1f1b;
+  --gamden-talk-bg-deep: #161a15;
+
+  /* 金色点缀 */
+  --gamden-talk-accent: rgba(201, 168, 124, 0.04);
+  --gamden-talk-accent-light: rgba(201, 168, 124, 0.02);
+
+  /**
+   * 完整聊天背景（多层渐变叠加）
+   * 1. 基础渐变（上到下）
+   * 2. 巢穴点阵（径向圆点）
+   * 3. 对角线纹理
+   */
+  --gamden-talk-bg:
+    /* 对角线纹理 */
+    repeating-linear-gradient(
+      45deg,
+      rgba(201, 168, 124, 0.015) 0,
+      rgba(201, 168, 124, 0.015) 1rpx,
+      transparent 1rpx,
+      transparent 96rpx
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      rgba(201, 168, 124, 0.01) 0,
+      rgba(201, 168, 124, 0.01) 1rpx,
+      transparent 1rpx,
+      transparent 96rpx
+    ),
+    /* 巢穴点阵（多层） */
+    radial-gradient(
+      circle at 25% 25%,
+      rgba(201, 168, 124, 0.04) 1rpx,
+      transparent 1rpx
+    ),
+    radial-gradient(
+      circle at 75% 75%,
+      rgba(201, 168, 124, 0.03) 1rpx,
+      transparent 1rpx
+    ),
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(201, 168, 124, 0.02) 2rpx,
+      transparent 2rpx
+    ),
+    /* 纸张纹理 */
+    repeating-linear-gradient(
+      0deg,
+      rgba(245, 240, 230, 0.008) 0,
+      rgba(245, 240, 230, 0.008) 1rpx,
+      transparent 1rpx,
+      transparent 4rpx
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(245, 240, 230, 0.005) 0,
+      rgba(245, 240, 230, 0.005) 1rpx,
+      transparent 1rpx,
+      transparent 4rpx
+    ),
+    /* 基础渐变 */
+    linear-gradient(
+      180deg,
+      var(--gamden-talk-bg-base) 0%,
+      var(--gamden-talk-bg-secondary) 50%,
+      var(--gamden-talk-bg-deep) 100%
+    );
+
+  /* 背景尺寸 */
+  --gamden-talk-bg-size: 96rpx 96rpx, 96rpx 96rpx, 48rpx 48rpx, 48rpx 48rpx, 96rpx 96rpx, 4rpx 4rpx, 4rpx 4rpx, 100% 100%;
+}
+
+/**
+ * 应用聊天背景的工具类
+ */
+.gamden-talk-bg {
+  background: var(--gamden-talk-bg);
+  background-size: var(--gamden-talk-bg-size);
+}
+
+/**
+ * 简化版背景（性能优化，用于低端设备）
+ */
+.gamden-talk-bg-simple {
+  background:
+    radial-gradient(
+      circle at 25% 25%,
+      rgba(201, 168, 124, 0.04) 1rpx,
+      transparent 1rpx
+    ),
+    radial-gradient(
+      circle at 75% 75%,
+      rgba(201, 168, 124, 0.03) 1rpx,
+      transparent 1rpx
+    ),
+    linear-gradient(
+      180deg,
+      #1E241F 0%,
+      #161a15 100%
+    );
+  background-size: 48rpx 48rpx, 48rpx 48rpx, 100% 100%;
+}

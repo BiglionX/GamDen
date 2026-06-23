@@ -1,0 +1,1194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  GamDen 气泡皮肤配置 / wxo_bubble_customize.plist
+  ----------------------------------------------------------------------
+  用于 iOS Native 端（OpenIM iOS SDK）读取的皮肤配置。
+  与 src/static/wxo_bubble_customize.json 字段一一对应，UniApp / Web 端读取 JSON，iOS 端读取 PLIST。
+
+  - 主题色：#C9A87C（领地金）
+  - 暗色背景：#1E241F（巢穴墨）
+  - 守护灵：机械师 #8B7355 / 精灵 #7AA06E / 占星师 #9B8AC4
+  - 烽火红：#C0392B
+  - 生机绿：#5A8F6C
+-->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>_comment</key>
+    <string>GamDen 气泡皮肤配置 / Bubble Skin Configuration</string>
+    <key>_version</key>
+    <integer>2</integer>
+    <key>_updated</key>
+    <string>2026-06-23</string>
+    <key>_for</key>
+    <string>wxo_bubble_customize (iOS Native)</string>
+    <key>_design_spec</key>
+    <string>GamDen 领地金 / 巢穴墨 / 宣纸白 / 烽火红 / 生机绿 视觉体系</string>
+    <key>_architecture_note</key>
+    <string>OpenIM 核心源码未修改；皮肤仅通过本配置 + 前端组件实现扩展</string>
+
+    <!-- 皮肤基础信息 -->
+    <key>skin</key>
+    <dict>
+        <key>id</key>
+        <string>gamden_nest_v2</string>
+        <key>name</key>
+        <string>GamDen 巢穴皮肤 v2</string>
+        <key>version</key>
+        <integer>2</integer>
+        <key>themeColor</key>
+        <string>#C9A87C</string>
+        <key>themeColorDark</key>
+        <string>#A8895F</string>
+        <key>themeColorLight</key>
+        <string>#D8BE95</string>
+        <key>bgColor</key>
+        <string>#1E241F</string>
+        <key>textColor</key>
+        <string>#F5F0E6</string>
+        <key>subTextColor</key>
+        <string>#A89E85</string>
+        <key>accentColors</key>
+        <dict>
+            <key>guardian.mechanical</key>
+            <string>#8B7355</string>
+            <key>guardian.elf</key>
+            <string>#7AA06E</string>
+            <key>guardian.astrologer</key>
+            <string>#9B8AC4</string>
+            <key>fire</key>
+            <string>#C0392B</string>
+            <key>verdant</key>
+            <string>#5A8F6C</string>
+        </dict>
+    </dict>
+
+    <!-- 聊天背景 -->
+    <key>background</key>
+    <dict>
+        <key>type</key>
+        <string>image+pattern</string>
+        <key>image</key>
+        <string>/static/themes/talk_bg.svg</string>
+        <key>imageFallback</key>
+        <string>/static/themes/talk_bg.css</string>
+        <key>patternId</key>
+        <string>nest_dim</string>
+        <key>baseColor</key>
+        <string>#1E241F</string>
+        <key>secondaryColor</key>
+        <string>#262D27</string>
+        <key>accentColor</key>
+        <string>#C9A87C</string>
+        <key>cssBackground</key>
+        <string>radial-gradient(circle at 20% 20%, rgba(201, 168, 124, 0.05) 1rpx, transparent 1rpx), radial-gradient(circle at 80% 80%, rgba(201, 168, 124, 0.05) 1rpx, transparent 1rpx), radial-gradient(circle at 50% 50%, rgba(201, 168, 124, 0.03) 2rpx, transparent 2rpx)</string>
+        <key>backgroundSize</key>
+        <string>48rpx 48rpx, 48rpx 48rpx, 96rpx 96rpx</string>
+        <key>_migration_note</key>
+        <string>原 OpenIM 默认的 talk_bg.jpeg 已被替换为 GamDen 巢穴暗纹背景；优先加载 SVG，失败回退 CSS pattern</string>
+    </dict>
+
+    <!-- 导航栏（iOS / 小程序原生导航 + H5 自绘导航共用） -->
+    <key>navigationBar</key>
+    <dict>
+        <key>background</key>
+        <string>#1E241F</string>
+        <key>titleColor</key>
+        <string>#F5F0E6</string>
+        <key>titleFontFamily</key>
+        <string>Noto Serif SC, Source Han Serif SC, Songti SC, serif</string>
+        <key>titleFontSize</key>
+        <string>34rpx</string>
+        <key>titleFontWeight</key>
+        <integer>600</integer>
+        <key>backButtonColor</key>
+        <string>#C9A87C</string>
+        <key>backButtonSize</key>
+        <string>44rpx</string>
+        <key>borderBottom</key>
+        <string>1rpx solid rgba(201, 168, 124, 0.25)</string>
+        <key>shadow</key>
+        <string>0 2rpx 12rpx rgba(0, 0, 0, 0.4)</string>
+        <key>rightButtons</key>
+        <dict>
+            <key>color</key>
+            <string>#C9A87C</string>
+            <key>size</key>
+            <string>36rpx</string>
+        </dict>
+    </dict>
+
+    <!-- 气泡配置 -->
+    <key>bubbles</key>
+    <dict>
+        <!-- 普通文本（他人）—— 浅灰 + 古风边框 -->
+        <key>text_others</key>
+        <dict>
+            <key>id</key>
+            <string>bubble_text_others</string>
+            <key>alignment</key>
+            <string>left</string>
+            <key>maxWidth</key>
+            <string>70%</string>
+            <key>padding</key>
+            <string>20rpx 28rpx</string>
+            <key>borderRadius</key>
+            <string>16rpx</string>
+            <key>fill</key>
+            <dict>
+                <key>type</key>
+                <string>linear-gradient</string>
+                <key>value</key>
+                <string>linear-gradient(180deg, #4A5250 0%, #3D4544 100%)</string>
+                <key>_comment</key>
+                <string>浅灰渐变（适配古风暗色调，比右气泡明显浅一档，区分发送方向）</string>
+                <key>pattern</key>
+                <string>radial-gradient(circle at 20% 30%, rgba(201, 168, 124, 0.05) 1rpx, transparent 1rpx), radial-gradient(circle at 80% 70%, rgba(201, 168, 124, 0.04) 1rpx, transparent 1rpx)</string>
+                <key>patternSize</key>
+                <string>32rpx 32rpx</string>
+            </dict>
+            <key>border</key>
+            <dict>
+                <key>outer</key>
+                <dict>
+                    <key>width</key>
+                    <string>6rpx</string>
+                    <key>color</key>
+                    <string>linear-gradient(135deg, #8B7355 0%, #6B5840 50%, #8B7355 100%)</string>
+                    <key>_comment</key>
+                    <string>古风边框（机械师色，外层金属描边）</string>
+                    <key>radius</key>
+                    <string>20rpx</string>
+                </dict>
+                <key>inner</key>
+                <dict>
+                    <key>width</key>
+                    <string>2rpx</string>
+                    <key>color</key>
+                    <string>rgba(245, 240, 230, 0.18)</string>
+                    <key>inset</key>
+                    <string>4rpx</string>
+                    <key>radius</key>
+                    <string>16rpx</string>
+                </dict>
+                <key>texture</key>
+                <dict>
+                    <key>type</key>
+                    <string>repeating-linear-gradient</string>
+                    <key>pattern</key>
+                    <string>repeating-linear-gradient(45deg, rgba(201,168,124,0.18) 0 2rpx, transparent 2rpx 6rpx), repeating-linear-gradient(-45deg, rgba(201,168,124,0.12) 0 2rpx, transparent 2rpx 6rpx)</string>
+                    <key>_comment</key>
+                    <string>古风织锦纹理（双向 45° 细线）</string>
+                </dict>
+            </dict>
+            <key>textColor</key>
+            <string>#F5F0E6</string>
+            <key>textWeight</key>
+            <integer>400</integer>
+            <key>shadow</key>
+            <string>0 2rpx 12rpx rgba(0, 0, 0, 0.4)</string>
+        </dict>
+
+        <!-- 普通文本（自己）—— 领地金 + 古风边框 -->
+        <key>text_self</key>
+        <dict>
+            <key>id</key>
+            <string>bubble_text_self</string>
+            <key>alignment</key>
+            <string>right</string>
+            <key>maxWidth</key>
+            <string>70%</string>
+            <key>padding</key>
+            <string>20rpx 28rpx</string>
+            <key>borderRadius</key>
+            <string>16rpx</string>
+            <key>fill</key>
+            <dict>
+                <key>type</key>
+                <string>linear-gradient</string>
+                <key>value</key>
+                <string>linear-gradient(135deg, #C9A87C 0%, #A8895F 100%)</string>
+                <key>_comment</key>
+                <string>领地金渐变（品牌色）</string>
+                <key>pattern</key>
+                <string>radial-gradient(circle at 30% 30%, rgba(255, 245, 220, 0.22) 1rpx, transparent 1rpx), radial-gradient(circle at 70% 80%, rgba(255, 245, 220, 0.16) 1rpx, transparent 1rpx)</string>
+                <key>patternSize</key>
+                <string>32rpx 32rpx</string>
+            </dict>
+            <key>border</key>
+            <dict>
+                <key>outer</key>
+                <dict>
+                    <key>width</key>
+                    <string>6rpx</string>
+                    <key>color</key>
+                    <string>linear-gradient(135deg, #D8BE95 0%, #C9A87C 50%, #D8BE95 100%)</string>
+                    <key>_comment</key>
+                    <string>古风边框（金色高亮外层）</string>
+                    <key>radius</key>
+                    <string>20rpx</string>
+                </dict>
+                <key>inner</key>
+                <dict>
+                    <key>width</key>
+                    <string>2rpx</string>
+                    <key>color</key>
+                    <string>rgba(245, 240, 230, 0.35)</string>
+                    <key>inset</key>
+                    <string>4rpx</string>
+                    <key>radius</key>
+                    <string>16rpx</string>
+                </dict>
+                <key>texture</key>
+                <dict>
+                    <key>type</key>
+                    <string>repeating-linear-gradient</string>
+                    <key>pattern</key>
+                    <string>repeating-linear-gradient(45deg, rgba(255, 245, 220, 0.25) 0 2rpx, transparent 2rpx 6rpx), repeating-linear-gradient(-45deg, rgba(168, 124, 75, 0.18) 0 2rpx, transparent 2rpx 6rpx)</string>
+                </dict>
+            </dict>
+            <key>textColor</key>
+            <string>#1E241F</string>
+            <key>textWeight</key>
+            <integer>500</integer>
+            <key>shadow</key>
+            <string>0 2rpx 12rpx rgba(201, 168, 124, 0.35)</string>
+        </dict>
+
+        <!-- 表情 -->
+        <key>emoji</key>
+        <dict>
+            <key>id</key>
+            <string>bubble_emoji</string>
+            <key>alignment</key>
+            <string>left</string>
+            <key>maxWidth</key>
+            <string>70%</string>
+            <key>padding</key>
+            <string>16rpx 24rpx</string>
+            <key>fontSize</key>
+            <string>80rpx</string>
+            <key>fill</key>
+            <dict>
+                <key>type</key>
+                <string>linear-gradient</string>
+                <key>value</key>
+                <string>linear-gradient(180deg, #4A5250 0%, #3D4544 100%)</string>
+            </dict>
+            <key>border</key>
+            <dict>
+                <key>outer</key>
+                <dict>
+                    <key>width</key>
+                    <string>6rpx</string>
+                    <key>color</key>
+                    <string>linear-gradient(135deg, #8B7355 0%, #6B5840 50%, #8B7355 100%)</string>
+                    <key>radius</key>
+                    <string>20rpx</string>
+                </dict>
+            </dict>
+        </dict>
+
+        <!-- 守护灵系统通知 -->
+        <key>guardian</key>
+        <dict>
+            <key>id</key>
+            <string>bubble_guardian_notice</string>
+            <key>alignment</key>
+            <string>center</string>
+            <key>layout</key>
+            <string>horizontal</string>
+            <key>padding</key>
+            <string>20rpx 24rpx</string>
+            <key>borderRadius</key>
+            <string>16rpx</string>
+            <key>borderLeft</key>
+            <dict>
+                <key>width</key>
+                <string>6rpx</string>
+                <key>style</key>
+                <string>solid</string>
+                <key>color</key>
+                <string>var(--guardian-color, #C9A87C)</string>
+            </dict>
+            <key>fill</key>
+            <dict>
+                <key>type</key>
+                <string>linear-gradient</string>
+                <key>value</key>
+                <string>linear-gradient(180deg, rgba(201, 168, 124, 0.08) 0%, rgba(201, 168, 124, 0.02) 100%)</string>
+                <key>pattern</key>
+                <string>radial-gradient(circle at 20% 20%, rgba(201, 168, 124, 0.06) 1rpx, transparent 1rpx), radial-gradient(circle at 80% 80%, rgba(201, 168, 124, 0.06) 1rpx, transparent 1rpx)</string>
+                <key>patternSize</key>
+                <string>40rpx 40rpx</string>
+            </dict>
+            <key>shadow</key>
+            <string>0 2rpx 12rpx rgba(0, 0, 0, 0.3)</string>
+            <key>avatar</key>
+            <dict>
+                <key>size</key>
+                <string>80rpx</string>
+                <key>shape</key>
+                <string>circle</string>
+                <key>borderWidth</key>
+                <string>3rpx</string>
+                <key>glow</key>
+                <true/>
+                <key>glowColor</key>
+                <string>var(--guardian-color)</string>
+            </dict>
+            <key>title</key>
+            <dict>
+                <key>fontSize</key>
+                <string>30rpx</string>
+                <key>color</key>
+                <string>#F5F0E6</string>
+                <key>fontWeight</key>
+                <integer>600</integer>
+            </dict>
+            <key>subtitle</key>
+            <dict>
+                <key>fontSize</key>
+                <string>24rpx</string>
+                <key>color</key>
+                <string>var(--guardian-color)</string>
+                <key>fontWeight</key>
+                <integer>600</integer>
+                <key>letterSpacing</key>
+                <string>2rpx</string>
+            </dict>
+            <key>content</key>
+            <dict>
+                <key>fontSize</key>
+                <string>26rpx</string>
+                <key>color</key>
+                <string>#D6CFC0</string>
+                <key>lineHeight</key>
+                <real>1.5</real>
+            </dict>
+            <key>levelTag</key>
+            <dict>
+                <key>fontSize</key>
+                <string>18rpx</string>
+                <key>padding</key>
+                <string>2rpx 10rpx</string>
+                <key>borderRadius</key>
+                <string>10rpx</string>
+                <key>bgColor</key>
+                <string>var(--guardian-color)</string>
+                <key>textColor</key>
+                <string>#1E241F</string>
+            </dict>
+        </dict>
+
+        <!-- 入群欢迎 -->
+        <key>welcome</key>
+        <dict>
+            <key>id</key>
+            <string>bubble_welcome</string>
+            <key>alignment</key>
+            <string>center</string>
+            <key>layout</key>
+            <string>vertical</string>
+            <key>padding</key>
+            <string>4rpx</string>
+            <key>borderRadius</key>
+            <string>20rpx</string>
+            <key>outerFrame</key>
+            <dict>
+                <key>type</key>
+                <string>linear-gradient</string>
+                <key>value</key>
+                <string>linear-gradient(135deg, rgba(201, 168, 124, 0.4), rgba(201, 168, 124, 0.1))</string>
+            </dict>
+            <key>inner</key>
+            <dict>
+                <key>padding</key>
+                <string>24rpx</string>
+                <key>borderRadius</key>
+                <string>16rpx</string>
+                <key>fill</key>
+                <dict>
+                    <key>type</key>
+                    <string>linear-gradient</string>
+                    <key>value</key>
+                    <string>linear-gradient(180deg, #2A3128 0%, #1E241F 100%)</string>
+                    <key>pattern</key>
+                    <string>radial-gradient(circle at 25% 25%, rgba(201, 168, 124, 0.08) 1rpx, transparent 1rpx), radial-gradient(circle at 75% 75%, rgba(201, 168, 124, 0.08) 1rpx, transparent 1rpx)</string>
+                    <key>patternSize</key>
+                    <string>40rpx 40rpx</string>
+                </dict>
+            </dict>
+            <key>shadow</key>
+            <string>0 4rpx 16rpx rgba(0, 0, 0, 0.35)</string>
+            <key>avatar</key>
+            <dict>
+                <key>size</key>
+                <string>72rpx</string>
+                <key>shape</key>
+                <string>circle</string>
+                <key>borderColor</key>
+                <string>var(--guardian-color)</string>
+                <key>borderWidth</key>
+                <string>3rpx</string>
+            </dict>
+            <key>nameText</key>
+            <dict>
+                <key>fontSize</key>
+                <string>30rpx</string>
+                <key>color</key>
+                <string>#F5F0E6</string>
+                <key>fontWeight</key>
+                <integer>600</integer>
+            </dict>
+            <key>actionText</key>
+            <dict>
+                <key>fontSize</key>
+                <string>22rpx</string>
+                <key>color</key>
+                <string>var(--guardian-color)</string>
+                <key>text</key>
+                <string>加入巢穴 ✦</string>
+                <key>letterSpacing</key>
+                <string>2rpx</string>
+            </dict>
+            <key>greetingText</key>
+            <dict>
+                <key>fontSize</key>
+                <string>28rpx</string>
+                <key>fontWeight</key>
+                <integer>500</integer>
+                <key>gradient</key>
+                <string>linear-gradient(135deg, #F5F0E6 0%, #C9A87C 100%)</string>
+                <key>lineHeight</key>
+                <real>1.55</real>
+            </dict>
+            <key>footerDivider</key>
+            <dict>
+                <key>type</key>
+                <string>dashed</string>
+                <key>color</key>
+                <string>rgba(201, 168, 124, 0.3)</string>
+            </dict>
+        </dict>
+    </dict>
+
+    <!-- 头像 -->
+    <key>avatar</key>
+    <dict>
+        <key>size</key>
+        <string>72rpx</string>
+        <key>shape</key>
+        <string>circle</string>
+        <key>background</key>
+        <string>rgba(201, 168, 124, 0.15)</string>
+        <key>borderWidth</key>
+        <string>2rpx</string>
+        <key>borderColor</key>
+        <string>rgba(201, 168, 124, 0.45)</string>
+        <key>shadow</key>
+        <string>0 2rpx 8rpx rgba(0, 0, 0, 0.35)</string>
+    </dict>
+
+    <!-- 输入栏 -->
+    <key>inputBar</key>
+    <dict>
+        <key>background</key>
+        <string>linear-gradient(180deg, #2C3A2F 0%, #1E241F 100%)</string>
+        <key>borderTop</key>
+        <string>1rpx solid rgba(201, 168, 124, 0.3)</string>
+        <key>padding</key>
+        <string>16rpx 24rpx</string>
+        <key>safeAreaBottom</key>
+        <true/>
+        <key>textarea</key>
+        <dict>
+            <key>background</key>
+            <string>#2C3A2F</string>
+            <key>border</key>
+            <string>1rpx solid rgba(201, 168, 124, 0.35)</string>
+            <key>borderRadius</key>
+            <string>16rpx</string>
+            <key>padding</key>
+            <string>16rpx 20rpx</string>
+            <key>fontSize</key>
+            <string>28rpx</string>
+            <key>color</key>
+            <string>#F5F0E6</string>
+            <key>placeholderColor</key>
+            <string>#A89E85</string>
+            <key>lineHeight</key>
+            <real>1.5</real>
+            <key>minHeight</key>
+            <string>72rpx</string>
+            <key>maxHeight</key>
+            <string>200rpx</string>
+        </dict>
+        <key>sendButton</key>
+        <dict>
+            <key>_comment</key>
+            <string>发送按钮（领地金色 + 古风金属感）</string>
+            <key>background</key>
+            <string>linear-gradient(135deg, #C9A87C 0%, #A8895F 100%)</string>
+            <key>color</key>
+            <string>#1E241F</string>
+            <key>fontWeight</key>
+            <integer>600</integer>
+            <key>borderRadius</key>
+            <string>32rpx</string>
+            <key>padding</key>
+            <string>12rpx 28rpx</string>
+            <key>shadow</key>
+            <string>0 2rpx 8rpx rgba(201, 168, 124, 0.4)</string>
+            <key>border</key>
+            <string>none</string>
+        </dict>
+        <key>emojiButton</key>
+        <dict>
+            <key>background</key>
+            <string>rgba(201, 168, 124, 0.1)</string>
+            <key>borderColor</key>
+            <string>rgba(201, 168, 124, 0.35)</string>
+            <key>iconColor</key>
+            <string>#C9A87C</string>
+            <key>size</key>
+            <string>56rpx</string>
+        </dict>
+        <key>moreButton</key>
+        <dict>
+            <key>background</key>
+            <string>rgba(201, 168, 124, 0.1)</string>
+            <key>borderColor</key>
+            <string>rgba(201, 168, 124, 0.35)</string>
+            <key>iconColor</key>
+            <string>#C9A87C</string>
+            <key>size</key>
+            <string>56rpx</string>
+        </dict>
+    </dict>
+
+    <!-- 成员面板 -->
+    <key>memberPanel</key>
+    <dict>
+        <key>width</key>
+        <string>78%</string>
+        <key>maxWidth</key>
+        <string>600rpx</string>
+        <key>background</key>
+        <string>linear-gradient(180deg, #1E241F 0%, #161A15 100%)</string>
+        <key>backgroundPattern</key>
+        <string>radial-gradient(circle at 20% 20%, rgba(201, 168, 124, 0.06) 1rpx, transparent 1rpx), radial-gradient(circle at 80% 80%, rgba(201, 168, 124, 0.06) 1rpx, transparent 1rpx)</string>
+        <key>backgroundSize</key>
+        <string>48rpx 48rpx</string>
+        <key>shadow</key>
+        <string>-8rpx 0 32rpx rgba(0, 0, 0, 0.6)</string>
+        <key>headerBackground</key>
+        <string>#262D27</string>
+        <key>headerTextColor</key>
+        <string>#F5F0E6</string>
+        <key>roleBadge</key>
+        <dict>
+            <key>owner</key>
+            <dict>
+                <key>background</key>
+                <string>linear-gradient(135deg, #C9A87C, #A8895F)</string>
+                <key>color</key>
+                <string>#1E241F</string>
+                <key>text</key>
+                <string>群主</string>
+            </dict>
+            <key>admin</key>
+            <dict>
+                <key>background</key>
+                <string>linear-gradient(135deg, #9B8AC4, #7B6BA4)</string>
+                <key>color</key>
+                <string>#1E241F</string>
+                <key>text</key>
+                <string>管理</string>
+            </dict>
+        </dict>
+        <key>onlineDot</key>
+        <dict>
+            <key>color</key>
+            <string>#5A8F6C</string>
+            <key>border</key>
+            <string>2rpx solid #1E241F</string>
+        </dict>
+    </dict>
+
+    <!-- 顶部头 -->
+    <key>header</key>
+    <dict>
+        <key>_comment</key>
+        <string>顶部头（兼容老字段，新字段请使用 navigationBar）</string>
+        <key>background</key>
+        <string>#1E241F</string>
+        <key>borderBottom</key>
+        <string>1rpx solid rgba(201, 168, 124, 0.3)</string>
+        <key>backdropFilter</key>
+        <string>blur(10rpx)</string>
+    </dict>
+
+    <!-- 自定义消息类型 -->
+    <key>customMessageTypes</key>
+    <dict>
+        <key>_comment</key>
+        <string>GamDen 自定义 contentType（与 OpenIM 协议对齐）</string>
+        <key>TEXT</key>
+        <integer>101</integer>
+        <key>IMAGE</key>
+        <integer>102</integer>
+        <key>VOICE</key>
+        <integer>103</integer>
+        <key>VIDEO</key>
+        <integer>104</integer>
+        <key>FILE</key>
+        <integer>105</integer>
+        <key>AT</key>
+        <integer>106</integer>
+        <key>REVOKE</key>
+        <integer>110</integer>
+        <key>EMOJI</key>
+        <integer>115</integer>
+        <key>GUARDIAN_NOTICE</key>
+        <integer>200</integer>
+        <key>WELCOME</key>
+        <integer>201</integer>
+    </dict>
+
+    <!-- 平台说明 -->
+    <key>_platform_notes</key>
+    <dict>
+        <key>UniApp_Web</key>
+        <string>JSON 是主配置；前端组件读取 skin.* 全局字段 + bubbles.* + inputBar.*</string>
+        <key>iOS_Native</key>
+        <string>PLIST 与 JSON 字段一一对应；通过 wxo_bubble_customize.plist 加载</string>
+        <key>Android_Native</key>
+        <string>OpenIM Android SDK 不直接支持 PLIST；可读 JSON 后动态注入 native 主题</string>
+        <key>MiniProgram</key>
+        <string>JSON 字段直接使用；样式 token 已在 im-theme.scss 同步</string>
+    </dict>
+</dict>
+</plist>
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  GamDen 气泡皮肤配置 / wxo_bubble_customize.plist
+  ----------------------------------------------------------------------
+  用于 iOS Native 端（OpenIM iOS SDK）读取的皮肤配置。
+  与 src/static/wxo_bubble_customize.json 字段一一对应，UniApp / Web 端读取 JSON，iOS 端读取 PLIST。
+
+  - 主题色：#C9A87C（领地金）
+  - 暗色背景：#1E241F（巢穴墨）
+  - 守护灵：机械师 #8B7355 / 精灵 #7AA06E / 占星师 #9B8AC4
+-->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>_comment</key>
+    <string>GamDen 气泡皮肤配置 / Bubble Skin Configuration</string>
+    <key>_version</key>
+    <integer>1</integer>
+    <key>_for</key>
+    <string>wxo_bubble_customize (iOS Native)</string>
+    <key>_design_spec</key>
+    <string>GamDen 领地金 / 巢穴墨 视觉体系</string>
+
+    <!-- 皮肤基础信息 -->
+    <key>skin</key>
+    <dict>
+        <key>id</key>
+        <string>gamden_nest_v1</string>
+        <key>name</key>
+        <string>GamDen 巢穴皮肤</string>
+        <key>themeColor</key>
+        <string>#C9A87C</string>
+        <key>themeColorDark</key>
+        <string>#A8895F</string>
+        <key>themeColorLight</key>
+        <string>#D8BE95</string>
+        <key>accentColors</key>
+        <dict>
+            <key>guardian.mechanical</key>
+            <string>#8B7355</string>
+            <key>guardian.elf</key>
+            <string>#7AA06E</string>
+            <key>guardian.astrologer</key>
+            <string>#9B8AC4</string>
+        </dict>
+    </dict>
+
+    <!-- 聊天背景 -->
+    <key>background</key>
+    <dict>
+        <key>type</key>
+        <string>pattern</string>
+        <key>patternId</key>
+        <string>nest_dim</string>
+        <key>baseColor</key>
+        <string>#1E241F</string>
+        <key>secondaryColor</key>
+        <string>#262D27</string>
+        <key>accentColor</key>
+        <string>#C9A87C</string>
+        <key>cssBackground</key>
+        <string>radial-gradient(circle at 20% 20%, rgba(201, 168, 124, 0.05) 1rpx, transparent 1rpx), radial-gradient(circle at 80% 80%, rgba(201, 168, 124, 0.05) 1rpx, transparent 1rpx), radial-gradient(circle at 50% 50%, rgba(201, 168, 124, 0.03) 2rpx, transparent 2rpx)</string>
+        <key>backgroundSize</key>
+        <string>48rpx 48rpx, 48rpx 48rpx, 96rpx 96rpx</string>
+        <key>imageFallback</key>
+        <string>/static/themes/nest-bg.png</string>
+    </dict>
+
+    <!-- 气泡配置 -->
+    <key>bubbles</key>
+    <dict>
+        <!-- 普通文本（他人） -->
+        <key>text</key>
+        <dict>
+            <key>id</key>
+            <string>bubble_text_others</string>
+            <key>alignment</key>
+            <string>left</string>
+            <key>maxWidth</key>
+            <string>70%</string>
+            <key>padding</key>
+            <string>20rpx 28rpx</string>
+            <key>borderRadius</key>
+            <string>14rpx</string>
+            <key>border</key>
+            <dict>
+                <key>outer</key>
+                <dict>
+                    <key>width</key>
+                    <string>6rpx</string>
+                    <key>color</key>
+                    <string>linear-gradient(135deg, #8B7355, #6B5840, #8B7355)</string>
+                    <key>radius</key>
+                    <string>18rpx</string>
+                </dict>
+                <key>inner</key>
+                <dict>
+                    <key>width</key>
+                    <string>2rpx</string>
+                    <key>color</key>
+                    <string>rgba(245, 240, 230, 0.25)</string>
+                    <key>inset</key>
+                    <string>4rpx</string>
+                    <key>radius</key>
+                    <string>14rpx</string>
+                </dict>
+                <key>texture</key>
+                <dict>
+                    <key>type</key>
+                    <string>repeating-linear-gradient</string>
+                    <key>pattern</key>
+                    <string>repeating-linear-gradient(45deg, rgba(201,168,124,0.18) 0 2rpx, transparent 2rpx 6rpx), repeating-linear-gradient(-45deg, rgba(201,168,124,0.12) 0 2rpx, transparent 2rpx 6rpx)</string>
+                </dict>
+            </dict>
+            <key>fill</key>
+            <dict>
+                <key>type</key>
+                <string>linear-gradient</string>
+                <key>value</key>
+                <string>linear-gradient(180deg, #2F3830 0%, #262D27 100%)</string>
+                <key>pattern</key>
+                <string>radial-gradient(circle at 20% 30%, rgba(201, 168, 124, 0.05) 1rpx, transparent 1rpx), radial-gradient(circle at 80% 70%, rgba(201, 168, 124, 0.05) 1rpx, transparent 1rpx)</string>
+                <key>patternSize</key>
+                <string>32rpx 32rpx</string>
+            </dict>
+            <key>textColor</key>
+            <string>#F5F0E6</string>
+            <key>shadow</key>
+            <string>0 2rpx 12rpx rgba(0, 0, 0, 0.4)</string>
+        </dict>
+
+        <!-- 普通文本（自己） -->
+        <key>text_self</key>
+        <dict>
+            <key>id</key>
+            <string>bubble_text_self</string>
+            <key>alignment</key>
+            <string>right</string>
+            <key>maxWidth</key>
+            <string>70%</string>
+            <key>padding</key>
+            <string>20rpx 28rpx</string>
+            <key>borderRadius</key>
+            <string>14rpx</string>
+            <key>fill</key>
+            <dict>
+                <key>type</key>
+                <string>linear-gradient</string>
+                <key>value</key>
+                <string>linear-gradient(180deg, #D8BE95 0%, #C9A87C 100%)</string>
+                <key>pattern</key>
+                <string>radial-gradient(circle at 30% 30%, rgba(255, 245, 220, 0.18) 1rpx, transparent 1rpx), radial-gradient(circle at 70% 80%, rgba(255, 245, 220, 0.12) 1rpx, transparent 1rpx)</string>
+                <key>patternSize</key>
+                <string>32rpx 32rpx</string>
+            </dict>
+            <key>border</key>
+            <dict>
+                <key>outer</key>
+                <dict>
+                    <key>width</key>
+                    <string>6rpx</string>
+                    <key>color</key>
+                    <string>linear-gradient(135deg, #C9A87C, #A8895F, #C9A87C)</string>
+                    <key>radius</key>
+                    <string>18rpx</string>
+                </dict>
+            </dict>
+            <key>textColor</key>
+            <string>#1E241F</string>
+            <key>textWeight</key>
+            <integer>500</integer>
+            <key>shadow</key>
+            <string>0 2rpx 12rpx rgba(0, 0, 0, 0.4)</string>
+        </dict>
+
+        <!-- 表情 -->
+        <key>emoji</key>
+        <dict>
+            <key>id</key>
+            <string>bubble_emoji</string>
+            <key>alignment</key>
+            <string>left</string>
+            <key>maxWidth</key>
+            <string>70%</string>
+            <key>padding</key>
+            <string>16rpx 24rpx</string>
+            <key>fontSize</key>
+            <string>80rpx</string>
+            <key>fill</key>
+            <dict>
+                <key>type</key>
+                <string>linear-gradient</string>
+                <key>value</key>
+                <string>linear-gradient(180deg, #2F3830 0%, #262D27 100%)</string>
+            </dict>
+            <key>border</key>
+            <dict>
+                <key>outer</key>
+                <dict>
+                    <key>width</key>
+                    <string>6rpx</string>
+                    <key>color</key>
+                    <string>linear-gradient(135deg, #8B7355, #6B5840, #8B7355)</string>
+                    <key>radius</key>
+                    <string>18rpx</string>
+                </dict>
+            </dict>
+        </dict>
+
+        <!-- 守护灵系统通知 -->
+        <key>guardian</key>
+        <dict>
+            <key>id</key>
+            <string>bubble_guardian_notice</string>
+            <key>alignment</key>
+            <string>center</string>
+            <key>layout</key>
+            <string>horizontal</string>
+            <key>padding</key>
+            <string>20rpx 24rpx</string>
+            <key>borderRadius</key>
+            <string>16rpx</string>
+            <key>borderLeft</key>
+            <dict>
+                <key>width</key>
+                <string>6rpx</string>
+                <key>style</key>
+                <string>solid</string>
+                <key>color</key>
+                <string>var(--guardian-color, #C9A87C)</string>
+            </dict>
+            <key>fill</key>
+            <dict>
+                <key>type</key>
+                <string>linear-gradient</string>
+                <key>value</key>
+                <string>linear-gradient(180deg, rgba(201, 168, 124, 0.08) 0%, rgba(201, 168, 124, 0.02) 100%)</string>
+                <key>pattern</key>
+                <string>radial-gradient(circle at 20% 20%, rgba(201, 168, 124, 0.06) 1rpx, transparent 1rpx), radial-gradient(circle at 80% 80%, rgba(201, 168, 124, 0.06) 1rpx, transparent 1rpx)</string>
+                <key>patternSize</key>
+                <string>40rpx 40rpx</string>
+            </dict>
+            <key>shadow</key>
+            <string>0 2rpx 12rpx rgba(0, 0, 0, 0.3)</string>
+            <key>avatar</key>
+            <dict>
+                <key>size</key>
+                <string>80rpx</string>
+                <key>shape</key>
+                <string>circle</string>
+                <key>borderWidth</key>
+                <string>3rpx</string>
+                <key>glow</key>
+                <true/>
+                <key>glowColor</key>
+                <string>var(--guardian-color)</string>
+            </dict>
+            <key>title</key>
+            <dict>
+                <key>fontSize</key>
+                <string>30rpx</string>
+                <key>color</key>
+                <string>#F5F0E6</string>
+                <key>fontWeight</key>
+                <integer>600</integer>
+            </dict>
+            <key>subtitle</key>
+            <dict>
+                <key>fontSize</key>
+                <string>24rpx</string>
+                <key>color</key>
+                <string>var(--guardian-color)</string>
+                <key>fontWeight</key>
+                <integer>600</integer>
+                <key>letterSpacing</key>
+                <string>2rpx</string>
+            </dict>
+            <key>content</key>
+            <dict>
+                <key>fontSize</key>
+                <string>26rpx</string>
+                <key>color</key>
+                <string>#D6CFC0</string>
+                <key>lineHeight</key>
+                <real>1.5</real>
+            </dict>
+            <key>levelTag</key>
+            <dict>
+                <key>fontSize</key>
+                <string>18rpx</string>
+                <key>padding</key>
+                <string>2rpx 10rpx</string>
+                <key>borderRadius</key>
+                <string>10rpx</string>
+                <key>bgColor</key>
+                <string>var(--guardian-color)</string>
+                <key>textColor</key>
+                <string>#1E241F</string>
+            </dict>
+        </dict>
+
+        <!-- 入群欢迎 -->
+        <key>welcome</key>
+        <dict>
+            <key>id</key>
+            <string>bubble_welcome</string>
+            <key>alignment</key>
+            <string>center</string>
+            <key>layout</key>
+            <string>vertical</string>
+            <key>padding</key>
+            <string>4rpx</string>
+            <key>borderRadius</key>
+            <string>20rpx</string>
+            <key>outerFrame</key>
+            <dict>
+                <key>type</key>
+                <string>linear-gradient</string>
+                <key>value</key>
+                <string>linear-gradient(135deg, rgba(201, 168, 124, 0.4), rgba(201, 168, 124, 0.1))</string>
+            </dict>
+            <key>inner</key>
+            <dict>
+                <key>padding</key>
+                <string>24rpx</string>
+                <key>borderRadius</key>
+                <string>16rpx</string>
+                <key>fill</key>
+                <dict>
+                    <key>type</key>
+                    <string>linear-gradient</string>
+                    <key>value</key>
+                    <string>linear-gradient(180deg, #2A3128 0%, #1E241F 100%)</string>
+                    <key>pattern</key>
+                    <string>radial-gradient(circle at 25% 25%, rgba(201, 168, 124, 0.08) 1rpx, transparent 1rpx), radial-gradient(circle at 75% 75%, rgba(201, 168, 124, 0.08) 1rpx, transparent 1rpx)</string>
+                    <key>patternSize</key>
+                    <string>40rpx 40rpx</string>
+                </dict>
+            </dict>
+            <key>shadow</key>
+            <string>0 4rpx 16rpx rgba(0, 0, 0, 0.35)</string>
+            <key>avatar</key>
+            <dict>
+                <key>size</key>
+                <string>72rpx</string>
+                <key>shape</key>
+                <string>circle</string>
+                <key>borderColor</key>
+                <string>var(--guardian-color)</string>
+                <key>borderWidth</key>
+                <string>3rpx</string>
+            </dict>
+            <key>nameText</key>
+            <dict>
+                <key>fontSize</key>
+                <string>30rpx</string>
+                <key>color</key>
+                <string>#F5F0E6</string>
+                <key>fontWeight</key>
+                <integer>600</integer>
+            </dict>
+            <key>actionText</key>
+            <dict>
+                <key>fontSize</key>
+                <string>22rpx</string>
+                <key>color</key>
+                <string>var(--guardian-color)</string>
+                <key>text</key>
+                <string>加入巢穴 ✦</string>
+                <key>letterSpacing</key>
+                <string>2rpx</string>
+            </dict>
+            <key>greetingText</key>
+            <dict>
+                <key>fontSize</key>
+                <string>28rpx</string>
+                <key>fontWeight</key>
+                <integer>500</integer>
+                <key>gradient</key>
+                <string>linear-gradient(135deg, #F5F0E6 0%, #C9A87C 100%)</string>
+                <key>lineHeight</key>
+                <real>1.55</real>
+            </dict>
+            <key>footerDivider</key>
+            <dict>
+                <key>type</key>
+                <string>dashed</string>
+                <key>color</key>
+                <string>rgba(201, 168, 124, 0.3)</string>
+            </dict>
+        </dict>
+    </dict>
+
+    <!-- 头像 -->
+    <key>avatar</key>
+    <dict>
+        <key>size</key>
+        <string>72rpx</string>
+        <key>shape</key>
+        <string>circle</string>
+        <key>background</key>
+        <string>rgba(201, 168, 124, 0.15)</string>
+        <key>borderWidth</key>
+        <string>2rpx</string>
+        <key>borderColor</key>
+        <string>rgba(201, 168, 124, 0.45)</string>
+        <key>shadow</key>
+        <string>0 2rpx 8rpx rgba(0, 0, 0, 0.35)</string>
+    </dict>
+
+    <!-- 输入栏 -->
+    <key>inputBar</key>
+    <dict>
+        <key>background</key>
+        <string>linear-gradient(180deg, #262D27 0%, #1E241F 100%)</string>
+        <key>borderTop</key>
+        <string>1rpx solid rgba(201, 168, 124, 0.3)</string>
+        <key>textarea</key>
+        <dict>
+            <key>background</key>
+            <string>rgba(0, 0, 0, 0.3)</string>
+            <key>border</key>
+            <string>1rpx solid rgba(201, 168, 124, 0.3)</string>
+            <key>borderRadius</key>
+            <string>12rpx</string>
+            <key>padding</key>
+            <string>16rpx 20rpx</string>
+            <key>fontSize</key>
+            <string>28rpx</string>
+            <key>color</key>
+            <string>#F5F0E6</string>
+        </dict>
+        <key>sendButton</key>
+        <dict>
+            <key>background</key>
+            <string>linear-gradient(135deg, #C9A87C 0%, #A8895F 100%)</string>
+            <key>color</key>
+            <string>#1E241F</string>
+            <key>fontWeight</key>
+            <integer>600</integer>
+        </dict>
+        <key>emojiButton</key>
+        <dict>
+            <key>background</key>
+            <string>rgba(201, 168, 124, 0.1)</string>
+            <key>borderColor</key>
+            <string>rgba(201, 168, 124, 0.3)</string>
+        </dict>
+    </dict>
+
+    <!-- 成员面板 -->
+    <key>memberPanel</key>
+    <dict>
+        <key>width</key>
+        <string>78%</string>
+        <key>maxWidth</key>
+        <string>600rpx</string>
+        <key>background</key>
+        <string>linear-gradient(180deg, #1E241F 0%, #161A15 100%)</string>
+        <key>backgroundPattern</key>
+        <string>radial-gradient(circle at 20% 20%, rgba(201, 168, 124, 0.06) 1rpx, transparent 1rpx), radial-gradient(circle at 80% 80%, rgba(201, 168, 124, 0.06) 1rpx, transparent 1rpx)</string>
+        <key>backgroundSize</key>
+        <string>48rpx 48rpx</string>
+        <key>shadow</key>
+        <string>-8rpx 0 32rpx rgba(0, 0, 0, 0.6)</string>
+        <key>roleBadge</key>
+        <dict>
+            <key>owner</key>
+            <dict>
+                <key>background</key>
+                <string>linear-gradient(135deg, #C9A87C, #A8895F)</string>
+                <key>color</key>
+                <string>#1E241F</string>
+                <key>text</key>
+                <string>群主</string>
+            </dict>
+            <key>admin</key>
+            <dict>
+                <key>background</key>
+                <string>linear-gradient(135deg, #9B8AC4, #7B6BA4)</string>
+                <key>color</key>
+                <string>#1E241F</string>
+                <key>text</key>
+                <string>管理</string>
+            </dict>
+        </dict>
+        <key>onlineDot</key>
+        <dict>
+            <key>color</key>
+            <string>#5A8F6C</string>
+            <key>border</key>
+            <string>2rpx solid #1E241F</string>
+        </dict>
+    </dict>
+
+    <!-- 顶部头 -->
+    <key>header</key>
+    <dict>
+        <key>background</key>
+        <string>linear-gradient(180deg, rgba(38, 45, 39, 0.95) 0%, rgba(30, 36, 31, 0.85) 100%)</string>
+        <key>borderBottom</key>
+        <string>1rpx solid rgba(201, 168, 124, 0.3)</string>
+        <key>backdropFilter</key>
+        <string>blur(10rpx)</string>
+    </dict>
+
+    <!-- 自定义消息类型 -->
+    <key>customMessageTypes</key>
+    <dict>
+        <key>_comment</key>
+        <string>GamDen 自定义 contentType（与 OpenIM 协议对齐）</string>
+        <key>TEXT</key>
+        <integer>101</integer>
+        <key>EMOJI</key>
+        <integer>115</integer>
+        <key>GUARDIAN_NOTICE</key>
+        <integer>200</integer>
+        <key>WELCOME</key>
+        <integer>201</integer>
+    </dict>
+</dict>
+</plist>

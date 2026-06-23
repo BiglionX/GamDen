@@ -1,0 +1,242 @@
+﻿/**
+ * uview-plus 全局 SCSS 主题变量
+ * 主题色系与 GamDen 设计规范对齐：
+ *  - 巢穴墨 #1E241F（主背景）
+ *  - 领地金 #C9A87C（品牌色/主按钮）★ 全局主题色
+ *  - 宣纸白 #F5F0E6（主文字）
+ *  - 烽火红 #C0392B（警告/未读）
+ *  - 生机绿 #5A8F6C（成功/升级）
+ *
+ *  巢穴暗纹背景（CSS 实现，零图片依赖）：
+ *    @include nest-dim-bg()  → 聊天气泡 / 卡片背景
+ */
+
+/* 主色 - 领地金 */
+$u-primary: #c9a87c;
+$u-primary-light: #d8be95;
+$u-primary-dark: #a8895f;
+$u-primary-disabled: #b89e75;
+
+/* 辅助色 */
+$u-warning: #c0392b;
+$u-success: #5a8f6c;
+$u-error: #c0392b;
+$u-info: #8a8a8a;
+
+/* 文字色 */
+$u-main-color: #f5f0e6;
+$u-content-color: #d6cfc0;
+$u-tips-color: #a89e85;
+$u-light-color: #8a7f63;
+$u-border-color: rgba(201, 168, 124, 0.25);
+
+/* 背景色 */
+$u-bg-color: #1e241f;
+$u-bg-color-light: #262d27;
+$u-bg-color-grey: #2f3830;
+
+/* 引入 uview-plus 完整主题（必须放在变量声明之后） */
+@import 'uview-plus/theme.scss';
+
+/* ============================================================
+ * GamDen 专属 mixin / 工具类
+ * ============================================================ */
+
+/**
+ * 巢穴暗纹背景（径向点阵）
+ *  - 默认 3 层叠加：左上 / 右下 / 中央
+ *  - 用法：@include nest-dim-bg();
+ *  - 也可直接使用类：.nest-bg
+ */
+@mixin nest-dim-bg($alpha1: 0.05, $alpha2: 0.05, $alpha3: 0.03) {
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(201, 168, 124, $alpha1) 1rpx, transparent 1rpx),
+    radial-gradient(circle at 80% 80%, rgba(201, 168, 124, $alpha2) 1rpx, transparent 1rpx),
+    radial-gradient(circle at 50% 50%, rgba(201, 168, 124, $alpha3) 2rpx, transparent 2rpx);
+  background-size: 48rpx 48rpx, 48rpx 48rpx, 96rpx 96rpx;
+}
+
+/**
+ * 古风边框纹理（双向 45° 细线）
+ *  - 用法：@include ancient-border-texture();
+ */
+@mixin ancient-border-texture($alpha1: 0.18, $alpha2: 0.12) {
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      rgba(201, 168, 124, $alpha1) 0,
+      rgba(201, 168, 124, $alpha1) 2rpx,
+      transparent 2rpx,
+      transparent 6rpx
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      rgba(201, 168, 124, $alpha2) 0,
+      rgba(201, 168, 124, $alpha2) 2rpx,
+      transparent 2rpx,
+      transparent 6rpx
+    );
+}
+
+/* 全局类 */
+.nest-bg {
+  @include nest-dim-bg();
+}
+.nest-bg-light {
+  @include nest-dim-bg(0.08, 0.08, 0.05);
+}
+.ancient-border {
+  @include ancient-border-texture();
+}
+
+/* ============================================================
+ * GamDen 古风字体栈
+ * ============================================================ */
+
+/**
+ * 衬线字体（标题/古风文本）
+ * - 思源宋体优先 → 系统衬线降级
+ * - 用于页面标题、卡片标题等
+ */
+%font-serif {
+  font-family: 'Noto Serif SC', 'Source Han Serif SC', 'Songti SC', 'STSong',
+    'SimSun', '宋体', serif;
+}
+
+/**
+ * 无衬线字体（正文）
+ */
+%font-sans {
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue',
+    'Microsoft YaHei', sans-serif;
+}
+
+/**
+ * 等宽字体（数字/代码）
+ */
+%font-mono {
+  font-family: 'SF Mono', Menlo, Monaco, Consolas, monospace;
+}
+
+/* 全局类 */
+.font-serif {
+  @extend %font-serif;
+}
+.font-sans {
+  @extend %font-sans;
+}
+.font-mono {
+  @extend %font-mono;
+}
+
+/* ============================================================
+ * 安全区域 mixin（uni.scss 兼容版本）
+ * - 使用 extend 而不是 mixin，避免重复 padding 链
+ * ============================================================ */
+
+/**
+ * 顶部安全区（刘海/灵动岛）
+ * 使用方式：@extend %safe-area-top;
+ */
+%safe-area-top {
+  padding-top: env(safe-area-inset-top);
+}
+
+%safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+%safe-area-left {
+  padding-left: env(safe-area-inset-left);
+}
+
+%safe-area-right {
+  padding-right: env(safe-area-inset-right);
+}
+
+%safe-area-all {
+  @extend %safe-area-top;
+  @extend %safe-area-bottom;
+  @extend %safe-area-left;
+  @extend %safe-area-right;
+}
+
+/* 全局类（直接 className 使用） */
+.safe-top {
+  @extend %safe-area-top;
+}
+.safe-bottom {
+  @extend %safe-area-bottom;
+}
+.safe-left {
+  @extend %safe-area-left;
+}
+.safe-right {
+  @extend %safe-area-right;
+}
+.safe-all {
+  @extend %safe-area-all;
+}
+
+/* ============================================================
+ * 增强版暗纹背景（古风织锦感）
+ * ============================================================ */
+
+/**
+ * 古风织锦纹理（更密集的双向细线）
+ */
+%ancient-brocade-bg {
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      rgba(201, 168, 124, 0.05) 0,
+      rgba(201, 168, 124, 0.05) 1rpx,
+      transparent 1rpx,
+      transparent 4rpx
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      rgba(245, 240, 230, 0.03) 0,
+      rgba(245, 240, 230, 0.03) 1rpx,
+      transparent 1rpx,
+      transparent 4rpx
+    );
+}
+
+/**
+ * 宣纸纤维纹理（极淡横向细线，模拟纸张纤维）
+ */
+%paper-fiber-bg {
+  background-image: repeating-linear-gradient(
+    0deg,
+    rgba(245, 240, 230, 0.015) 0,
+    rgba(245, 240, 230, 0.015) 1rpx,
+    transparent 1rpx,
+    transparent 3rpx
+  );
+}
+
+/* 全局类 */
+.brocade-bg {
+  @extend %ancient-brocade-bg;
+}
+.paper-fiber-bg {
+  @extend %paper-fiber-bg;
+}
+.paper-bg {
+  @extend %paper-fiber-bg;
+  background-color: #f5f0e6;
+}
+
+/* ============================================================
+ * 减少动画偏好（a11y）
+ * ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

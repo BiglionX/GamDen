@@ -1,0 +1,81 @@
+/**
+ * GamDen 安全区域 mixin
+ *
+ * 适配 iPhone 刘海屏 / 灵动岛 / 底部 Home Indicator
+ *
+ * 用法：
+ *   .top-bar { @include safe-area-top; }
+ *   .bottom-cta { @include safe-area-bottom; }
+ *   .page { @include safe-area-all; }
+ *
+ * 实现：
+ *  - 使用 env(safe-area-inset-*) 运行时获取真实值
+ *  - 在没有安全区的设备上值为 0px
+ *  - 配合 padding-top/bottom 一起使用
+ */
+@use '../variables' as *;
+
+/**
+ * 顶部安全区（刘海/灵动岛）
+ * - 用于固定顶部导航栏
+ */
+@mixin safe-area-top {
+  padding-top: $gamden-safe-area-top;
+}
+
+/**
+ * 底部安全区（Home Indicator）
+ * - 用于固定底部按钮、TabBar
+ */
+@mixin safe-area-bottom {
+  padding-bottom: $gamden-safe-area-bottom;
+}
+
+/**
+ * 左右安全区（横屏/异形屏）
+ */
+@mixin safe-area-left {
+  padding-left: $gamden-safe-area-left;
+}
+
+@mixin safe-area-right {
+  padding-right: $gamden-safe-area-right;
+}
+
+/**
+ * 四边安全区（页面级）
+ */
+@mixin safe-area-all {
+  padding-top: $gamden-safe-area-top;
+  padding-bottom: $gamden-safe-area-bottom;
+  padding-left: $gamden-safe-area-left;
+  padding-right: $gamden-safe-area-right;
+}
+
+/**
+ * 顶部安全区（margin 版本，避免污染 padding）
+ * 用于已有 padding 的元素（如导航栏）
+ */
+@mixin safe-area-top-margin {
+  margin-top: $gamden-safe-area-top;
+}
+
+/**
+ * 底部安全区（margin 版本）
+ */
+@mixin safe-area-bottom-margin {
+  margin-bottom: $gamden-safe-area-bottom;
+}
+
+/**
+ * 内容安全区（content + padding）
+ * - 用于固定底部 CTA 按钮
+ * - 保证按钮上方有安全距离
+ */
+@mixin safe-content-bottom {
+  padding-bottom: calc(#{$gamden-safe-area-bottom} + #{$gamden-spacing-base});
+}
+
+@mixin safe-content-top {
+  padding-top: calc(#{$gamden-safe-area-top} + #{$gamden-spacing-base});
+}

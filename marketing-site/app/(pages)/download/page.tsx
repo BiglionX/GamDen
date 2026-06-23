@@ -3,7 +3,7 @@ import { useState } from 'react';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import { motion } from 'framer-motion';
-import { Smartphone, Monitor, Globe, Apple, Download, Mail, Key, Shield, Star, Gift } from 'lucide-react';
+import { Smartphone, Monitor, Globe, Apple, Download, Mail, Key, Shield, Star, Gift, Users, QrCode } from 'lucide-react';
 
 const DownloadPage: NextPage = () => {
   const [email, setEmail] = useState('');
@@ -129,6 +129,25 @@ const DownloadPage: NextPage = () => {
                 </motion.div>
               ))}
             </div>
+          </div>
+        </section>
+
+        {/* 下载后引导 */}
+        <section className="py-12 bg-gradient-to-r from-gold/10 via-pixel-green/10 to-gold/10">
+          <div className="container-custom text-center">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="inline-flex items-center gap-3 px-6 py-4 bg-space-black/80 border border-gold/30 rounded-full shadow-lg"
+            >
+              <QrCode className="w-6 h-6 text-gold" />
+              <p className="text-lg text-gray-200">
+                下载App后，邀请 <span className="text-gold font-bold">3 位好友</span> 入驻，即可解锁你的个人专属小程序
+              </p>
+              <Users className="w-6 h-6 text-pixel-green" />
+            </motion.div>
           </div>
         </section>
 

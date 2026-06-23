@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import type { NextPage } from 'next';
 import Head from 'next/head'
 import { motion } from 'framer-motion'
-import { Castle, Handshake, Sword, Gamepad2, Star, Users, Shield, Zap } from 'lucide-react';
+import { Castle, Handshake, Sword, Gamepad2, Star, Users, Shield, Zap, Smartphone, QrCode, PartyPopper, Crown } from 'lucide-react';
 
 // 特性数据
 const features = [
@@ -156,6 +156,92 @@ const HomePage: NextPage = () => {
                 </motion.div>
               ))}
             </div>
+          </div>
+        </section>
+
+        {/* 专属小程序门牌卡片 */}
+        <section className="section-padding bg-space-black-light/30">
+          <div className="container-custom">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+            >
+              <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-space-black via-space-black-light to-space-black border border-gold/30 p-8 md:p-12 shadow-2xl">
+                {/* 装饰背景 */}
+                <div className="absolute top-0 right-0 w-64 h-64 bg-gold/5 rounded-full blur-3xl" />
+                <div className="absolute bottom-0 left-0 w-48 h-48 bg-pixel-green/5 rounded-full blur-3xl" />
+                
+                <div className="relative z-10 flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
+                  {/* 左侧图标区 */}
+                  <motion.div
+                    initial={{ scale: 0.8, rotate: -10 }}
+                    whileInView={{ scale: 1, rotate: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, type: 'spring' }}
+                    className="flex-shrink-0"
+                  >
+                    <div className="relative">
+                      <div className="absolute inset-0 bg-gold/20 rounded-full blur-xl animate-pulse" />
+                      <div className="relative w-32 h-32 rounded-full bg-gradient-to-br from-gold/20 to-pixel-green/20 border-2 border-gold/40 flex items-center justify-center">
+                        <div className="grid grid-cols-2 gap-2">
+                          <Smartphone className="w-8 h-8 text-gold" />
+                          <QrCode className="w-8 h-8 text-pixel-green" />
+                          <Crown className="w-8 h-8 text-gold/80" />
+                          <PartyPopper className="w-8 h-8 text-pixel-green/80" />
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+
+                  {/* 右侧内容区 */}
+                  <div className="flex-1 text-center lg:text-left">
+                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gold/10 border border-gold/30 mb-4">
+                      <QrCode className="w-4 h-4 text-gold" />
+                      <span className="text-gold text-sm font-medium">邀请解锁</span>
+                    </div>
+                    
+                    <h3 className="text-3xl md:text-4xl font-bold text-white mb-4">
+                      📱 你的专属小程序门牌
+                    </h3>
+                    
+                    <p className="text-xl text-gray-300 mb-2">
+                      邀请 <span className="text-gold font-bold">3 位好友</span> 入驻 GamDen，即可解锁个人专属小程序
+                    </p>
+                    
+                    <p className="text-gray-400 mb-6">
+                      展示你的领地、邀请进度，成为朋友圈里的游戏巢穴主人
+                    </p>
+
+                    <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                      <button className="btn-primary group">
+                        <span>了解详情</span>
+                        <span className="ml-2 group-hover:translate-x-1 transition-transform">→</span>
+                      </button>
+                      <div className="flex items-center gap-2 text-sm text-gray-400">
+                        <Users className="w-4 h-4" />
+                        <span>已有 2,847 位玩家解锁</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 右侧装饰 */}
+                  <div className="hidden lg:block flex-shrink-0">
+                    <div className="relative w-40 h-40">
+                      <div className="absolute inset-0 border-2 border-dashed border-gold/30 rounded-xl animate-spin" style={{ animationDuration: '20s' }} />
+                      <div className="absolute inset-4 border-2 border-dashed border-pixel-green/30 rounded-lg animate-spin" style={{ animationDuration: '15s', animationDirection: 'reverse' }} />
+                      <div className="absolute inset-8 bg-gradient-to-br from-gold/10 to-pixel-green/10 rounded-lg flex items-center justify-center">
+                        <Crown className="w-12 h-12 text-gold/60" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 底部装饰线 */}
+                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-gold/50 to-transparent" />
+              </div>
+            </motion.div>
           </div>
         </section>
 

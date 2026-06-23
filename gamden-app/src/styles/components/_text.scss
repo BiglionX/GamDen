@@ -1,0 +1,143 @@
+/**
+ * GamDen 文字样式 mixin
+ *
+ * 字体栈策略：
+ *  - serif  - 标题/古风文本（思源宋体 + 系统衬线降级）
+ *  - sans   - 正文（苹方/微软雅黑）
+ *  - mono   - 数字/代码（SF Mono）
+ *  - fantasy - 装饰性文本（楷体）
+ *
+ * 用法：
+ *   .title { @include text-title; }
+ *   .body  { @include text-body; }
+ *   .serif { @include use-serif; }
+ */
+@use '../variables' as *;
+
+@mixin use-serif {
+  font-family: $gamden-font-serif;
+}
+
+@mixin use-sans {
+  font-family: $gamden-font-sans;
+}
+
+@mixin use-mono {
+  font-family: $gamden-font-mono;
+}
+
+@mixin use-fantasy {
+  font-family: $gamden-font-fantasy;
+}
+
+/**
+ * 标题（古风衬线 + 大字号 + 字间距）
+ */
+@mixin text-title(
+  $level: 'lg',
+  $color: $gamden-text-primary,
+  $align: center
+) {
+  @if $level == 'xxl' {
+    font-size: $gamden-font-size-xxl;
+    line-height: 1.3;
+  } @else if $level == 'xl' {
+    font-size: $gamden-font-size-xl;
+    line-height: 1.4;
+  } @else if $level == 'lg' {
+    font-size: $gamden-font-size-lg;
+    line-height: 1.4;
+  } @else if $level == 'md' {
+    font-size: $gamden-font-size-md;
+    line-height: 1.5;
+  } @else {
+    font-size: $gamden-font-size-sm;
+    line-height: 1.5;
+  }
+
+  font-family: $gamden-font-serif;
+  font-weight: $gamden-font-weight-bold;
+  color: $color;
+  text-align: $align;
+  letter-spacing: 4rpx;
+}
+
+/**
+ * 正文（无衬线 + 标准字号）
+ */
+@mixin text-body(
+  $size: 'base',
+  $color: $gamden-text-regular,
+  $weight: $gamden-font-weight-regular
+) {
+  @if $size == 'lg' {
+    font-size: $gamden-font-size-md;
+  } @else if $size == 'sm' {
+    font-size: $gamden-font-size-sm;
+  } @else if $size == 'xs' {
+    font-size: $gamden-font-size-xs;
+  } @else {
+    font-size: $gamden-font-size-base;
+  }
+
+  font-family: $gamden-font-sans;
+  font-weight: $weight;
+  color: $color;
+  line-height: $gamden-line-height-base;
+}
+
+/**
+ * 辅助文字（小字号 + 浅色）
+ */
+@mixin text-caption {
+  font-family: $gamden-font-sans;
+  font-size: $gamden-font-size-xs;
+  color: $gamden-text-secondary;
+  line-height: 1.4;
+}
+
+/**
+ * 数字（金色 + 等宽）
+ */
+@mixin text-number(
+  $size: $gamden-font-size-base,
+  $color: $gamden-gold
+) {
+  font-family: $gamden-font-mono;
+  font-size: $size;
+  color: $color;
+  font-weight: $gamden-font-weight-semibold;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 1rpx;
+}
+
+/**
+ * 古风标题（思源宋体 + 金色 + 大字距）
+ * 用于页面顶部、卡片标题等需要凸显古风韵味的场景
+ */
+@mixin text-ancient-title($size: $gamden-font-size-xl) {
+  font-family: $gamden-font-serif;
+  font-size: $size;
+  font-weight: $gamden-font-weight-bold;
+  color: $gamden-gold;
+  letter-spacing: 8rpx;
+  text-align: center;
+  text-shadow: 0 2rpx 8rpx rgba(201, 168, 124, 0.3);
+}
+
+/**
+ * 单行省略
+ */
+@mixin text-ellipsis($lines: 1) {
+  @if $lines == 1 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  } @else {
+    display: -webkit-box;
+    -webkit-line-clamp: $lines;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
