@@ -11,12 +11,9 @@
     "build:marketing": "cd marketing-site && npm run build",
     "start:backend": "cd backend && npm start",
     "start:frontend": "cd frontend && npm start",
-    "deploy:setup": "bash deploy/scripts/setup-ssh-keys.sh all root 43.160.220.131 gamden",
-    "deploy:quick": "bash deploy/quick-start.sh",
-    "deploy:prod": "bash deploy/scripts/ssh-deploy-main.sh --production",
-    "deploy:dry-run": "bash deploy/scripts/ssh-deploy-main.sh --dry-run",
-    "deploy:help": "bash deploy/scripts/ssh-deploy-main.sh --help",
-    "deploy:win": "powershell -ExecutionPolicy Bypass -File deploy/scripts/ssh-deploy.ps1"
+    "deploy": "ssh root@43.160.220.131 'bash /opt/GamDen/deploy/scripts/redeploy.sh'",
+    "deploy:skip-build": "ssh root@43.160.220.131 'SKIP_PULL=true bash /opt/GamDen/deploy/scripts/redeploy.sh'",
+    "deploy:status": "ssh root@43.160.220.131 'pm2 list && docker ps && curl -s -o /dev/null -w http_code:%{http_code} http://localhost:80'"
   },
   "keywords": ["game", "community", "social"],
   "author": "GamDen Team",
