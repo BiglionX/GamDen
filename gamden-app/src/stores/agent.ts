@@ -21,6 +21,25 @@ const GUIDE_WINDOW_MAX = 2;
 /** 软引导气泡自动淡出时间（15 秒） */
 const GUEST_BUBBLE_DURATION_MS = 15_000;
 
+/** 入驻流程完成标记 */
+const ONBOARDING_COMPLETE_KEY = 'gamden_onboarding_complete';
+/** 新手任务完成标记 */
+const NEW_USER_TASK_COMPLETE_KEY = 'gamden_new_user_task_complete';
+
+/** 入驻流程步骤枚举 */
+export enum OnboardingStep {
+  /** 未开始 */
+  NOT_STARTED = 0,
+  /** 注册页 */
+  REGISTER = 1,
+  /** 守护灵选择 */
+  SELECT_GUARDIAN = 2,
+  /** 领地分配 */
+  TERRITORY = 3,
+  /** 完成 */
+  COMPLETE = 4,
+}
+
 /**
  * 守护灵状态管理
  * - 当前展示的话术队列（最多同时 1 条，新消息替换或排队）
@@ -42,6 +61,20 @@ export const useAgentStore = defineStore('agent', () => {
 
   /** 守卫：是否在显示中（用于防止重复触发） */
   const showing = ref(false);
+
+  // ---- 入驻引导状态 ----
+
+  /** 入驻流程当前步骤 */
+  const onboardingStep = ref<OnboardingStep>(OnboardingStep.NOT_STARTED);
+
+  /** 已选择的守护灵类型（入驻流程中） */
+  const onboardingGuardian = ref<GuardianType | null>(null);
+
+  /** 是否已完成入驻流程 */
+  const onboardingComplete = ref(false);
+
+  /** 是否已完成新手任务 */
+  const newUserTaskComplete = ref(false);
 
   // ---- 游客引导弹窗（受限操作触发） ----
 
@@ -123,6 +156,61 @@ export const useAgentStore = defineStore('agent', () => {
     setTimeout(() => {
       guestGuideVisible.value = false;
     }, GUEST_BUBBLE_DURATION_MS);
+  }
+
+  // ---- 入驻引导流程方法 ----
+
+  /** 初始化入驻状态（从 storage 恢复） */
+  function initOnboardingState(): void {
+    onboardingComplete.value = storage.get<boolean>(ONBOARDING_COMPLETE_KEY, false) ?? false;
+    newUserTaskComplete.value = storage.get<boolean>(NEW_USER_TASK_COMPLETE_KEY, false) ?? false;
+  }
+
+  /** 开始入驻流程（进入注册页） */
+  function startOnboarding(): void {
+    onboardingStep.value = OnboardingStep.REGISTER;
+  }
+
+  /** 设置已选择的守护灵并进入下一阶段 */
+  function setOnboardingGuardian(type: GuardianType): void {
+    onboardingGuardian.value = type;
+    onboardingStep.value = OnboardingStep.SELECT_GUARDIAN;
+  }
+
+  /** 完成守护灵选择，进入领地分配 */
+  function confirmGuardianSelection(): void {
+    if (!onboardingGuardian.value) return;
+    onboardingStep.value = OnboardingStep.TERRITORY;
+  }
+
+  /** 完成领地分配，标记入驻完成 */
+  function completeOnboarding(): void {
+    onboardingStep.value = OnboardingStep.COMPLETE;
+    onboardingComplete.value = true;
+    storage.set(ONBOARDING_COMPLETE_KEY, true);
+  }
+
+  /** 触发初次相遇话术 */
+  function triggerFirstEncounter(): void {
+    publish('firstEncounter');
+  }
+
+  /** 触发新手任务引导话术 */
+  function triggerNewUserTask(): void {
+    if (newUserTaskComplete.value) return;
+    publish('newUserTask');
+  }
+
+  /** 标记新手任务完成并触发祝贺话术 */
+  function completeNewUserTask(): void {
+    newUserTaskComplete.value = true;
+    storage.set(NEW_USER_TASK_COMPLETE_KEY, true);
+    publish('taskComplete');
+  }
+
+  /** 检查是否需要展示新手任务引导 */
+  function shouldShowNewUserTask(): boolean {
+    return onboardingComplete.value && !newUserTaskComplete.value;
   }
 
   /** 关闭游客引导气泡 */
@@ -271,6 +359,10 @@ export const useAgentStore = defineStore('agent', () => {
     guideModalVisible,
     guideModalScene,
     guideModalLine,
+    onboardingStep,
+    onboardingGuardian,
+    onboardingComplete,
+    newUserTaskComplete,
     // getters
     guardianType,
     isGuest,
@@ -287,5 +379,15 @@ export const useAgentStore = defineStore('agent', () => {
     acquireGuideSlot,
     bindEventBus,
     tryDailyWelcome,
+    // 入驻引导
+    initOnboardingState,
+    startOnboarding,
+    setOnboardingGuardian,
+    confirmGuardianSelection,
+    completeOnboarding,
+    triggerFirstEncounter,
+    triggerNewUserTask,
+    completeNewUserTask,
+    shouldShowNewUserTask,
   };
 });

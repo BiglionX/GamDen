@@ -3,17 +3,31 @@ import { computed, onMounted, ref } from 'vue';
 import { useUserStore } from '@/stores/user';
 import { useInviteStore } from '@/stores/invite';
 import { useCelebrationStore } from '@/stores/celebration';
+import { useAgentStore } from '@/stores/agent';
 import { storeToRefs } from 'pinia';
 import RedDotBadge from '@/components/celebration/RedDotBadge.vue';
+import { GUARDIAN_VISUALS } from '@/types/agent';
 
 const userStore = useUserStore();
 const inviteStore = useInviteStore();
 const celebrationStore = useCelebrationStore();
+const agentStore = useAgentStore();
 
 const { stats, loading } = storeToRefs(inviteStore);
 const { profileRedDot } = storeToRefs(celebrationStore);
 
 const refreshing = ref(false);
+
+/** 是否展示新手任务引导 */
+const showNewUserGuide = computed(() => {
+  return !userStore.isGuest && agentStore.shouldShowNewUserTask();
+});
+
+/** 守护灵视觉配置 */
+const guardianVisual = computed(() => {
+  const type = userStore.profile?.guardianType ?? 'mechanical';
+  return GUARDIAN_VISUALS[type];
+});
 
 /**
  * 是否展示"小程序"入口的红点：
@@ -26,8 +40,19 @@ const showMiniProgramRedDot = computed(() => {
 });
 
 onMounted(async () => {
+  // 初始化入驻状态
+  agentStore.initOnboardingState();
+
   if (!userStore.isGuest) {
     await inviteStore.loadStats();
+
+    // 检查是否需要展示新手任务引导
+    if (agentStore.shouldShowNewUserTask()) {
+      // 延迟展示，给页面渲染留出时间
+      setTimeout(() => {
+        agentStore.triggerNewUserTask();
+      }, 800);
+    }
   }
 });
 
@@ -58,6 +83,20 @@ function handleMiniProgram() {
   uni.navigateTo({ url: '/pages/invite/mini-program' });
 }
 
+/** 跳到集市（新手任务） */
+function handleGoMarket() {
+  // 标记新手任务完成
+  agentStore.completeNewUserTask();
+  // 跳转到集市
+  uni.switchTab({ url: '/pages/market/index' });
+}
+
+/** 关闭新手任务引导 */
+function handleDismissGuide() {
+  agentStore.completeNewUserTask();
+  agentStore.dismiss();
+}
+
 function handleLogout() {
   uni.showModal({
     title: '确认退出',
@@ -79,6 +118,41 @@ function goLogin() {
 
 <template>
   <view class="page-profile">
+    <!-- 新手任务引导（首次进入"我的"页面显示） -->
+    <view v-if="showNewUserGuide && agentStore.current" class="new-user-guide" @tap.stop>
+      <!-- 守护灵头像 -->
+      <view
+        class="new-user-guide__avatar"
+        :style="{
+          borderColor: guardianVisual.color,
+          background: guardianVisual.color + '22',
+        }"
+      >
+        <text class="new-user-guide__icon">{{ guardianVisual.icon }}</text>
+      </view>
+
+      <!-- 对话气泡 -->
+      <view class="new-user-guide__bubble">
+        <view class="new-user-guide__bubble-header">
+          <text class="new-user-guide__name" :style="{ color: guardianVisual.color }">
+            {{ guardianVisual.name }}
+          </text>
+          <text class="new-user-guide__tag">新手任务</text>
+        </view>
+        <text class="new-user-guide__text">{{ agentStore.current.text }}</text>
+      </view>
+
+      <!-- 操作按钮 -->
+      <view class="new-user-guide__actions">
+        <view class="new-user-guide__btn new-user-guide__btn--primary" @tap="handleGoMarket">
+          <text>去集市看看</text>
+        </view>
+        <view class="new-user-guide__btn" @tap="handleDismissGuide">
+          <text>知道了</text>
+        </view>
+      </view>
+    </view>
+
     <!-- 头部用户信息 -->
     <view class="profile-header">
       <view class="profile-header__avatar">
@@ -241,6 +315,116 @@ function goLogin() {
   min-height: 100vh;
   background: $u-bg-color;
   padding: 24rpx 32rpx 200rpx;
+}
+
+/* ===== 新手任务引导 ===== */
+.new-user-guide {
+  display: flex;
+  align-items: flex-start;
+  gap: 20rpx;
+  background: linear-gradient(180deg, rgba(42, 49, 40, 0.95) 0%, rgba(30, 36, 31, 0.98) 100%);
+  border: 2rpx solid rgba(201, 168, 124, 0.4);
+  border-radius: 20rpx;
+  padding: 28rpx;
+  margin-bottom: 32rpx;
+  animation: guide-enter 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  &__avatar {
+    width: 80rpx;
+    height: 80rpx;
+    border-radius: 50%;
+    border-width: 3rpx;
+    border-style: solid;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.3);
+  }
+
+  &__icon {
+    font-size: 44rpx;
+    line-height: 1;
+  }
+
+  &__bubble {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__bubble-header {
+    display: flex;
+    align-items: center;
+    gap: 12rpx;
+    margin-bottom: 12rpx;
+    padding-bottom: 10rpx;
+    border-bottom: 1rpx solid rgba(201, 168, 124, 0.2);
+  }
+
+  &__name {
+    font-size: 26rpx;
+    font-weight: 700;
+    letter-spacing: 2rpx;
+  }
+
+  &__tag {
+    font-size: 18rpx;
+    color: #a89e85;
+    padding: 2rpx 10rpx;
+    background: rgba(201, 168, 124, 0.12);
+    border-radius: 8rpx;
+  }
+
+  &__text {
+    display: block;
+    font-size: 28rpx;
+    color: #f5f0e6;
+    line-height: 1.6;
+    font-weight: 500;
+  }
+
+  &__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12rpx;
+    flex-shrink: 0;
+  }
+
+  &__btn {
+    padding: 16rpx 24rpx;
+    border-radius: 24rpx;
+    font-size: 24rpx;
+    font-weight: 600;
+    text-align: center;
+    transition: transform 0.15s;
+
+    &--primary {
+      background: linear-gradient(135deg, $u-primary 0%, $u-primary-dark 100%);
+      color: $u-bg-color;
+      box-shadow: 0 2rpx 8rpx rgba(201, 168, 124, 0.3);
+    }
+
+    &:not(&--primary) {
+      background: transparent;
+      color: #a89e85;
+      border: 1rpx solid rgba(201, 168, 124, 0.3);
+    }
+
+    &:active {
+      transform: scale(0.96);
+    }
+  }
+}
+
+@keyframes guide-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-20rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .profile-header {

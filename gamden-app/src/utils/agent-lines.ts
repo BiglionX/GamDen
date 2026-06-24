@@ -8,10 +8,17 @@ import type { AgentLine, GuardianType, GuestGuideScene } from '@/types/agent';
  *  - V1.1+ 可改为从后端 /agent/lines 接口拉取
  *
  * 场景说明：
- *  - welcome     每日首次登录（按 guardianType 推送）
- *  - upgrade     领地升级祝贺（任意等级 +1 触发）
- *  - invite      邀请好友成功（邀请人 + 被邀请人均触发）
- *  - guestGuide  游客态浏览 30 秒软引导（与 guardian 无关，统一文案）
+ *  - welcome          每日首次登录（按 guardianType 推送）
+ *  - upgrade          领地升级祝贺（任意等级 +1 触发）
+ *  - invite           邀请好友成功（邀请人 + 被邀请人均触发）
+ *  - guestGuide       游客态浏览 30 秒软引导（与 guardian 无关，统一文案）
+ *  - firstEncounter   入驻引导：初次相遇
+ *  - askName          入驻引导：询问名字
+ *  - selectGuardian   入驻引导：守护灵选择（卡片悬停台词）
+ *  - alliance         入驻引导：结盟确认
+ *  - territoryLanding 入驻引导：领地落地祝贺
+ *  - newUserTask      入驻引导：新手任务引导
+ *  - taskComplete     入驻引导：任务完成祝贺
  */
 export const AGENT_LINES: AgentLine[] = [
   // ============ 机械师 ============
@@ -31,6 +38,49 @@ export const AGENT_LINES: AgentLine[] = [
     guardian: 'mechanical',
     scene: 'invite',
     text: '新坐标已锁定。',
+    duration: 5000,
+  },
+  // 入驻引导：机械师
+  {
+    guardian: 'mechanical',
+    scene: 'firstEncounter',
+    text: '信号同步中。我的编号是[M-07]，GamDen巢穴的守夜人。',
+    duration: 6000,
+  },
+  {
+    guardian: 'mechanical',
+    scene: 'askName',
+    text: '你的领地坐标已锁定，等待指挥官确认身份——请告诉我你的名字。',
+    duration: 6000,
+  },
+  {
+    guardian: 'mechanical',
+    scene: 'selectGuardian',
+    text: '机械不会说谎。我会用数据为你守护每一寸领地。',
+    duration: 0, // 选择卡片悬停时显示，不自动消失
+  },
+  {
+    guardian: 'mechanical',
+    scene: 'alliance',
+    text: '指令确认。人机绑定完成。欢迎归队，指挥官。',
+    duration: 6000,
+  },
+  {
+    guardian: 'mechanical',
+    scene: 'territoryLanding',
+    text: '领地已落地，坐标已锁定。这是你的起点，请开始建设。',
+    duration: 6000,
+  },
+  {
+    guardian: 'mechanical',
+    scene: 'newUserTask',
+    text: '建议执行初始任务：浏览集市。寻找领地升级所需资源。是否立即执行？',
+    duration: 0, // 常驻显示
+  },
+  {
+    guardian: 'mechanical',
+    scene: 'taskComplete',
+    text: '任务完成。初步建设已启动。继续前进。',
     duration: 5000,
   },
 
@@ -53,6 +103,49 @@ export const AGENT_LINES: AgentLine[] = [
     text: '新芽破土了！',
     duration: 5000,
   },
+  // 入驻引导：精灵
+  {
+    guardian: 'elf',
+    scene: 'firstEncounter',
+    text: '终于，你走过来了。我叫[灵]，这片森林的守护者。',
+    duration: 6000,
+  },
+  {
+    guardian: 'elf',
+    scene: 'askName',
+    text: '你的领地在等你。但在这之前，告诉我你的名字。',
+    duration: 6000,
+  },
+  {
+    guardian: 'elf',
+    scene: 'selectGuardian',
+    text: '风会带来远方的消息。我陪你等每一个邻居到来。',
+    duration: 0,
+  },
+  {
+    guardian: 'elf',
+    scene: 'alliance',
+    text: '你选了我。真好。那么——欢迎回家。',
+    duration: 6000,
+  },
+  {
+    guardian: 'elf',
+    scene: 'territoryLanding',
+    text: '你看，这里就是你的领地了。现在它很小，但风会帮你带来邻居。我保证。',
+    duration: 6000,
+  },
+  {
+    guardian: 'elf',
+    scene: 'newUserTask',
+    text: '要不要先去集市看看？那里有可以让领地变漂亮的东西。我陪你。',
+    duration: 0,
+  },
+  {
+    guardian: 'elf',
+    scene: 'taskComplete',
+    text: '你去了集市！真好。领地会一天天变好看的。',
+    duration: 5000,
+  },
 
   // ============ 占星师 ============
   {
@@ -73,20 +166,84 @@ export const AGENT_LINES: AgentLine[] = [
     text: '命运之线已连接。',
     duration: 5000,
   },
+  // 入驻引导：占星师
+  {
+    guardian: 'astrologer',
+    scene: 'firstEncounter',
+    text: '星辰已经等到了它的观星者。我等你很久了。',
+    duration: 6000,
+  },
+  {
+    guardian: 'astrologer',
+    scene: 'askName',
+    text: '请告诉我，我该用什么名字呼唤你？',
+    duration: 6000,
+  },
+  {
+    guardian: 'astrologer',
+    scene: 'selectGuardian',
+    text: '星辰的轨迹里，我已经看到了你的未来。跟我来。',
+    duration: 0,
+  },
+  {
+    guardian: 'astrologer',
+    scene: 'alliance',
+    text: '命运之线，从此缠绕。我陪你看未来的每一颗星。',
+    duration: 6000,
+  },
+  {
+    guardian: 'astrologer',
+    scene: 'territoryLanding',
+    text: '第一个坐标，是命运给你的礼物。以后这里会开满属于你的故事。',
+    duration: 6000,
+  },
+  {
+    guardian: 'astrologer',
+    scene: 'newUserTask',
+    text: '你的第一步，应该是去集市看看那些为你准备的"星尘"。走吧，我引路。',
+    duration: 0,
+  },
+  {
+    guardian: 'astrologer',
+    scene: 'taskComplete',
+    text: '第一步已经迈出。星途漫漫，我陪你走。',
+    duration: 5000,
+  },
 ];
 
 /**
- * 游客软引导气泡（30 秒定时触发后显示，15 秒后自动消失）
- * - 与 guardian 无关，统一文案
+ * 游客软引导气泡话术（30 秒定时触发后显示，15 秒后自动消失）
+ * - 与 guardian 无关，三选一随机
+ * - 按需求文档 3.1 节话术库
  */
 export const GUEST_GUIDE_LINES: AgentLine[] = [
   {
     guardian: 'mechanical',
     scene: 'guestGuide',
-    text: '巢穴之门已为你打开，私聊与升级需先入驻。',
+    text: '检测到正在执行"观望"指令。已持续45秒，建议进入"决策"阶段。',
+    duration: 15000,
+  },
+  {
+    guardian: 'elf',
+    scene: 'guestGuide',
+    text: '你站在迷雾边缘很久了。风里有一种熟悉的气息——这里，也曾经是我的家。',
+    duration: 15000,
+  },
+  {
+    guardian: 'astrologer',
+    scene: 'guestGuide',
+    text: '星盘上有一颗新的光点正在靠近。是你，对吗？',
     duration: 15000,
   },
 ];
+
+/**
+ * 获取随机软引导话术（用于气泡展示）
+ */
+export function getRandomGuestGuideLine(): AgentLine {
+  const idx = Math.floor(Math.random() * GUEST_GUIDE_LINES.length);
+  return GUEST_GUIDE_LINES[idx];
+}
 
 /**
  * 游客引导弹窗话术（受限操作触发）
@@ -146,7 +303,8 @@ export function getAgentLine(
   scene: AgentLine['scene'],
 ): AgentLine | null {
   if (scene === 'guestGuide') {
-    return GUEST_GUIDE_LINES[0] ?? null;
+    // 软引导话术：三选一随机
+    return getRandomGuestGuideLine();
   }
   if (!guardian) return null;
   return (

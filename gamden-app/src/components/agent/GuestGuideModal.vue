@@ -37,10 +37,12 @@ function handleMaskTap() {
   agentStore.dismissGuideModal();
 }
 
-/** 主按钮：跳注册页 */
+/** 主按钮：跳入驻引导注册页 */
 function handlePrimary() {
   agentStore.dismissGuideModal();
-  uni.navigateTo({ url: '/pages/auth/login' });
+  // 标记开始入驻流程并跳转
+  agentStore.startOnboarding();
+  uni.navigateTo({ url: '/pages/onboarding/register' });
 }
 
 /** 次按钮：关闭弹窗 */

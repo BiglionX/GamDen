@@ -26,6 +26,7 @@ import { http } from './request';
  * - 前端必须使用此常量，不允许拼字符串
  */
 export const TrackEvent = {
+  // ========== 小程序相关 ==========
   /** 用户邀请满 3 人（后端触发：AuthService.register） */
   MpQualificationUnlocked: 'mp_qualification_unlocked',
   /** 用户点击"开始申请"（前端按钮：mini-program.vue） */
@@ -44,6 +45,20 @@ export const TrackEvent = {
   MpAbandon: 'mp_abandon',
   /** 用户点击联系客服（前端按钮：HelpCenterSheet） */
   MpHelpClicked: 'mp_help_clicked',
+
+  // ========== 入驻引导流程 ==========
+  /** 软引导气泡弹出 */
+  OnboardingGuideBubbleShown: 'onboarding_guide_bubble_shown',
+  /** 用户点击软引导气泡 */
+  OnboardingGuideClicked: 'onboarding_guide_clicked',
+  /** 用户进入注册页 */
+  OnboardingRegisterStarted: 'onboarding_register_started',
+  /** 用户完成守护灵选择 */
+  OnboardingGuardianSelected: 'onboarding_guardian_selected',
+  /** 领地分配动画完成 */
+  OnboardingTerritoryLanded: 'onboarding_territory_landed',
+  /** 用户完成新手任务 */
+  OnboardingCompleted: 'onboarding_completed',
 } as const;
 
 export type TrackEventName = (typeof TrackEvent)[keyof typeof TrackEvent];

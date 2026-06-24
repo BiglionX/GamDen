@@ -48,6 +48,34 @@
       }
     },
     {
+      "path": "pages/onboarding/register",
+      "style": {
+        "navigationBarTitleText": "入驻引导",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/onboarding/select-guardian",
+      "style": {
+        "navigationBarTitleText": "选择守护灵",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/onboarding/territory",
+      "style": {
+        "navigationBarTitleText": "领地分配",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/onboarding/complete",
+      "style": {
+        "navigationBarTitleText": "入驻完成",
+        "navigationStyle": "custom"
+      }
+    },
+    {
       "path": "pages/im/messages",
       "style": {
         "navigationBarTitleText": "消息中心",
@@ -141,22 +169,33 @@
     "selectedColor": "#C9A87C",
     "backgroundColor": "#1E241F",
     "borderStyle": "black",
+    "height": "56px",
+    "fontSize": "12px",
+    "iconWidth": "24px",
     "list": [
       {
         "pagePath": "pages/map/index",
-        "text": "领地"
+        "text": "领地",
+        "iconPath": "static/tabbar/map.svg",
+        "selectedIconPath": "static/tabbar/map-active.svg"
       },
       {
         "pagePath": "pages/club/index",
-        "text": "俱乐部"
+        "text": "俱乐部",
+        "iconPath": "static/tabbar/club.svg",
+        "selectedIconPath": "static/tabbar/club-active.svg"
       },
       {
         "pagePath": "pages/market/index",
-        "text": "集市"
+        "text": "集市",
+        "iconPath": "static/tabbar/market.svg",
+        "selectedIconPath": "static/tabbar/market-active.svg"
       },
       {
         "pagePath": "pages/profile/index",
-        "text": "我的"
+        "text": "我的",
+        "iconPath": "static/tabbar/profile.svg",
+        "selectedIconPath": "static/tabbar/profile-active.svg"
       }
     ]
   },
