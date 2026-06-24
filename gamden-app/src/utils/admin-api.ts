@@ -145,4 +145,76 @@ export const adminApi = {
   deleteFaq(id: string): Promise<{ ok: true }> {
     return http.delete<{ ok: true }>(`/admin/faqs/${id}`);
   },
+
+  // ========== 俱乐部管理 ==========
+
+  /**
+   * 获取俱乐部列表
+   */
+  getClubList(params?: {
+    page?: number;
+    limit?: number;
+    club_type?: string;
+    status?: string;
+    vitality_level?: string;
+    keyword?: string;
+  }): Promise<{ clubs: any[]; total: number }> {
+    const queryParams = new URLSearchParams();
+    if (params) {
+      if (params.page) queryParams.set('page', String(params.page));
+      if (params.limit) queryParams.set('limit', String(params.limit));
+      if (params.club_type) queryParams.set('club_type', params.club_type);
+      if (params.status) queryParams.set('status', params.status);
+      if (params.vitality_level) queryParams.set('vitality_level', params.vitality_level);
+      if (params.keyword) queryParams.set('keyword', params.keyword);
+    }
+    return http.get<{ clubs: any[]; total: number }>(`/admin/clubs?${queryParams.toString()}`);
+  },
+
+  /**
+   * 获取提议审核列表
+   */
+  getProposalReviewList(params?: {
+    page?: number;
+    limit?: number;
+    status?: string;
+  }): Promise<{ proposals: any[]; total: number }> {
+    const queryParams = new URLSearchParams();
+    if (params) {
+      if (params.page) queryParams.set('page', String(params.page));
+      if (params.limit) queryParams.set('limit', String(params.limit));
+      if (params.status) queryParams.set('status', params.status);
+    }
+    return http.get<{ proposals: any[]; total: number }>(`/admin/club-proposals?${queryParams.toString()}`);
+  },
+
+  /**
+   * 审核提议
+   */
+  reviewProposal(id: number, action: 'approve' | 'reject', comment?: string): Promise<any> {
+    return http.post(`/admin/club-proposals/${id}`, { action, comment });
+  },
+
+  /**
+   * 获取活力值统计
+   */
+  getVitalityStats(): Promise<any> {
+    return http.get('/admin/club-vitality/stats');
+  },
+
+  /**
+   * 获取活力值趋势
+   */
+  getVitalityTrend(days?: number): Promise<any[]> {
+    const params = days ? `?days=${days}` : '';
+    return http.get<any[]>(`/admin/club-vitality/trend${params}`);
+  },
+
+  /**
+   * 获取活力值TOP俱乐部
+   */
+  getVitalityTopClubs(limit?: number): Promise<any[]> {
+    const params = limit ? `?limit=${limit}` : '';
+    return http.get<any[]>(`/admin/club-vitality/top${params}`);
+  },
 };

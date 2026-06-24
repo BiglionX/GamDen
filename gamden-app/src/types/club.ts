@@ -42,6 +42,199 @@ export type IMContentType =
   | 200
   | 201;
 
+// ============================================
+// 俱乐部升级系统类型定义
+// ============================================
+
+/** 俱乐部类型 */
+export type ClubType = 'default' | 'interest' | 'game' | 'custom';
+
+/** 俱乐部状态 */
+export type ClubStatus = 'active' | 'dormant' | 'archived' | 'closed';
+
+/** 加入方式 */
+export type JoinType = 'auto' | 'free' | 'approval';
+
+/** 活力值等级 */
+export type VitalityLevel = 'bronze' | 'silver' | 'gold' | 'diamond';
+
+/** 提议状态 */
+export type ProposalStatus = 'pending' | 'approved' | 'rejected' | 'expired';
+
+/** 提议类型 */
+export type ProposalType = 'game' | 'interest' | 'other';
+
+/** 成员角色 */
+export type MemberRole = 'member' | 'moderator' | 'owner';
+
+/**
+ * 俱乐部（扩展版）
+ */
+export interface ClubUpgrade {
+  id: number;
+  name: string;
+  description: string;
+  club_type: ClubType;
+  game_name_ext?: string;
+  tags: string[];
+  join_type: JoinType;
+  status: ClubStatus;
+  vitality: number;
+  vitality_level: VitalityLevel;
+  vitality_updated_at?: string;
+  member_count: number;
+  post_count: number;
+  icon: string;
+  openim_group_id?: string;
+  owner_id: number;
+  owner_name?: string;
+  game_name?: string;
+  endorsement_count?: number;
+  endorsement_deadline?: string;
+  created_at: string;
+  updated_at: string;
+  /** 是否已联署 */
+  is_endorsed?: boolean;
+}
+
+/**
+ * 俱乐部成员（扩展版）
+ */
+export interface ClubMemberUpgrade {
+  id: number;
+  club_id: number;
+  user_id: number;
+  role: MemberRole;
+  joined_at: string;
+  last_active_at: string;
+  nickname: string;
+  avatar: string;
+  guardian_type?: GuardianType;
+  level?: number;
+}
+
+/**
+ * 俱乐部提议
+ */
+export interface ClubProposal {
+  id: number;
+  proposer_id: number;
+  proposer_name?: string;
+  proposer_avatar?: string;
+  proposer_level?: number;
+  name: string;
+  description: string;
+  proposal_type: ProposalType;
+  game_name?: string;
+  tags: string[];
+  endorsement_count: number;
+  endorsement_deadline: string;
+  status: ProposalStatus;
+  reviewed_by?: number;
+  review_comment?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+/**
+ * 活力值等级配置
+ */
+export interface VitalityLevelConfig {
+  level: VitalityLevel;
+  name: string;
+  icon: string;
+  min_value: number;
+  max_value: number;
+  color: string;
+}
+
+/** 活力值等级配置常量 */
+export const VITALITY_LEVEL_CONFIG: Record<VitalityLevel, VitalityLevelConfig> = {
+  bronze: {
+    level: 'bronze',
+    name: '青铜',
+    icon: '🥉',
+    min_value: 0,
+    max_value: 199,
+    color: '#CD7F32'
+  },
+  silver: {
+    level: 'silver',
+    name: '白银',
+    icon: '🥈',
+    min_value: 200,
+    max_value: 499,
+    color: '#C0C0C0'
+  },
+  gold: {
+    level: 'gold',
+    name: '黄金',
+    icon: '🥇',
+    min_value: 500,
+    max_value: 999,
+    color: '#FFD700'
+  },
+  diamond: {
+    level: 'diamond',
+    name: '钻石',
+    icon: '💎',
+    min_value: 1000,
+    max_value: Infinity,
+    color: '#B9F2FF'
+  }
+};
+
+/**
+ * 热门标签
+ */
+export const HOT_TAGS: Record<ClubType, string[]> = {
+  default: [],
+  interest: ['pvp', '竞技', '休闲', '社交', '创作', '剧情', '建造', '技术'],
+  game: ['MOBA', 'RPG', 'FPS', '休闲', '策略', '动作', '二次元'],
+  custom: []
+};
+
+/**
+ * 俱乐部类型配置
+ */
+export interface ClubTypeConfig {
+  type: ClubType;
+  name: string;
+  icon: string;
+  description: string;
+}
+
+export const CLUB_TYPE_CONFIG: Record<ClubType, ClubTypeConfig> = {
+  default: {
+    type: 'default',
+    name: '默认',
+    icon: '🍵',
+    description: '所有玩家的第一个家'
+  },
+  interest: {
+    type: 'interest',
+    name: '兴趣',
+    icon: '🎯',
+    description: '按兴趣聚合的俱乐部'
+  },
+  game: {
+    type: 'game',
+    name: '游戏',
+    icon: '🎮',
+    description: '按游戏分类的俱乐部'
+  },
+  custom: {
+    type: 'custom',
+    name: '自定义',
+    icon: '✨',
+    description: '玩家提议创建的俱乐部'
+  }
+};
+
+// ============================================
+// 以下为原有类型（向后兼容）
+// ============================================
+
 /**
  * 俱乐部（群聊）元数据
  */
