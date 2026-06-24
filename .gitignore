@@ -1,55 +1,34 @@
-# Dependencies
-node_modules/
-package-lock.json
-yarn.lock
-pnpm-lock.yaml
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
 
-# Environment variables
-.env
-.env.local
-.env.development
-.env.production
+# testing
+/coverage
 
-# Build outputs
-dist/
-build/
-.next/
-out/
+# next.js
+/.next/
+/out/
 
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
+# production
+/build
 
-# OS
+# misc
 .DS_Store
-Thumbs.db
+*.pem
 
-# Logs
-logs/
-*.log
+# debug
 npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# Database
-*.db
-*.sqlite
+# local env files
+.env*.local
+.env
 
-# Docker
-.dockerignore
+# vercel
+.vercel
 
-# Temp files
-*.tmp
-*.temp
-
-# CodeBuddy
-.codebuddy/
-
-# Scripts containing secrets (don't commit)
-.github/scripts/create-project-v2.py
-.github/scripts/create-project-v3.py
-.github/scripts/create-repo-project.py
-.github/scripts/link-project-to-repo.py
-.github/scripts/setup-board-final.py
-.github/scripts/setup-project-board.py
+# typescript
+*.tsbuildinfo
+next-env.d.ts
