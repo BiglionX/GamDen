@@ -16,7 +16,7 @@ export default registerAs(
     host: process.env.DB_HOST ?? 'localhost',
     port: parseInt(process.env.DB_PORT ?? '5432', 10),
     username: process.env.DB_USERNAME ?? 'gamden',
-    password: process.env.DB_PASSWORD ?? 'gamden_secret',
+    password: process.env.DB_PASSWORD ?? 'your_password',
     database: process.env.DB_DATABASE ?? 'gamden',
     entities: [User, Territory, Invite, Club, ClubPost, MarketItem, UserMiniProgram],
     synchronize: (process.env.DB_SYNCHRONIZE ?? 'true').toLowerCase() === 'true',
