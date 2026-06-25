@@ -43,10 +43,26 @@ yarn-error.log*
 .env.*
 .env.b64
 *.result.txt
-*.proc-err
-*.proc-out
+*result.txt
+*err.txt
+*stdout.txt
+*proc-err
+*proc-out
+check-*.txt
+inspect-*.txt
+deploy*-*.txt
+upload*-*.txt
+heredoc-*.txt
 *.log
 *.log.*
+**/release.keystore
+**/.codebuddy/
+**/GamDen/
+
+# nested package lockfiles produced by local installs,
+# keep root package-lock.json tracked
+**/package-lock.json
+!/package-lock.json
 
 # typescript
 *.tsbuildinfo
