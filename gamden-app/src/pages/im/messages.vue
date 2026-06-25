@@ -276,19 +276,29 @@ function goLogin() {
     <!-- 顶部状态栏 -->
     <view class="status-bar">
       <view class="status-bar__item">
-        <text class="status-bar__label">IM 状态</text>
+        <text class="status-bar__label">
+          IM 状态
+        </text>
         <view class="status-bar__value">
           <view class="dot" :style="{ backgroundColor: connectionColor }" />
           <text>{{ connectionLabel }}</text>
         </view>
       </view>
       <view class="status-bar__item">
-        <text class="status-bar__label">未读消息</text>
-        <text class="status-bar__value">{{ totalUnread }}</text>
+        <text class="status-bar__label">
+          未读消息
+        </text>
+        <text class="status-bar__value">
+          {{ totalUnread }}
+        </text>
       </view>
       <view class="status-bar__item">
-        <text class="status-bar__label">会话</text>
-        <text class="status-bar__value">{{ conversations.length + groupConversations.length }}</text>
+        <text class="status-bar__label">
+          会话
+        </text>
+        <text class="status-bar__value">
+          {{ conversations.length + groupConversations.length }}
+        </text>
       </view>
     </view>
 
@@ -311,9 +321,15 @@ function goLogin() {
 
     <!-- 游客态 -->
     <view v-if="userStore.isGuest" class="empty-card" @tap="goLogin">
-      <text class="empty-card__icon">💌</text>
-      <text class="empty-card__title">入驻巢穴，开启私聊</text>
-      <text class="empty-card__desc">私聊、俱乐部消息、守护灵通知都在这里</text>
+      <text class="empty-card__icon">
+        💌
+      </text>
+      <text class="empty-card__title">
+        入驻巢穴，开启私聊
+      </text>
+      <text class="empty-card__desc">
+        私聊、俱乐部消息、守护灵通知都在这里
+      </text>
       <view class="empty-card__btn">
         <text>立即入驻</text>
       </view>
@@ -342,11 +358,17 @@ function goLogin() {
         </view>
         <view class="conv-item__body">
           <view class="conv-item__top">
-            <text class="conv-item__name">{{ conv.showName }}</text>
-            <text class="conv-item__time">{{ formatLatestTime(conv.latestMsgSendTime) }}</text>
+            <text class="conv-item__name">
+              {{ conv.showName }}
+            </text>
+            <text class="conv-item__time">
+              {{ formatLatestTime(conv.latestMsgSendTime) }}
+            </text>
           </view>
           <view class="conv-item__bottom">
-            <text class="conv-item__last">{{ conv.latestMsg || '暂无消息' }}</text>
+            <text class="conv-item__last">
+              {{ conv.latestMsg || '暂无消息' }}
+            </text>
             <text v-if="conv.unreadCount > 0" class="conv-item__badge">
               {{ conv.unreadCount > 99 ? '99+' : conv.unreadCount }}
             </text>
@@ -356,7 +378,9 @@ function goLogin() {
 
       <view v-if="visibleConversations.length === 0" class="empty-tip">
         <text>{{ filterMode === 'single' ? '还没有私聊会话' : (filterMode === 'group' ? '还没有群聊会话' : '暂无会话') }}</text>
-        <text class="empty-tip__sub">到地图点击邻居或在俱乐部成员头像上私聊吧～</text>
+        <text class="empty-tip__sub">
+          到地图点击邻居或在俱乐部成员头像上私聊吧～
+        </text>
       </view>
     </view>
   </view>

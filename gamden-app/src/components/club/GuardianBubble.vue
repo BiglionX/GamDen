@@ -53,7 +53,9 @@ const accent = computed(() => GUARDIAN_COLOR[props.guardianType]);
       class="guardian-bubble__avatar"
       :style="{ borderColor: accent, background: `linear-gradient(135deg, ${accent}33, ${accent}11)` }"
     >
-      <text class="guardian-bubble__icon">{{ finalIcon }}</text>
+      <text class="guardian-bubble__icon">
+        {{ finalIcon }}
+      </text>
       <view class="guardian-bubble__avatar-glow" :style="{ background: accent }" />
     </view>
 
@@ -67,11 +69,19 @@ const accent = computed(() => GUARDIAN_COLOR[props.guardianType]);
           Lv.{{ level }}
         </text>
       </view>
-      <text class="guardian-bubble__title">{{ title }}</text>
-      <text v-if="content" class="guardian-bubble__content">{{ content }}</text>
+      <text class="guardian-bubble__title">
+        {{ title }}
+      </text>
+      <text v-if="content" class="guardian-bubble__content">
+        {{ content }}
+      </text>
       <view v-if="actorName || time" class="guardian-bubble__footer">
-        <text v-if="actorName" class="guardian-bubble__actor">— {{ actorName }}</text>
-        <text v-if="time" class="guardian-bubble__time">{{ time }}</text>
+        <text v-if="actorName" class="guardian-bubble__actor">
+          — {{ actorName }}
+        </text>
+        <text v-if="time" class="guardian-bubble__time">
+          {{ time }}
+        </text>
       </view>
     </view>
   </view>

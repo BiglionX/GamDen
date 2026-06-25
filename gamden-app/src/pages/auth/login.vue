@@ -70,12 +70,18 @@ function handleGuestMode() {
 <template>
   <view class="page-login">
     <view class="hero">
-      <text class="hero__brand">GamDen</text>
-      <text class="hero__tagline">游戏巢穴 · 邀请制社区</text>
+      <text class="hero__brand">
+        GamDen
+      </text>
+      <text class="hero__tagline">
+        游戏巢穴 · 邀请制社区
+      </text>
     </view>
 
     <view class="form-card">
-      <text class="form-card__label">邀请码（必填）</text>
+      <text class="form-card__label">
+        邀请码（必填）
+      </text>
       <u-input
         v-model="inviteCode"
         placeholder="请输入邀请码"
@@ -87,7 +93,9 @@ function handleGuestMode() {
         custom-style="margin-bottom: 32rpx;"
       />
 
-      <text class="form-card__label">手机号（选填）</text>
+      <text class="form-card__label">
+        手机号（选填）
+      </text>
       <view class="phone-row">
         <u-input
           v-model="phone"
@@ -122,7 +130,9 @@ function handleGuestMode() {
     </view>
 
     <view class="guardian-section">
-      <text class="form-card__label">选择你的守护灵</text>
+      <text class="form-card__label">
+        选择你的守护灵
+      </text>
       <view class="guardian-list">
         <view
           v-for="g in guardians"
@@ -135,9 +145,15 @@ function handleGuestMode() {
           <view class="guardian-card__icon">
             <text>{{ g.icon }}</text>
           </view>
-          <text class="guardian-card__name">{{ g.name }}</text>
-          <text class="guardian-card__tagline">"{{ g.tagline }}"</text>
-          <text class="guardian-card__desc">{{ g.description }}</text>
+          <text class="guardian-card__name">
+            {{ g.name }}
+          </text>
+          <text class="guardian-card__tagline">
+            "{{ g.tagline }}"
+          </text>
+          <text class="guardian-card__desc">
+            {{ g.description }}
+          </text>
           <view v-if="selectedGuardian === g.type" class="guardian-card__check">
             <text>✓</text>
           </view>

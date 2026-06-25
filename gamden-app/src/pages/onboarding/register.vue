@@ -125,7 +125,9 @@ function handleGuestMode() {
           background: `linear-gradient(135deg, ${visual.color}22 0%, ${visual.color}11 100%)`,
         }"
       >
-        <text class="page-onboarding-register__avatar-icon">{{ visual.icon }}</text>
+        <text class="page-onboarding-register__avatar-icon">
+          {{ visual.icon }}
+        </text>
         <view
           class="page-onboarding-register__avatar-glow"
           :style="{ background: visual.color }"
@@ -159,7 +161,9 @@ function handleGuestMode() {
       <view class="page-onboarding-register__form-card">
         <!-- 手机号 -->
         <view class="page-onboarding-register__form-item">
-          <text class="page-onboarding-register__form-label">手机号</text>
+          <text class="page-onboarding-register__form-label">
+            手机号
+          </text>
           <view class="page-onboarding-register__phone-row">
             <u-input
               v-model="phone"
@@ -183,7 +187,9 @@ function handleGuestMode() {
 
         <!-- 验证码 -->
         <view class="page-onboarding-register__form-item">
-          <text class="page-onboarding-register__form-label">验证码</text>
+          <text class="page-onboarding-register__form-label">
+            验证码
+          </text>
           <u-input
             v-model="smsCode"
             type="number"

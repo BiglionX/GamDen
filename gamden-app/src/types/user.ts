@@ -4,9 +4,15 @@
 export type UserRole = 'guest' | 'registered' | 'agent';
 
 /**
- * 守护灵类型（V1.0 三选一）
+ * 守护灵类型（V1.0 六选一）
+ * - mechanical  机械师 - 理性/秩序
+ * - elf         精灵   - 温暖/陪伴
+ * - astrologer  占星师 - 深邃/宿命
+ * - ranger      游侠   - 自由/冒险
+ * - artisan     工匠   - 创造/经营
+ * - apostle     使徒   - 信念/守护
  */
-export type GuardianType = 'mechanical' | 'elf' | 'astrologer';
+export type GuardianType = 'mechanical' | 'elf' | 'astrologer' | 'ranger' | 'artisan' | 'apostle';
 
 /**
  * 用户实体（与后端 User 对齐）

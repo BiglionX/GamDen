@@ -11,7 +11,9 @@
           confirm-type="search"
           @confirm="onSearch"
         />
-        <button class="search-btn" @click="onSearch">搜索</button>
+        <button class="search-btn" @click="onSearch">
+          搜索
+        </button>
       </view>
 
       <scroll-view scroll-x class="status-tabs" show-scrollbar="false">
@@ -35,7 +37,9 @@
         >
           <view class="picker">
             主体：{{ certOptions[certIndex] ?? '全部' }}
-            <text class="arrow">▾</text>
+            <text class="arrow">
+              ▾
+            </text>
           </view>
         </picker>
         <picker
@@ -46,7 +50,9 @@
         >
           <view class="picker">
             排序：{{ sortOptions[sortIndex] }}
-            <text class="arrow">▾</text>
+            <text class="arrow">
+              ▾
+            </text>
           </view>
         </picker>
         <picker
@@ -57,7 +63,9 @@
         >
           <view class="picker">
             {{ order === 'desc' ? '降序' : '升序' }}
-            <text class="arrow">▾</text>
+            <text class="arrow">
+              ▾
+            </text>
           </view>
         </picker>
       </view>
@@ -72,7 +80,9 @@
         @click="goDetail(item.userId)"
       >
         <view class="row1">
-          <view class="nickname">{{ item.nickname }}</view>
+          <view class="nickname">
+            {{ item.nickname }}
+          </view>
           <view
             class="status-badge"
             :style="{ background: STATUS_COLOR[item.status] }"
@@ -81,11 +91,13 @@
           </view>
         </view>
         <view class="row2">
-          <text class="phone">{{ item.phoneMasked }}</text>
-          <text class="cert" v-if="item.certificationType">
+          <text class="phone">
+            {{ item.phoneMasked }}
+          </text>
+          <text v-if="item.certificationType" class="cert">
             · {{ CERT_LABEL[item.certificationType] }}
           </text>
-          <text class="appid" v-if="item.appidMasked">
+          <text v-if="item.appidMasked" class="appid">
             · {{ item.appidMasked }}
           </text>
         </view>
@@ -102,8 +114,12 @@
         </view>
       </view>
 
-      <view v-if="loading && list.length === 0" class="empty">加载中...</view>
-      <view v-else-if="list.length === 0" class="empty">暂无数据</view>
+      <view v-if="loading && list.length === 0" class="empty">
+        加载中...
+      </view>
+      <view v-else-if="list.length === 0" class="empty">
+        暂无数据
+      </view>
 
       <view v-if="list.length > 0" class="pagination">
         <button
@@ -113,7 +129,9 @@
         >
           上一页
         </button>
-        <text class="page-info">{{ page }} / {{ totalPages }} (共 {{ total }})</text>
+        <text class="page-info">
+          {{ page }} / {{ totalPages }} (共 {{ total }})
+        </text>
         <button
           class="page-btn"
           :disabled="page >= totalPages"

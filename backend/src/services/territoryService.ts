@@ -3,6 +3,7 @@ import { logger } from '../utils/logger';
 import { auditText, processAuditResult } from './contentAuditService';
 import { triggerLevelUp } from './agentService';
 import { getInviteProgress } from './inviteService';
+import { addExp, updateConsecutiveDays } from './agentUpgradeService';
 
 export interface TerritoryInfo {
   user_id: number;
@@ -221,7 +222,7 @@ export const addExperience = async (
       [userId, newLevel, iconUrl]
     );
 
-    // 触发Agent等级提升通知（异步）
+    // 触发Agent领地等级提升通知（异步）
     setImmediate(async () => {
       try {
         await triggerLevelUp(userId);
@@ -232,6 +233,16 @@ export const addExperience = async (
 
     logger.info('用户升级', { userId, newLevel, source });
   }
+
+  // 同时触发守护灵升级系统的领地升级经验值（异步，不阻塞主流程）
+  setImmediate(async () => {
+    try {
+      await addExp(userId, 'territory');
+      await updateConsecutiveDays(userId);
+    } catch (err: any) {
+      logger.error('守护灵领地升级EXP添加失败', { userId, error: err.message });
+    }
+  });
   
   return {
     level_up: levelUp,

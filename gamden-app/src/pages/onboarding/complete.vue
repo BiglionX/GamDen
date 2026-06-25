@@ -82,9 +82,13 @@ function handleEnterNest() {
             background: `linear-gradient(135deg, ${visual.color}22 0%, ${visual.color}11 100%)`,
           }"
         >
-          <text class="page-complete__badge-emoji">{{ visual.icon }}</text>
+          <text class="page-complete__badge-emoji">
+            {{ visual.icon }}
+          </text>
         </view>
-        <text class="page-complete__badge-text">结盟成功</text>
+        <text class="page-complete__badge-text">
+          结盟成功
+        </text>
       </view>
 
       <!-- 守护灵信息 -->
@@ -92,7 +96,9 @@ function handleEnterNest() {
         <text class="page-complete__guardian-name" :style="{ color: visual.color }">
           {{ visual.name }}
         </text>
-        <text class="page-complete__guardian-subtitle">你的专属守护灵</text>
+        <text class="page-complete__guardian-subtitle">
+          你的专属守护灵
+        </text>
       </view>
 
       <!-- 结盟确认台词 -->
@@ -101,17 +107,25 @@ function handleEnterNest() {
           class="page-complete__dialogue-bubble"
           :style="{ borderColor: visual.color }"
         >
-          <text class="page-complete__dialogue-text">{{ allianceLine?.text }}</text>
+          <text class="page-complete__dialogue-text">
+            {{ allianceLine?.text }}
+          </text>
         </view>
       </view>
 
       <!-- 领地信息 -->
       <view class="page-complete__territory">
         <view class="page-complete__territory-card">
-          <text class="page-complete__territory-icon">🏰</text>
+          <text class="page-complete__territory-icon">
+            🏰
+          </text>
           <view class="page-complete__territory-info">
-            <text class="page-complete__territory-label">你的领地</text>
-            <text class="page-complete__territory-id">#{{ territoryId || '-----' }}</text>
+            <text class="page-complete__territory-label">
+              你的领地
+            </text>
+            <text class="page-complete__territory-id">
+              #{{ territoryId || '-----' }}
+            </text>
           </view>
         </view>
       </view>

@@ -65,10 +65,16 @@ function handleExchange(item: Item) {
   <view class="page-market">
     <view class="balance-card">
       <view class="balance-card__row">
-        <text class="balance-card__label">我的金币</text>
-        <text class="balance-card__value">🪙 {{ coinBalance }}</text>
+        <text class="balance-card__label">
+          我的金币
+        </text>
+        <text class="balance-card__value">
+          🪙 {{ coinBalance }}
+        </text>
       </view>
-      <text class="balance-card__hint">通过签到、发帖、邀请好友获取金币</text>
+      <text class="balance-card__hint">
+        通过签到、发帖、邀请好友获取金币
+      </text>
     </view>
 
     <view class="category-tabs">
@@ -90,11 +96,19 @@ function handleExchange(item: Item) {
 
     <view class="item-grid">
       <view v-for="item in filteredItems" :key="item.id" class="item-card">
-        <text class="item-card__icon">{{ item.icon }}</text>
-        <text class="item-card__name">{{ item.name }}</text>
-        <text class="item-card__desc">{{ item.description }}</text>
+        <text class="item-card__icon">
+          {{ item.icon }}
+        </text>
+        <text class="item-card__name">
+          {{ item.name }}
+        </text>
+        <text class="item-card__desc">
+          {{ item.description }}
+        </text>
         <view class="item-card__footer">
-          <text class="item-card__price">🪙 {{ item.price }}</text>
+          <text class="item-card__price">
+            🪙 {{ item.price }}
+          </text>
           <u-button type="primary" size="mini" text="兑换" @tap="handleExchange(item)" />
         </view>
       </view>

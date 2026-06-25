@@ -197,13 +197,17 @@ onShow(() => {
         :class="{ 'tabs__item--active': activeTab === tab.key }"
         @tap="onTabChange(tab.key)"
       >
-        <text class="tabs__icon">{{ tab.icon }}</text>
-        <text class="tabs__name">{{ tab.name }}</text>
+        <text class="tabs__icon">
+          {{ tab.icon }}
+        </text>
+        <text class="tabs__name">
+          {{ tab.name }}
+        </text>
       </view>
     </view>
 
     <!-- 热门标签 -->
-    <view class="tags" v-if="activeTab === 'all' || activeTab === 'interest' || activeTab === 'game'">
+    <view v-if="activeTab === 'all' || activeTab === 'interest' || activeTab === 'game'" class="tags">
       <view class="tags__scroll">
         <view
           v-for="tag in HOT_TAGS"
@@ -224,7 +228,9 @@ onShow(() => {
       </text>
       <view class="result-bar__proposal" @tap="goProposal">
         <text>提议新茶摊</text>
-        <text class="arrow">›</text>
+        <text class="arrow">
+          ›
+        </text>
       </view>
     </view>
 
@@ -234,6 +240,171 @@ onShow(() => {
       scroll-y
       @scrolltolower="onReachBottom"
     >
+      <view
+        v-for="club in filteredClubs"
+        :key="club.id"
+        class="club-card"
+        @tap="goDetail(club)"
+      >
+        <view class="club-card__icon">
+          {{ club.icon }}
+        </view>
+        <view class="club-card__body">
+          <view class="club-card__header">
+            <text class="club-card__name">
+              {{ club.name }}
+            </text>
+            <text class="club-card__vitality">
+              {{ getVitalityIcon(club.vitality_level) }}
+            </text>
+          </view>
+          <view v-if="club.tags && club.tags.length > 0" class="club-card__tags">
+            <text v-for="tag in club.tags.slice(0, 3)" :key="tag" class="club-card__tag">
+              {{ tag }}
+            </text>
+          </view>
+          <text class="club-card__desc">
+            {{ club.description }}
+          </text>
+          <view class="club-card__meta">
+            <text class="club-card__meta-item">
+              <text class="club-card__meta-icon">
+                👥
+              </text>
+              {{ club.member_count.toLocaleString() }} 成员
+            </text>
+            <text class="club-card__meta-item">
+              <text class="club-card__meta-icon">
+                ⚡
+              </text>
+              活力 {{ club.vitality }}
+            </text>
+          </view>
+        </view>
+        <view class="club-card__chevron">
+          <text>›</text>
+        </view>
+      </view>
+
+      <!-- 加载更多 -->
+      <view v-if="loading" class="loading-more">
+        <text>加载中...</text>
+      </view>
+
+      <!-- 没有更多 -->
+      <view v-else-if="filteredClubs.length >= total && total > 0" class="no-more">
+        <text>没有更多了</text>
+      </view>
+
+      <!-- 空态 -->
+      <view v-if="!loading && filteredClubs.length === 0" class="empty">
+        <text class="empty__icon">
+          🛖
+        </text>
+        <text class="empty__text">
+          未找到匹配的俱乐部
+        </text>
+        <view class="empty__btn" @tap="goProposal">
+          <text>发起提议</text>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+</template>
+
+<script setup lang="ts">
+/**
+ * 俱乐部列表页（pages/club/index）
+ * ----------------------------------------------------------------------
+ * 功能：
+ *   1. 展示所有俱乐部卡片（游戏名称、成员数、今日新帖数）
+ *   2. 搜索框：按游戏名称 / 俱乐部名称实时筛选
+ *   3. 点击进入俱乐部详情（pages/club/detail）
+ *
+ * 数据来源：
+ *   - 复用 useClubChatStore.searchClubs()（内部 mock，后续接 /clubs/list）
+ */
+import { computed, ref } from 'vue';
+import { onShow, onPullDownRefresh } from '@dcloudio/uni-app';
+import { useClubChatStore } from '@/stores/club-chat';
+import type { Club } from '@/types/club';
+
+const chatStore = useClubChatStore();
+
+const keyword = ref('');
+const refreshing = ref(false);
+
+// 计算属性：按关键字过滤
+const filteredClubs = computed<Club[]>(() => {
+  return chatStore.searchClubs(keyword.value);
+});
+
+// 搜索回调（兼容 u-search 的 @search）
+function handleSearch(kw: string) {
+  keyword.value = kw;
+}
+
+// 实时输入（u-search v-model 已绑定，额外兜底）
+function handleInput(kw: string) {
+  keyword.value = kw;
+}
+
+// 清空关键字
+function clearKeyword() {
+  keyword.value = '';
+}
+
+// 点击卡片 → 跳详情
+function goDetail(club: Club) {
+  uni.navigateTo({ url: `/pages/club/detail?id=${club.id}` });
+}
+
+// 下拉刷新
+async function handleRefresh() {
+  refreshing.value = true;
+  try {
+    // 真实接入后：await http.get('/clubs/list', { keyword: keyword.value })
+    await new Promise((r) => setTimeout(r, 400));
+    uni.showToast({ title: '已刷新', icon: 'none', duration: 800 });
+  } finally {
+    refreshing.value = false;
+    uni.stopPullDownRefresh();
+  }
+}
+
+onPullDownRefresh(handleRefresh);
+onShow(() => {
+  // 每次回到列表时重新拉（保证新帖数等实时）
+  // 真实接入后在此调 searchClubs 重新拉
+});
+</script>
+<template>
+  <view class="page-club">
+    <!-- 搜索栏 -->
+    <view class="search-bar">
+      <u-search
+        :model-value="keyword"
+        placeholder="搜索游戏名 / 俱乐部名"
+        :show-action="false"
+        bg-color="#262D27"
+        color="#F5F0E6"
+        placeholder-color="#A89E85"
+        clearable
+        @search="handleSearch"
+        @input="handleInput"
+        @clear="clearKeyword"
+      />
+    </view>
+
+    <!-- 结果统计 -->
+    <view class="result-bar">
+      <text class="result-bar__text">
+        {{ keyword ? `匹配到 ${filteredClubs.length} 个俱乐部` : `共 ${filteredClubs.length} 个俱乐部` }}
+      </text>
+    </view>
+
+    <!-- 俱乐部列表 -->
+    <view v-if="filteredClubs.length > 0" class="club-list">
       <view
         v-for="club in filteredClubs"
         :key="club.id"
@@ -265,26 +436,21 @@ onShow(() => {
           <text>›</text>
         </view>
       </view>
+    </view>
 
-      <!-- 加载更多 -->
-      <view v-if="loading" class="loading-more">
-        <text>加载中...</text>
+    <!-- 空态 -->
+    <view v-else class="empty">
+      <text class="empty__icon">🛖</text>
+      <text class="empty__text">未找到匹配 "{{ keyword }}" 的俱乐部</text>
+      <view class="empty__btn" @tap="clearKeyword">
+        <text>清空搜索</text>
       </view>
+    </view>
 
-      <!-- 没有更多 -->
-      <view v-else-if="filteredClubs.length >= total && total > 0" class="no-more">
-        <text>没有更多了</text>
-      </view>
-
-      <!-- 空态 -->
-      <view v-if="!loading && filteredClubs.length === 0" class="empty">
-        <text class="empty__icon">🛖</text>
-        <text class="empty__text">未找到匹配的俱乐部</text>
-        <view class="empty__btn" @tap="goProposal">
-          <text>发起提议</text>
-        </view>
-      </view>
-    </scroll-view>
+    <!-- 下拉刷新指示 -->
+    <view v-if="refreshing" class="refresh-tip">
+      <text>刷新中...</text>
+    </view>
   </view>
 </template>
 
@@ -562,148 +728,6 @@ onShow(() => {
   font-size: 24rpx;
 }
 </style>
-<script setup lang="ts">
-/**
- * 俱乐部列表页（pages/club/index）
- * ----------------------------------------------------------------------
- * 功能：
- *   1. 展示所有俱乐部卡片（游戏名称、成员数、今日新帖数）
- *   2. 搜索框：按游戏名称 / 俱乐部名称实时筛选
- *   3. 点击进入俱乐部详情（pages/club/detail）
- *
- * 数据来源：
- *   - 复用 useClubChatStore.searchClubs()（内部 mock，后续接 /clubs/list）
- */
-import { computed, ref } from 'vue';
-import { onShow, onPullDownRefresh } from '@dcloudio/uni-app';
-import { useClubChatStore } from '@/stores/club-chat';
-import type { Club } from '@/types/club';
-
-const chatStore = useClubChatStore();
-
-const keyword = ref('');
-const refreshing = ref(false);
-
-// 计算属性：按关键字过滤
-const filteredClubs = computed<Club[]>(() => {
-  return chatStore.searchClubs(keyword.value);
-});
-
-// 搜索回调（兼容 u-search 的 @search）
-function handleSearch(kw: string) {
-  keyword.value = kw;
-}
-
-// 实时输入（u-search v-model 已绑定，额外兜底）
-function handleInput(kw: string) {
-  keyword.value = kw;
-}
-
-// 清空关键字
-function clearKeyword() {
-  keyword.value = '';
-}
-
-// 点击卡片 → 跳详情
-function goDetail(club: Club) {
-  uni.navigateTo({ url: `/pages/club/detail?id=${club.id}` });
-}
-
-// 下拉刷新
-async function handleRefresh() {
-  refreshing.value = true;
-  try {
-    // 真实接入后：await http.get('/clubs/list', { keyword: keyword.value })
-    await new Promise((r) => setTimeout(r, 400));
-    uni.showToast({ title: '已刷新', icon: 'none', duration: 800 });
-  } finally {
-    refreshing.value = false;
-    uni.stopPullDownRefresh();
-  }
-}
-
-onPullDownRefresh(handleRefresh);
-onShow(() => {
-  // 每次回到列表时重新拉（保证新帖数等实时）
-  // 真实接入后在此调 searchClubs 重新拉
-});
-</script>
-
-<template>
-  <view class="page-club">
-    <!-- 搜索栏 -->
-    <view class="search-bar">
-      <u-search
-        :model-value="keyword"
-        placeholder="搜索游戏名 / 俱乐部名"
-        :show-action="false"
-        bg-color="#262D27"
-        color="#F5F0E6"
-        placeholder-color="#A89E85"
-        clearable
-        @search="handleSearch"
-        @input="handleInput"
-        @clear="clearKeyword"
-      />
-    </view>
-
-    <!-- 结果统计 -->
-    <view class="result-bar">
-      <text class="result-bar__text">
-        {{ keyword ? `匹配到 ${filteredClubs.length} 个俱乐部` : `共 ${filteredClubs.length} 个俱乐部` }}
-      </text>
-    </view>
-
-    <!-- 俱乐部列表 -->
-    <view v-if="filteredClubs.length > 0" class="club-list">
-      <view
-        v-for="club in filteredClubs"
-        :key="club.id"
-        class="club-card"
-        @tap="goDetail(club)"
-      >
-        <view class="club-card__icon">{{ club.icon }}</view>
-        <view class="club-card__body">
-          <view class="club-card__header">
-            <text class="club-card__name">{{ club.name }}</text>
-            <text class="club-card__vitality">{{ getVitalityIcon(club.vitality_level) }}</text>
-          </view>
-          <view class="club-card__tags" v-if="club.tags && club.tags.length > 0">
-            <text v-for="tag in club.tags.slice(0, 3)" :key="tag" class="club-card__tag">{{ tag }}</text>
-          </view>
-          <text class="club-card__desc">{{ club.description }}</text>
-          <view class="club-card__meta">
-            <text class="club-card__meta-item">
-              <text class="club-card__meta-icon">👥</text>
-              {{ club.member_count.toLocaleString() }} 成员
-            </text>
-            <text class="club-card__meta-item">
-              <text class="club-card__meta-icon">⚡</text>
-              活力 {{ club.vitality }}
-            </text>
-          </view>
-        </view>
-        <view class="club-card__chevron">
-          <text>›</text>
-        </view>
-      </view>
-    </view>
-
-    <!-- 空态 -->
-    <view v-else class="empty">
-      <text class="empty__icon">🛖</text>
-      <text class="empty__text">未找到匹配 "{{ keyword }}" 的俱乐部</text>
-      <view class="empty__btn" @tap="clearKeyword">
-        <text>清空搜索</text>
-      </view>
-    </view>
-
-    <!-- 下拉刷新指示 -->
-    <view v-if="refreshing" class="refresh-tip">
-      <text>刷新中...</text>
-    </view>
-  </view>
-</template>
 
 <style lang="scss" scoped>
 .page-club {

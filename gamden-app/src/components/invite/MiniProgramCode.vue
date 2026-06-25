@@ -58,8 +58,12 @@ function handleShare() {
   <view v-if="data?.unlocked" class="mp-code">
     <view class="mp-code__card">
       <view class="mp-code__header">
-        <text class="mp-code__title">我的专属小程序</text>
-        <text class="mp-code__hint">扫码进入 · 邀请进度 {{ data.invitedCount }}/{{ data.threshold }}</text>
+        <text class="mp-code__title">
+          我的专属小程序
+        </text>
+        <text class="mp-code__hint">
+          扫码进入 · 邀请进度 {{ data.invitedCount }}/{{ data.threshold }}
+        </text>
       </view>
 
       <view class="mp-code__body">
@@ -77,8 +81,12 @@ function handleShare() {
         </view>
 
         <view class="mp-code__meta">
-          <text class="mp-code__scene">scene: {{ data.scene }}</text>
-          <text class="mp-code__page">page: {{ data.pagePath }}</text>
+          <text class="mp-code__scene">
+            scene: {{ data.scene }}
+          </text>
+          <text class="mp-code__page">
+            page: {{ data.pagePath }}
+          </text>
           <text v-if="data.expiresAt" class="mp-code__exp">
             有效期至 {{ data.expiresAt.slice(0, 10) }}
           </text>
@@ -97,7 +105,9 @@ function handleShare() {
   </view>
 
   <view v-else-if="data && !data.unlocked" class="mp-code-locked">
-    <view class="mp-code-locked__icon">🔒</view>
+    <view class="mp-code-locked__icon">
+      🔒
+    </view>
     <view class="mp-code-locked__text">
       邀请 {{ data.threshold - data.invitedCount }} 位好友即可解锁专属小程序
     </view>

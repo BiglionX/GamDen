@@ -36,7 +36,9 @@ function handleDismiss() {
       class="agent-dialog__avatar"
       :style="{ borderColor: visual.color, background: visual.bgColor }"
     >
-      <text class="agent-dialog__avatar-icon">{{ visual.icon }}</text>
+      <text class="agent-dialog__avatar-icon">
+        {{ visual.icon }}
+      </text>
       <view class="agent-dialog__avatar-glow" :style="{ background: visual.color }" />
     </view>
 
@@ -44,10 +46,16 @@ function handleDismiss() {
     <view class="agent-dialog__bubble">
       <view class="agent-dialog__bubble-arrow" />
       <view class="agent-dialog__header">
-        <text class="agent-dialog__name">{{ visual.name }}</text>
-        <text class="agent-dialog__scene-tag">{{ sceneLabel }}</text>
+        <text class="agent-dialog__name">
+          {{ visual.name }}
+        </text>
+        <text class="agent-dialog__scene-tag">
+          {{ sceneLabel }}
+        </text>
       </view>
-      <text class="agent-dialog__text">{{ current.text }}</text>
+      <text class="agent-dialog__text">
+        {{ current.text }}
+      </text>
     </view>
   </view>
 </template>

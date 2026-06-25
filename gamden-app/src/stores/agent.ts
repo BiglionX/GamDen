@@ -84,6 +84,73 @@ export const useAgentStore = defineStore('agent', () => {
   /** 弹窗触发场景（用于差异化文案与埋点） */
   const guideModalScene = ref<GuestGuideScene>('default');
 
+  // ---- 守护灵升级系统状态 ----
+
+  /** 守护灵成长状态 */
+  const agentState = ref<{
+    agentLevel: number;
+    exp: number;
+    bondLevel: number;
+    bondPoints: number;
+    personalityTags: string[];
+    unlockedEggs: string[];
+    consecutiveDays: number;
+    lastActiveAt: string;
+    lastLevelUpAt: string | null;
+  } | null>(null);
+
+  /** 今日EXP进度 */
+  const dailyProgress = ref<{
+    signInCount: number;
+    postCount: number;
+    likeCount: number;
+    inviteCount: number;
+    marketCount: number;
+    expGained: number;
+    bondGained: number;
+  } | null>(null);
+
+  /** 守护灵状态加载中 */
+  const agentStateLoading = ref(false);
+
+  /** 是否显示升级特效 */
+  const showUpgradeEffect = ref(false);
+
+  /** 升级特效数据 */
+  const upgradeEffectData = ref<{
+    newLevel: number;
+    text: string;
+  } | null>(null);
+
+  // ---- AI 智能对话系统状态 ----
+
+  /** 能量状态 */
+  const energyStatus = ref<{
+    dailyUsed: number;
+    dailyFree: number;
+    purchasedBalance: number;
+    remaining: number;
+    total: number;
+    percentage: number;
+    level: 'abundant' | 'low' | 'depleted';
+  } | null>(null);
+
+  /** 对话历史 */
+  const chatHistory = ref<{
+    role: string;
+    content: string;
+    created_at?: string;
+  }[]>([]);
+
+  /** 长期记忆列表 */
+  const memories = ref<any[]>([]);
+
+  /** 对话加载中 */
+  const chatLoading = ref(false);
+
+  /** 能量加载中 */
+  const energyLoading = ref(false);
+
   // ---- 计算 ----
 
   const userStore = useUserStore();
@@ -308,6 +375,195 @@ export const useAgentStore = defineStore('agent', () => {
     // });
   }
 
+  // ---- 守护灵升级系统方法 ----
+
+  /** 获取守护灵成长状态 */
+  async function fetchAgentState(): Promise<void> {
+    const userStore = useUserStore();
+    if (!userStore.isLoggedIn) return;
+
+    agentStateLoading.value = true;
+    try {
+      const res = await uni.request({
+        url: '/api/agent/state',
+        method: 'GET',
+      });
+      if (res.statusCode === 200 && res.data) {
+        agentState.value = res.data as typeof agentState.value;
+      }
+    } catch (e) {
+      console.error('[AgentStore] fetchAgentState error:', e);
+    } finally {
+      agentStateLoading.value = false;
+    }
+  }
+
+  /** 获取今日EXP进度 */
+  async function fetchDailyProgress(): Promise<void> {
+    const userStore = useUserStore();
+    if (!userStore.isLoggedIn) return;
+
+    try {
+      const res = await uni.request({
+        url: '/api/agent/daily-progress',
+        method: 'GET',
+      });
+      if (res.statusCode === 200 && res.data) {
+        dailyProgress.value = res.data as typeof dailyProgress.value;
+      }
+    } catch (e) {
+      console.error('[AgentStore] fetchDailyProgress error:', e);
+    }
+  }
+
+  /** 触发升级特效 */
+  function triggerUpgradeEffect(newLevel: number, text: string): void {
+    upgradeEffectData.value = { newLevel, text };
+    showUpgradeEffect.value = true;
+  }
+
+  /** 隐藏升级特效 */
+  function hideUpgradeEffect(): void {
+    showUpgradeEffect.value = false;
+    upgradeEffectData.value = null;
+  }
+
+  // ---- AI 智能对话系统方法 ----
+
+  /** 获取能量状态 */
+  async function fetchEnergyStatus(): Promise<void> {
+    if (!userStore.isLoggedIn) return;
+
+    energyLoading.value = true;
+    try {
+      const res = await uni.request({
+        url: '/api/agent/energy',
+        method: 'GET',
+      });
+      if (res.statusCode === 200 && (res.data as any)?.data) {
+        energyStatus.value = (res.data as any).data;
+      }
+    } catch (e) {
+      console.error('[AgentStore] fetchEnergyStatus error:', e);
+    } finally {
+      energyLoading.value = false;
+    }
+  }
+
+  /** 发送 AI 对话消息 */
+  async function sendChatMessage(message: string): Promise<{
+    text: string;
+    tokensUsed: number;
+    isDegraded: boolean;
+    degradedReason?: string;
+  } | null> {
+    if (!userStore.isLoggedIn) return null;
+
+    chatLoading.value = true;
+    try {
+      const res = await uni.request({
+        url: '/api/agent/chat',
+        method: 'POST',
+        data: { message },
+      });
+      if (res.statusCode === 200 && (res.data as any)?.data) {
+        const data = (res.data as any).data;
+        // 更新对话历史
+        chatHistory.value.push(
+          { role: 'user', content: message },
+          { role: 'agent', content: data.text }
+        );
+        // 更新能量状态
+        if (energyStatus.value) {
+          energyStatus.value.remaining = data.remainingToken;
+          energyStatus.value.dailyUsed += data.tokensUsed;
+        }
+        return {
+          text: data.text,
+          tokensUsed: data.tokensUsed,
+          isDegraded: data.isDegraded,
+          degradedReason: data.degradedReason
+        };
+      }
+      return null;
+    } catch (e) {
+      console.error('[AgentStore] sendChatMessage error:', e);
+      return null;
+    } finally {
+      chatLoading.value = false;
+    }
+  }
+
+  /** 获取对话历史 */
+  async function fetchChatHistory(): Promise<void> {
+    if (!userStore.isLoggedIn) return;
+
+    chatLoading.value = true;
+    try {
+      const res = await uni.request({
+        url: '/api/agent/conversations',
+        method: 'GET',
+      });
+      if (res.statusCode === 200 && (res.data as any)?.data) {
+        const data = (res.data as any).data;
+        chatHistory.value = data.conversations || [];
+        if (energyStatus.value) {
+          energyStatus.value.level = data.energyLevel;
+        }
+      }
+    } catch (e) {
+      console.error('[AgentStore] fetchChatHistory error:', e);
+    } finally {
+      chatLoading.value = false;
+    }
+  }
+
+  /** 清空对话历史 */
+  async function clearChatHistory(): Promise<boolean> {
+    if (!userStore.isLoggedIn) return false;
+
+    try {
+      const res = await uni.request({
+        url: '/api/agent/history',
+        method: 'DELETE',
+      });
+      if (res.statusCode === 200) {
+        chatHistory.value = [];
+        return true;
+      }
+      return false;
+    } catch (e) {
+      console.error('[AgentStore] clearChatHistory error:', e);
+      return false;
+    }
+  }
+
+  /** 获取记忆列表 */
+  async function fetchMemories(): Promise<void> {
+    if (!userStore.isLoggedIn) return;
+
+    try {
+      const res = await uni.request({
+        url: '/api/agent/memories',
+        method: 'GET',
+      });
+      if (res.statusCode === 200 && (res.data as any)?.data) {
+        memories.value = (res.data as any).data.memories || [];
+      }
+    } catch (e) {
+      console.error('[AgentStore] fetchMemories error:', e);
+    }
+  }
+
+  /** 是否降智模式 */
+  const isDegraded = computed(() => energyStatus.value?.level === 'depleted');
+
+  /** 能量百分比 */
+  const energyPercentage = computed(() => {
+    if (!energyStatus.value) return 0;
+    return Math.round(energyStatus.value.percentage * 100);
+  });
+
   // ---- 事件总线桥接 ----
 
   /**
@@ -363,6 +619,12 @@ export const useAgentStore = defineStore('agent', () => {
     onboardingGuardian,
     onboardingComplete,
     newUserTaskComplete,
+    // 守护灵升级系统状态
+    agentState,
+    dailyProgress,
+    agentStateLoading,
+    showUpgradeEffect,
+    upgradeEffectData,
     // getters
     guardianType,
     isGuest,
@@ -389,5 +651,25 @@ export const useAgentStore = defineStore('agent', () => {
     triggerNewUserTask,
     completeNewUserTask,
     shouldShowNewUserTask,
+    // 守护灵升级系统方法
+    fetchAgentState,
+    fetchDailyProgress,
+    triggerUpgradeEffect,
+    hideUpgradeEffect,
+    // AI 智能对话系统状态
+    energyStatus,
+    chatHistory,
+    memories,
+    chatLoading,
+    energyLoading,
+    // AI 智能对话系统方法
+    fetchEnergyStatus,
+    sendChatMessage,
+    fetchChatHistory,
+    clearChatHistory,
+    fetchMemories,
+    // AI 计算属性
+    isDegraded,
+    energyPercentage,
   };
 });

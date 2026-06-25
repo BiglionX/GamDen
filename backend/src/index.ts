@@ -58,6 +58,8 @@ import inviteRoutes from './routes/inviteRoutes';
 import clubRoutes from './routes/clubRoutes';
 import shopRoutes from './routes/shopRoutes';
 import agentRoutes from './routes/agentRoutes';
+import agentUpgradeRoutes from './routes/agentUpgradeRoutes';
+import agentAIRoutes from './routes/agentAIRoutes';
 import webhookRoutes from './routes/webhookRoutes';
 import adminRoutes from './routes/adminRoutes';
 import wechatRoutes from './routes/wechatRoutes';
@@ -69,6 +71,8 @@ app.use('/api/invite', inviteRoutes);
 app.use('/api/club', clubRoutes);
 app.use('/api/shop', shopRoutes);
 app.use('/api/agent', agentRoutes);
+app.use('/api/agent', agentUpgradeRoutes);
+app.use('/api/agent', agentAIRoutes);
 app.use('/webhook', webhookRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/wechat', wechatRoutes);
@@ -102,9 +106,21 @@ startInviteActivationScheduler();
 import { startSignInReminderScheduler } from './services/agentService';
 startSignInReminderScheduler();
 
+// 启动守护灵连续未登录检查定时任务（每日凌晨检查）
+import { startAgentCareScheduler } from './services/agentUpgradeService';
+startAgentCareScheduler();
+
 // 启动账号清理定时任务（删除已注销超过30天的账号）
 import { startAccountCleanupScheduler } from './services/authService';
 startAccountCleanupScheduler();
+
+// 启动守护灵 AI 对话定时任务
+import { startAllAgentSchedulers } from './services/agentScheduler';
+startAllAgentSchedulers();
+
+// 启动俱乐部活力值定时任务
+import { startClubVitalityScheduler } from './services/clubVitalityScheduler';
+startClubVitalityScheduler();
 
 // 启动服务器
 app.listen(PORT, () => {

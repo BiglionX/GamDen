@@ -20,7 +20,9 @@ withDefaults(defineProps<Props>(), {
   <view class="sys-bubble">
     <view class="sys-bubble__line" />
     <view class="sys-bubble__text-wrap">
-      <text class="sys-bubble__text">{{ text }}</text>
+      <text class="sys-bubble__text">
+        {{ text }}
+      </text>
     </view>
     <view class="sys-bubble__line" />
   </view>

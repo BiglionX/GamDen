@@ -60,8 +60,12 @@ function defaultIcon(s?: MiniProgramStatus): string {
       `status-badge--${size}`,
     ]"
   >
-    <text v-if="finalIcon" class="status-badge__icon">{{ finalIcon }}</text>
-    <text class="status-badge__label">{{ finalLabel }}</text>
+    <text v-if="finalIcon" class="status-badge__icon">
+      {{ finalIcon }}
+    </text>
+    <text class="status-badge__label">
+      {{ finalLabel }}
+    </text>
   </view>
 </template>
 

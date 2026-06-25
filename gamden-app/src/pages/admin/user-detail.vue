@@ -1,36 +1,62 @@
 <template>
   <view class="user-detail">
-    <view v-if="loading && !detail" class="loading">加载中...</view>
+    <view v-if="loading && !detail" class="loading">
+      加载中...
+    </view>
 
     <template v-else-if="detail">
       <!-- 基础信息 -->
       <view class="card">
-        <view class="card-title">基础信息</view>
-        <view class="kv">
-          <text class="k">用户ID</text>
-          <text class="v mono">{{ detail.userId }}</text>
+        <view class="card-title">
+          基础信息
         </view>
         <view class="kv">
-          <text class="k">昵称</text>
-          <text class="v">{{ detail.nickname }}</text>
+          <text class="k">
+            用户ID
+          </text>
+          <text class="v mono">
+            {{ detail.userId }}
+          </text>
         </view>
         <view class="kv">
-          <text class="k">手机号</text>
-          <text class="v">{{ detail.phoneMasked }}</text>
+          <text class="k">
+            昵称
+          </text>
+          <text class="v">
+            {{ detail.nickname }}
+          </text>
         </view>
         <view class="kv">
-          <text class="k">邀请人数</text>
-          <text class="v">{{ detail.invitedCount }}</text>
+          <text class="k">
+            手机号
+          </text>
+          <text class="v">
+            {{ detail.phoneMasked }}
+          </text>
         </view>
         <view class="kv">
-          <text class="k">最后登录</text>
-          <text class="v">{{ formatDate(detail.lastLoginAt) }}</text>
+          <text class="k">
+            邀请人数
+          </text>
+          <text class="v">
+            {{ detail.invitedCount }}
+          </text>
+        </view>
+        <view class="kv">
+          <text class="k">
+            最后登录
+          </text>
+          <text class="v">
+            {{ formatDate(detail.lastLoginAt) }}
+          </text>
         </view>
       </view>
 
       <!-- 状态信息 -->
       <view class="card">
-        <view class="card-title">申请状态</view>
+        <view class="card-title">
+          申请状态
+        </view>
         <view class="status-bar">
           <view
             class="status-pill"
@@ -38,50 +64,86 @@
           >
             {{ STATUS_LABEL[detail.status] }}
           </view>
-          <text class="status-step">{{ statusStep }}</text>
+          <text class="status-step">
+            {{ statusStep }}
+          </text>
         </view>
 
         <view class="kv">
-          <text class="k">主体类型</text>
+          <text class="k">
+            主体类型
+          </text>
           <text class="v">
             {{ detail.certificationType ? CERT_LABEL[detail.certificationType] : '未提交' }}
           </text>
         </view>
         <view class="kv">
-          <text class="k">AppID</text>
-          <text class="v mono">{{ detail.appidMasked ?? '未提交' }}</text>
+          <text class="k">
+            AppID
+          </text>
+          <text class="v mono">
+            {{ detail.appidMasked ?? '未提交' }}
+          </text>
         </view>
         <view class="kv">
-          <text class="k">自定义名称</text>
-          <text class="v">{{ detail.customName ?? '-' }}</text>
+          <text class="k">
+            自定义名称
+          </text>
+          <text class="v">
+            {{ detail.customName ?? '-' }}
+          </text>
         </view>
         <view class="kv">
-          <text class="k">获得资格</text>
-          <text class="v">{{ formatDate(detail.qualificationUnlockedAt) }}</text>
+          <text class="k">
+            获得资格
+          </text>
+          <text class="v">
+            {{ formatDate(detail.qualificationUnlockedAt) }}
+          </text>
         </view>
         <view class="kv">
-          <text class="k">认证提交</text>
-          <text class="v">{{ formatDate(detail.certSubmittedAt) }}</text>
+          <text class="k">
+            认证提交
+          </text>
+          <text class="v">
+            {{ formatDate(detail.certSubmittedAt) }}
+          </text>
         </view>
         <view class="kv">
-          <text class="k">AppID 提交</text>
-          <text class="v">{{ formatDate(detail.appidSubmittedAt) }}</text>
+          <text class="k">
+            AppID 提交
+          </text>
+          <text class="v">
+            {{ formatDate(detail.appidSubmittedAt) }}
+          </text>
         </view>
         <view class="kv">
-          <text class="k">代码提交审核</text>
-          <text class="v">{{ formatDate(detail.codeSubmittedAt) }}</text>
+          <text class="k">
+            代码提交审核
+          </text>
+          <text class="v">
+            {{ formatDate(detail.codeSubmittedAt) }}
+          </text>
         </view>
         <view class="kv">
-          <text class="k">上线时间</text>
-          <text class="v">{{ formatDate(detail.onlineAt) }}</text>
+          <text class="k">
+            上线时间
+          </text>
+          <text class="v">
+            {{ formatDate(detail.onlineAt) }}
+          </text>
         </view>
       </view>
 
       <!-- 操作：推进状态 -->
       <view class="card">
-        <view class="card-title">手动推进状态</view>
+        <view class="card-title">
+          手动推进状态
+        </view>
         <view class="kv">
-          <text class="k">目标状态</text>
+          <text class="k">
+            目标状态
+          </text>
           <picker
             mode="selector"
             :range="targetStatusOptions"
@@ -90,12 +152,16 @@
           >
             <view class="picker">
               {{ targetStatusOptions[targetStatusIndex] }}
-              <text class="arrow">▾</text>
+              <text class="arrow">
+                ▾
+              </text>
             </view>
           </picker>
         </view>
         <view v-if="needCertType" class="kv">
-          <text class="k">认证主体</text>
+          <text class="k">
+            认证主体
+          </text>
           <picker
             mode="selector"
             :range="certTypeOptions"
@@ -104,12 +170,16 @@
           >
             <view class="picker">
               {{ certTypeOptions[certTypeIndex] }}
-              <text class="arrow">▾</text>
+              <text class="arrow">
+                ▾
+              </text>
             </view>
           </picker>
         </view>
         <view class="kv">
-          <text class="k">备注</text>
+          <text class="k">
+            备注
+          </text>
           <input
             v-model="advanceRemark"
             class="input"
@@ -117,8 +187,10 @@
           />
         </view>
         <view class="kv">
-          <text class="k">强制覆盖</text>
-          <switch :checked="advanceForce" @change="onForceChange" color="#c9a87c" />
+          <text class="k">
+            强制覆盖
+          </text>
+          <switch :checked="advanceForce" color="#c9a87c" @change="onForceChange" />
         </view>
         <button
           class="primary-btn"
@@ -131,9 +203,13 @@
 
       <!-- 操作：发送提醒 -->
       <view class="card">
-        <view class="card-title">发送提醒推送</view>
+        <view class="card-title">
+          发送提醒推送
+        </view>
         <view class="kv">
-          <text class="k">推送场景</text>
+          <text class="k">
+            推送场景
+          </text>
           <picker
             mode="selector"
             :range="reminderSceneOptions"
@@ -142,17 +218,23 @@
           >
             <view class="picker">
               {{ reminderSceneOptions[reminderSceneIndex] }}
-              <text class="arrow">▾</text>
+              <text class="arrow">
+                ▾
+              </text>
             </view>
           </picker>
         </view>
         <view v-if="reminderScene === 'custom'" class="form-block">
           <view class="kv">
-            <text class="k">自定义标题</text>
+            <text class="k">
+              自定义标题
+            </text>
             <input v-model="reminderTitle" class="input" placeholder="推送标题" />
           </view>
           <view class="kv">
-            <text class="k">自定义内容</text>
+            <text class="k">
+              自定义内容
+            </text>
             <textarea
               v-model="reminderContent"
               class="textarea"
@@ -161,7 +243,9 @@
           </view>
         </view>
         <view class="kv">
-          <text class="k">备注</text>
+          <text class="k">
+            备注
+          </text>
           <input v-model="reminderRemark" class="input" placeholder="（可选）运营备注" />
         </view>
         <button
@@ -175,12 +259,20 @@
 
       <!-- 操作日志 -->
       <view class="card">
-        <view class="card-title">操作日志</view>
-        <view v-if="logs.length === 0" class="empty-mini">暂无日志</view>
+        <view class="card-title">
+          操作日志
+        </view>
+        <view v-if="logs.length === 0" class="empty-mini">
+          暂无日志
+        </view>
         <view v-for="log in logs" :key="log.id" class="log-item">
           <view class="log-row1">
-            <text class="log-action">{{ log.actionLabel }}</text>
-            <text class="log-time">{{ formatDate(log.createdAt) }}</text>
+            <text class="log-action">
+              {{ log.actionLabel }}
+            </text>
+            <text class="log-time">
+              {{ formatDate(log.createdAt) }}
+            </text>
           </view>
           <view v-if="log.fromStatus || log.toStatus" class="log-row2">
             {{ log.fromStatus ? STATUS_LABEL[log.fromStatus] : '-' }}
@@ -189,7 +281,9 @@
           <view v-if="log.actorName || log.actorId" class="log-row3">
             操作人：{{ log.actorName ?? log.actorId }}
           </view>
-          <view v-if="log.remark" class="log-row4">备注：{{ log.remark }}</view>
+          <view v-if="log.remark" class="log-row4">
+            备注：{{ log.remark }}
+          </view>
         </view>
         <view v-if="logsTotal > logs.length" class="log-more" @click="loadMoreLogs">
           点击加载更多 ({{ logs.length }} / {{ logsTotal }})

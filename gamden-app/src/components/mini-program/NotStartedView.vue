@@ -46,7 +46,9 @@ function handleOpenTutorial(): void {
   <view class="nsv">
     <!-- 顶部说明 -->
     <view class="nsv-intro">
-      <text class="nsv-intro__title">📜 准备开始你的小程序申请</text>
+      <text class="nsv-intro__title">
+        📜 准备开始你的小程序申请
+      </text>
       <text class="nsv-intro__desc">
         请先在微信公众平台完成小程序注册与认证，然后回到本页面继续后续步骤。
       </text>
@@ -55,8 +57,12 @@ function handleOpenTutorial(): void {
     <!-- 准备材料清单 -->
     <view class="nsv-card">
       <view class="nsv-card__header">
-        <text class="nsv-card__title">📋 准备材料</text>
-        <text class="nsv-card__sub">建议提前准备以下材料</text>
+        <text class="nsv-card__title">
+          📋 准备材料
+        </text>
+        <text class="nsv-card__sub">
+          建议提前准备以下材料
+        </text>
       </view>
       <view class="nsv-materials">
         <view
@@ -64,8 +70,12 @@ function handleOpenTutorial(): void {
           :key="idx"
           class="nsv-material"
         >
-          <text class="nsv-material__icon">{{ m.icon }}</text>
-          <text class="nsv-material__label">{{ m.label }}</text>
+          <text class="nsv-material__icon">
+            {{ m.icon }}
+          </text>
+          <text class="nsv-material__label">
+            {{ m.label }}
+          </text>
         </view>
       </view>
     </view>
@@ -73,8 +83,12 @@ function handleOpenTutorial(): void {
     <!-- 费用说明 -->
     <view class="nsv-card">
       <view class="nsv-card__header">
-        <text class="nsv-card__title">💰 认证费用</text>
-        <text class="nsv-card__sub">由微信收取，一次性年费</text>
+        <text class="nsv-card__title">
+          💰 认证费用
+        </text>
+        <text class="nsv-card__sub">
+          由微信收取，一次性年费
+        </text>
       </view>
       <view class="nsv-fees">
         <view
@@ -82,19 +96,31 @@ function handleOpenTutorial(): void {
           :key="f.type"
           class="nsv-fee"
         >
-          <text class="nsv-fee__icon">{{ f.icon }}</text>
-          <text class="nsv-fee__label">{{ f.label }}</text>
-          <text class="nsv-fee__price">{{ f.fee }}</text>
+          <text class="nsv-fee__icon">
+            {{ f.icon }}
+          </text>
+          <text class="nsv-fee__label">
+            {{ f.label }}
+          </text>
+          <text class="nsv-fee__price">
+            {{ f.fee }}
+          </text>
         </view>
       </view>
     </view>
 
     <!-- 耗时预估 -->
     <view class="nsv-tip">
-      <text class="nsv-tip__icon">⏱️</text>
+      <text class="nsv-tip__icon">
+        ⏱️
+      </text>
       <view class="nsv-tip__body">
-        <text class="nsv-tip__title">预估耗时：3-15 个工作日</text>
-        <text class="nsv-tip__desc">包含微信认证审核 + 部署上线时间</text>
+        <text class="nsv-tip__title">
+          预估耗时：3-15 个工作日
+        </text>
+        <text class="nsv-tip__desc">
+          包含微信认证审核 + 部署上线时间
+        </text>
       </view>
     </view>
 

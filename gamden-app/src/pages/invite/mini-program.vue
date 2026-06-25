@@ -154,7 +154,9 @@ function onSubmitSuccess(): void {
         <view class="navbar__back" @tap="handleBack">
           <text>‹</text>
         </view>
-        <text class="navbar__title">🏠 我的小程序</text>
+        <text class="navbar__title">
+          🏠 我的小程序
+        </text>
         <view class="navbar__placeholder" />
       </view>
     </view>
@@ -169,7 +171,9 @@ function onSubmitSuccess(): void {
       <view class="mp-locked__icon">
         <text>🔒</text>
       </view>
-      <text class="mp-locked__title">尚未获得小程序部署资格</text>
+      <text class="mp-locked__title">
+        尚未获得小程序部署资格
+      </text>
       <text class="mp-locked__desc">
         邀请 {{ inviteStore.stats?.unlockThreshold ?? 3 }} 位好友入驻巢穴
         （已邀请 {{ inviteStore.stats?.totalInvited ?? 0 }} 位），即可解锁个人专属小程序
@@ -195,9 +199,13 @@ function onSubmitSuccess(): void {
       <view class="mp-header">
         <view class="mp-header__row">
           <StatusBadge :status="currentStatus" size="lg" />
-          <text class="mp-header__step">第 {{ statusDisplay.step }} 步 / 共 4 步</text>
+          <text class="mp-header__step">
+            第 {{ statusDisplay.step }} 步 / 共 4 步
+          </text>
         </view>
-        <text class="mp-header__desc">{{ statusDisplay.description }}</text>
+        <text class="mp-header__desc">
+          {{ statusDisplay.description }}
+        </text>
         <view class="mp-header__bar">
           <view
             class="mp-header__bar-fill"
@@ -225,7 +233,9 @@ function onSubmitSuccess(): void {
         <view class="mp-deploying__spinner">
           <text>🚀</text>
         </view>
-        <text class="mp-deploying__title">正在部署代码...</text>
+        <text class="mp-deploying__title">
+          正在部署代码...
+        </text>
         <text class="mp-deploying__desc">
           平台正在把你的小程序代码部署到微信服务器，稍后进入代码审核阶段。
         </text>
@@ -248,7 +258,9 @@ function onSubmitSuccess(): void {
     <!-- 放弃确认弹窗 -->
     <view v-if="showAbandon" class="mp-modal-mask" @tap="closeAbandon">
       <view class="mp-modal mp-modal--small" @tap.stop>
-        <text class="mp-modal__title">放弃申请？</text>
+        <text class="mp-modal__title">
+          放弃申请？
+        </text>
         <text class="mp-modal__desc">
           放弃后所有申请数据（认证主体、AppID、时间戳）将被清空，资格保留。
           您可以稍后重新申请。

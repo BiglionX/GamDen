@@ -65,12 +65,16 @@ function handleTap() {
   <view class="img-bubble" :class="{ 'img-bubble--self': isSelf }">
     <!-- 头像 -->
     <view v-if="!isSelf" class="img-bubble__avatar">
-      <text class="img-bubble__avatar-icon">{{ avatar }}</text>
+      <text class="img-bubble__avatar-icon">
+        {{ avatar }}
+      </text>
     </view>
 
     <!-- 主内容 -->
     <view class="img-bubble__main">
-      <text v-if="!isSelf && name" class="img-bubble__name">{{ name }}</text>
+      <text v-if="!isSelf && name" class="img-bubble__name">
+        {{ name }}
+      </text>
 
       <view class="img-bubble__body">
         <view class="img-bubble__border-outer" />
@@ -84,13 +88,19 @@ function handleTap() {
             @error="handleError"
           />
           <view v-else class="img-bubble__broken">
-            <text class="img-bubble__broken-icon">🖼️</text>
-            <text class="img-bubble__broken-text">图片加载失败</text>
+            <text class="img-bubble__broken-icon">
+              🖼️
+            </text>
+            <text class="img-bubble__broken-text">
+              图片加载失败
+            </text>
           </view>
 
           <!-- 发送中遮罩 -->
           <view v-if="status === 'sending'" class="img-bubble__mask">
-            <text class="img-bubble__mask-text">发送中...</text>
+            <text class="img-bubble__mask-text">
+              发送中...
+            </text>
           </view>
         </view>
       </view>
@@ -103,12 +113,16 @@ function handleTap() {
         >
           {{ status === 'sending' ? '发送中...' : '发送失败' }}
         </text>
-        <text v-if="time" class="img-bubble__time">{{ time }}</text>
+        <text v-if="time" class="img-bubble__time">
+          {{ time }}
+        </text>
       </view>
     </view>
 
     <view v-if="isSelf" class="img-bubble__avatar img-bubble__avatar--self">
-      <text class="img-bubble__avatar-icon">{{ avatar }}</text>
+      <text class="img-bubble__avatar-icon">
+        {{ avatar }}
+      </text>
     </view>
   </view>
 </template>

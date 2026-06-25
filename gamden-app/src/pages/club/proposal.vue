@@ -92,14 +92,18 @@ async function onSubmit() {
       <view class="header__back" @tap="goBack">
         <text>‹</text>
       </view>
-      <text class="header__title">提议新茶摊</text>
+      <text class="header__title">
+        提议新茶摊
+      </text>
       <view class="header__placeholder"></view>
     </view>
 
     <!-- 俱乐部名称 -->
     <view class="form-item">
       <view class="form-item__label">
-        <text class="form-item__icon">📌</text>
+        <text class="form-item__icon">
+          📌
+        </text>
         <text>茶摊名称 *</text>
       </view>
       <input
@@ -108,13 +112,17 @@ async function onSubmit() {
         placeholder="例如：星穹铁道茶摊、种田养老院"
         maxlength="15"
       />
-      <view class="form-item__hint">限15字</view>
+      <view class="form-item__hint">
+        限15字
+      </view>
     </view>
 
     <!-- 一句话简介 -->
     <view class="form-item">
       <view class="form-item__label">
-        <text class="form-item__icon">📝</text>
+        <text class="form-item__icon">
+          📝
+        </text>
         <text>一句话简介 *</text>
       </view>
       <textarea
@@ -123,13 +131,17 @@ async function onSubmit() {
         placeholder="用一句话介绍这个俱乐部"
         maxlength="50"
       />
-      <view class="form-item__hint">{{ description.length }}/50</view>
+      <view class="form-item__hint">
+        {{ description.length }}/50
+      </view>
     </view>
 
     <!-- 所属类型 -->
     <view class="form-item">
       <view class="form-item__label">
-        <text class="form-item__icon">🏷️</text>
+        <text class="form-item__icon">
+          🏷️
+        </text>
         <text>所属类型</text>
       </view>
       <view class="type-selector">
@@ -140,16 +152,20 @@ async function onSubmit() {
           :class="{ 'type-selector__item--active': proposalType === type.value }"
           @tap="onTypeChange(type.value)"
         >
-          <text class="type-selector__icon">{{ type.icon }}</text>
+          <text class="type-selector__icon">
+            {{ type.icon }}
+          </text>
           <text>{{ type.label }}</text>
         </view>
       </view>
     </view>
 
     <!-- 关联游戏（选填） -->
-    <view class="form-item" v-if="proposalType === 'game'">
+    <view v-if="proposalType === 'game'" class="form-item">
       <view class="form-item__label">
-        <text class="form-item__icon">🎮</text>
+        <text class="form-item__icon">
+          🎮
+        </text>
         <text>关联游戏</text>
       </view>
       <input
@@ -163,7 +179,9 @@ async function onSubmit() {
     <!-- 兴趣标签（选填） -->
     <view class="form-item">
       <view class="form-item__label">
-        <text class="form-item__icon">🏷️</text>
+        <text class="form-item__icon">
+          🏷️
+        </text>
         <text>兴趣标签（选填，最多3个）</text>
       </view>
       <view class="tag-selector">
@@ -184,11 +202,21 @@ async function onSubmit() {
 
     <!-- 提示 -->
     <view class="notice">
-      <view class="notice__title">提交前须知</view>
-      <view class="notice__item">• 请确认名称不含敏感词</view>
-      <view class="notice__item">• 已有≥20人联署时会自动通过</view>
-      <view class="notice__item">• 否则需运营审核（3个工作日内）</view>
-      <view class="notice__item">• 提议通过后可获得金币+50奖励</view>
+      <view class="notice__title">
+        提交前须知
+      </view>
+      <view class="notice__item">
+        • 请确认名称不含敏感词
+      </view>
+      <view class="notice__item">
+        • 已有≥20人联署时会自动通过
+      </view>
+      <view class="notice__item">
+        • 否则需运营审核（3个工作日内）
+      </view>
+      <view class="notice__item">
+        • 提议通过后可获得金币+50奖励
+      </view>
     </view>
 
     <!-- 提交按钮 -->

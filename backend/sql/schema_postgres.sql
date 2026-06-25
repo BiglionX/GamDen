@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS users (
   password_hash VARCHAR(255) NOT NULL,
   nickname VARCHAR(50) NOT NULL DEFAULT '',
   avatar VARCHAR(255) DEFAULT '',
-  guardian_type VARCHAR(20) NOT NULL CHECK (guardian_type IN ('mechanic', 'elf', 'astrologer')),
+  guardian_type VARCHAR(20) NOT NULL CHECK (guardian_type IN ('mechanic', 'elf', 'astrologer', 'ranger', 'artisan', 'apostle')),
   level INTEGER DEFAULT 1,
   exp INTEGER DEFAULT 0,
   invite_code VARCHAR(10) UNIQUE NOT NULL,

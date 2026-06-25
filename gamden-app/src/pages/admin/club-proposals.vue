@@ -137,7 +137,9 @@ onShow(() => {
       <picker :value="STATUS_OPTIONS.findIndex((s) => s.value === statusFilter)" :range="STATUS_OPTIONS" range-key="label" @change="onStatusChange">
         <view class="filter-item">
           <text>{{ STATUS_OPTIONS.find((s) => s.value === statusFilter)?.label || '全部' }}</text>
-          <text class="arrow">▼</text>
+          <text class="arrow">
+            ▼
+          </text>
         </view>
       </picker>
     </view>
@@ -151,18 +153,22 @@ onShow(() => {
     <scroll-view class="list" scroll-y @scrolltolower="onReachBottom">
       <view v-for="proposal in proposals" :key="proposal.id" class="proposal-item">
         <view class="proposal-item__header">
-          <text class="proposal-item__name">{{ proposal.name }}</text>
+          <text class="proposal-item__name">
+            {{ proposal.name }}
+          </text>
           <view class="proposal-item__status" :style="{ color: getStatusColor(proposal.status) }">
             {{ getStatusText(proposal.status) }}
           </view>
         </view>
-        <text class="proposal-item__desc">{{ proposal.description }}</text>
+        <text class="proposal-item__desc">
+          {{ proposal.description }}
+        </text>
         <view class="proposal-item__meta">
           <text>提议人：{{ proposal.proposer_name }}</text>
           <text>联署：{{ proposal.endorsement_count }}人</text>
           <text>{{ formatTime(proposal.created_at) }}</text>
         </view>
-        <view class="proposal-item__actions" v-if="proposal.status === 'pending'">
+        <view v-if="proposal.status === 'pending'" class="proposal-item__actions">
           <view class="btn btn--reject" @tap="onReject(proposal.id)">
             <text>驳回</text>
           </view>
@@ -172,9 +178,15 @@ onShow(() => {
         </view>
       </view>
 
-      <view v-if="loading" class="loading">加载中...</view>
-      <view v-else-if="proposals.length >= total && total > 0" class="no-more">没有更多了</view>
-      <view v-else-if="proposals.length === 0" class="empty">暂无数据</view>
+      <view v-if="loading" class="loading">
+        加载中...
+      </view>
+      <view v-else-if="proposals.length >= total && total > 0" class="no-more">
+        没有更多了
+      </view>
+      <view v-else-if="proposals.length === 0" class="empty">
+        暂无数据
+      </view>
     </scroll-view>
   </view>
 </template>

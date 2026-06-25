@@ -63,86 +63,134 @@ onShow(() => {
       <!-- 统计卡片 -->
       <view class="stats-grid">
         <view class="stat-card">
-          <view class="stat-card__value">{{ stats.total_clubs || 0 }}</view>
-          <view class="stat-card__label">总俱乐部</view>
+          <view class="stat-card__value">
+            {{ stats.total_clubs || 0 }}
+          </view>
+          <view class="stat-card__label">
+            总俱乐部
+          </view>
         </view>
         <view class="stat-card stat-card--highlight">
-          <view class="stat-card__value">{{ stats.active_clubs || 0 }}</view>
-          <view class="stat-card__label">活跃俱乐部</view>
+          <view class="stat-card__value">
+            {{ stats.active_clubs || 0 }}
+          </view>
+          <view class="stat-card__label">
+            活跃俱乐部
+          </view>
         </view>
         <view class="stat-card">
-          <view class="stat-card__value">{{ stats.total_members || 0 }}</view>
-          <view class="stat-card__label">总成员</view>
+          <view class="stat-card__value">
+            {{ stats.total_members || 0 }}
+          </view>
+          <view class="stat-card__label">
+            总成员
+          </view>
         </view>
         <view class="stat-card">
-          <view class="stat-card__value">{{ stats.avg_vitality || 0 }}</view>
-          <view class="stat-card__label">平均活力</view>
+          <view class="stat-card__value">
+            {{ stats.avg_vitality || 0 }}
+          </view>
+          <view class="stat-card__label">
+            平均活力
+          </view>
         </view>
       </view>
 
       <!-- 等级分布 -->
       <view class="section">
-        <view class="section__title">等级分布</view>
+        <view class="section__title">
+          等级分布
+        </view>
         <view class="level-bars">
           <view class="level-bar">
-            <text class="level-bar__icon">{{ VITALITY_ICONS.diamond }}</text>
+            <text class="level-bar__icon">
+              {{ VITALITY_ICONS.diamond }}
+            </text>
             <view class="level-bar__track">
               <view class="level-bar__fill level-bar__fill--diamond" :style="{ width: `${(stats.diamond_clubs / stats.total_clubs * 100) || 0}%` }"></view>
             </view>
-            <text class="level-bar__count">{{ stats.diamond_clubs || 0 }}</text>
+            <text class="level-bar__count">
+              {{ stats.diamond_clubs || 0 }}
+            </text>
           </view>
           <view class="level-bar">
-            <text class="level-bar__icon">{{ VITALITY_ICONS.gold }}</text>
+            <text class="level-bar__icon">
+              {{ VITALITY_ICONS.gold }}
+            </text>
             <view class="level-bar__track">
               <view class="level-bar__fill level-bar__fill--gold" :style="{ width: `${(stats.gold_clubs / stats.total_clubs * 100) || 0}%` }"></view>
             </view>
-            <text class="level-bar__count">{{ stats.gold_clubs || 0 }}</text>
+            <text class="level-bar__count">
+              {{ stats.gold_clubs || 0 }}
+            </text>
           </view>
           <view class="level-bar">
-            <text class="level-bar__icon">{{ VITALITY_ICONS.silver }}</text>
+            <text class="level-bar__icon">
+              {{ VITALITY_ICONS.silver }}
+            </text>
             <view class="level-bar__track">
               <view class="level-bar__fill level-bar__fill--silver" :style="{ width: `${(stats.silver_clubs / stats.total_clubs * 100) || 0}%` }"></view>
             </view>
-            <text class="level-bar__count">{{ stats.silver_clubs || 0 }}</text>
+            <text class="level-bar__count">
+              {{ stats.silver_clubs || 0 }}
+            </text>
           </view>
           <view class="level-bar">
-            <text class="level-bar__icon">{{ VITALITY_ICONS.bronze }}</text>
+            <text class="level-bar__icon">
+              {{ VITALITY_ICONS.bronze }}
+            </text>
             <view class="level-bar__track">
               <view class="level-bar__fill level-bar__fill--bronze" :style="{ width: `${(stats.bronze_clubs / stats.total_clubs * 100) || 0}%` }"></view>
             </view>
-            <text class="level-bar__count">{{ stats.bronze_clubs || 0 }}</text>
+            <text class="level-bar__count">
+              {{ stats.bronze_clubs || 0 }}
+            </text>
           </view>
         </view>
       </view>
 
       <!-- TOP10 排行榜 -->
       <view class="section">
-        <view class="section__title">活力值 TOP 10</view>
+        <view class="section__title">
+          活力值 TOP 10
+        </view>
         <view class="ranking-list">
           <view v-for="(club, index) in topClubs" :key="club.id" class="ranking-item">
             <view class="ranking-item__rank" :class="`ranking-item__rank--${index + 1}`">
               {{ index + 1 }}
             </view>
-            <text class="ranking-item__icon">{{ club.icon }}</text>
+            <text class="ranking-item__icon">
+              {{ club.icon }}
+            </text>
             <view class="ranking-item__info">
-              <text class="ranking-item__name">{{ club.name }}</text>
-              <text class="ranking-item__meta">{{ club.member_count }}成员</text>
+              <text class="ranking-item__name">
+                {{ club.name }}
+              </text>
+              <text class="ranking-item__meta">
+                {{ club.member_count }}成员
+              </text>
             </view>
             <view class="ranking-item__vitality">
               <text>{{ getVitalityIcon(club.vitality_level) }}</text>
               <text>{{ club.vitality }}</text>
             </view>
           </view>
-          <view v-if="topClubs.length === 0" class="empty">暂无数据</view>
+          <view v-if="topClubs.length === 0" class="empty">
+            暂无数据
+          </view>
         </view>
       </view>
 
       <!-- 趋势图（简化版） -->
       <view class="section">
-        <view class="section__title">7天活力变化趋势</view>
+        <view class="section__title">
+          7天活力变化趋势
+        </view>
         <view class="trend-chart">
           <view v-for="(day, index) in trend" :key="index" class="trend-bar">
-            <view class="trend-bar__value">{{ day.total_delta > 0 ? '+' : '' }}{{ day.total_delta || 0 }}</view>
+            <view class="trend-bar__value">
+              {{ day.total_delta > 0 ? '+' : '' }}{{ day.total_delta || 0 }}
+            </view>
             <view class="trend-bar__track">
               <view
                 class="trend-bar__fill"
@@ -152,9 +200,13 @@ onShow(() => {
                 }"
               ></view>
             </view>
-            <text class="trend-bar__date">{{ day.date?.slice(5) || '' }}</text>
+            <text class="trend-bar__date">
+              {{ day.date?.slice(5) || '' }}
+            </text>
           </view>
-          <view v-if="trend.length === 0" class="empty">暂无趋势数据</view>
+          <view v-if="trend.length === 0" class="empty">
+            暂无趋势数据
+          </view>
         </view>
       </view>
     </view>

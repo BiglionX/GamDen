@@ -83,7 +83,9 @@ onLoad((options: any) => {
       <view class="header__back" @tap="goBack">
         <text>‹</text>
       </view>
-      <text class="header__title">联署提议</text>
+      <text class="header__title">
+        联署提议
+      </text>
       <view class="header__share" @tap="share">
         <text>分享</text>
       </view>
@@ -99,18 +101,24 @@ onLoad((options: any) => {
       <!-- 提议信息 -->
       <view class="proposal-card">
         <view class="proposal-card__header">
-          <text class="proposal-card__name">{{ proposal.name }}</text>
+          <text class="proposal-card__name">
+            {{ proposal.name }}
+          </text>
           <view class="proposal-card__status" :class="`proposal-card__status--${proposal.status}`">
             {{ proposal.status === 'pending' ? '审核中' : proposal.status === 'approved' ? '已通过' : '已驳回' }}
           </view>
         </view>
-        <text class="proposal-card__desc">{{ proposal.description }}</text>
+        <text class="proposal-card__desc">
+          {{ proposal.description }}
+        </text>
         <view class="proposal-card__meta">
           <text class="proposal-card__type">
             {{ proposal.proposal_type === 'game' ? '🎮' : proposal.proposal_type === 'interest' ? '🎯' : '✨' }}
             {{ proposal.proposal_type === 'game' ? '游戏类' : proposal.proposal_type === 'interest' ? '兴趣类' : '其他' }}
           </text>
-          <text class="proposal-card__time">{{ proposal.created_at }}</text>
+          <text class="proposal-card__time">
+            {{ proposal.created_at }}
+          </text>
         </view>
         <view class="proposal-card__proposer">
           <text>提议人：{{ proposal.proposer_name }}</text>
@@ -119,34 +127,52 @@ onLoad((options: any) => {
 
       <!-- 联署进度 -->
       <view class="endorsement-progress">
-        <view class="endorsement-progress__title">联署进度</view>
+        <view class="endorsement-progress__title">
+          联署进度
+        </view>
         <view class="endorsement-progress__bar">
           <view class="endorsement-progress__fill" :style="{ width: `${progress}%` }"></view>
         </view>
         <view class="endorsement-progress__info">
-          <text class="endorsement-progress__count">{{ proposal.endorsement_count }}</text>
-          <text class="endorsement-progress__target">/ 20 人</text>
+          <text class="endorsement-progress__count">
+            {{ proposal.endorsement_count }}
+          </text>
+          <text class="endorsement-progress__target">
+            / 20 人
+          </text>
         </view>
-        <text class="endorsement-progress__hint" v-if="remaining > 0">
+        <text v-if="remaining > 0" class="endorsement-progress__hint">
           还差 {{ remaining }} 人联署即可自动通过
         </text>
-        <text class="endorsement-progress__success" v-else>
+        <text v-else class="endorsement-progress__success">
           已达成20人联署，正在等待系统处理...
         </text>
       </view>
 
       <!-- 联署按钮 -->
-      <view class="endorse-btn" v-if="proposal.status === 'pending'" @tap="onEndorse">
-        <text v-if="endorsing">联署中...</text>
-        <text v-else>支持此提议</text>
+      <view v-if="proposal.status === 'pending'" class="endorse-btn" @tap="onEndorse">
+        <text v-if="endorsing">
+          联署中...
+        </text>
+        <text v-else>
+          支持此提议
+        </text>
       </view>
 
       <!-- 状态说明 -->
       <view class="notice">
-        <view class="notice__title">联署说明</view>
-        <view class="notice__item">• 联署后可获得通知</view>
-        <view class="notice__item">• 达到20人联署将自动批准</view>
-        <view class="notice__item">• 提议通过后，所有联署人将收到通知</view>
+        <view class="notice__title">
+          联署说明
+        </view>
+        <view class="notice__item">
+          • 联署后可获得通知
+        </view>
+        <view class="notice__item">
+          • 达到20人联署将自动批准
+        </view>
+        <view class="notice__item">
+          • 提议通过后，所有联署人将收到通知
+        </view>
       </view>
     </view>
   </view>

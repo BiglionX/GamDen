@@ -257,7 +257,9 @@ onMounted(async () => {
     <!-- 自定义导航栏 -->
     <view class="navbar" :style="{ paddingTop: statusBarHeight + 'px' }">
       <view class="navbar__inner" :style="{ height: navBarHeight + 'px' }">
-        <text class="navbar__title">我的领地</text>
+        <text class="navbar__title">
+          我的领地
+        </text>
         <text class="navbar__subtitle" @tap="resetView">
           ({{ territoryStore.viewport.centerX }}, {{ territoryStore.viewport.centerY }})
         </text>
@@ -295,24 +297,32 @@ onMounted(async () => {
       <!-- 缩放控件 -->
       <view class="zoom-controls">
         <view class="zoom-controls__btn" @tap="zoomIn">
-          <text class="zoom-controls__icon">+</text>
+          <text class="zoom-controls__icon">
+            +
+          </text>
         </view>
         <view class="zoom-controls__btn" @tap="zoomOut">
-          <text class="zoom-controls__icon">−</text>
+          <text class="zoom-controls__icon">
+            −
+          </text>
         </view>
         <view class="zoom-controls__btn zoom-controls__btn--reset" @tap="resetView">
-          <text class="zoom-controls__icon">⊙</text>
+          <text class="zoom-controls__icon">
+            ⊙
+          </text>
         </view>
       </view>
 
       <!-- 操作提示（首次进入） -->
-      <view class="gesture-hint" v-if="!dragging">
+      <view v-if="!dragging" class="gesture-hint">
         <text>双指缩放 · 单指拖动 · 点击邻居打招呼</text>
       </view>
 
       <!-- 错误提示条 -->
       <view v-if="territoryStore.error" class="error-bar">
-        <text class="error-bar__text">{{ territoryStore.error }}</text>
+        <text class="error-bar__text">
+          {{ territoryStore.error }}
+        </text>
       </view>
     </view>
 
@@ -341,7 +351,9 @@ onMounted(async () => {
 
     <!-- 游客模式底部 banner -->
     <view v-if="userStore.isGuest" class="guest-banner">
-      <text class="guest-banner__text">巢穴之门已为你打开，私聊与升级需先入驻</text>
+      <text class="guest-banner__text">
+        巢穴之门已为你打开，私聊与升级需先入驻
+      </text>
       <view class="guest-banner__btn" @tap="handleVisit">
         <text>立即入驻</text>
       </view>

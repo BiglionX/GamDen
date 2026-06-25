@@ -203,13 +203,17 @@ function handleBack(): void {
       <view class="navbar__back" hover-class="navbar__back--hover" @tap="handleBack">
         <text>‹</text>
       </view>
-      <text class="navbar__title">选择你的主体类型</text>
+      <text class="navbar__title">
+        选择你的主体类型
+      </text>
       <view class="navbar__placeholder" />
     </view>
 
     <!-- 顶部说明 -->
     <view class="ct-intro">
-      <text class="ct-intro__title">🪶 选对你的身份</text>
+      <text class="ct-intro__title">
+        🪶 选对你的身份
+      </text>
       <text class="ct-intro__desc">
         小程序的主体类型将影响你的功能权限与认证费用。提交后可在【认证中】状态放弃并重新选择。
       </text>
@@ -232,26 +236,38 @@ function handleBack(): void {
 
         <!-- 头部：图标 + 标题 -->
         <view class="ct-card__head">
-          <text class="ct-card__icon">{{ opt.icon }}</text>
-          <text class="ct-card__title">{{ opt.title }}</text>
+          <text class="ct-card__icon">
+            {{ opt.icon }}
+          </text>
+          <text class="ct-card__title">
+            {{ opt.title }}
+          </text>
         </view>
 
         <!-- 信息行 -->
         <view class="ct-card__rows">
           <view class="ct-card__row">
-            <text class="ct-card__row-label">需准备</text>
-            <text class="ct-card__row-value">{{ opt.prepare }}</text>
+            <text class="ct-card__row-label">
+              需准备
+            </text>
+            <text class="ct-card__row-value">
+              {{ opt.prepare }}
+            </text>
           </view>
           <view class="ct-card__row">
-            <text class="ct-card__row-label">认证费</text>
+            <text class="ct-card__row-label">
+              认证费
+            </text>
             <text class="ct-card__row-value ct-card__row-value--fee">
               {{ opt.fee }}
             </text>
           </view>
           <view class="ct-card__row">
-            <text class="ct-card__row-label">{{
-              opt.highlight.positive ? '优势' : '限制'
-            }}</text>
+            <text class="ct-card__row-label">
+              {{
+                opt.highlight.positive ? '优势' : '限制'
+              }}
+            </text>
             <text
               class="ct-card__row-value"
               :class="{
@@ -263,8 +279,12 @@ function handleBack(): void {
             </text>
           </view>
           <view class="ct-card__row">
-            <text class="ct-card__row-label">适合</text>
-            <text class="ct-card__row-value">{{ opt.fitFor }}</text>
+            <text class="ct-card__row-label">
+              适合
+            </text>
+            <text class="ct-card__row-value">
+              {{ opt.fitFor }}
+            </text>
           </view>
         </view>
 
@@ -299,13 +319,17 @@ function handleBack(): void {
       <text class="ct-footnote__line">
         💡 个人主体功能受限（无法使用微信支付等），但作为个人展示名片已足够。
       </text>
-      <text class="ct-footnote__line">后期可升级为企业主体。</text>
+      <text class="ct-footnote__line">
+        后期可升级为企业主体。
+      </text>
     </view>
 
     <!-- 二次确认弹窗 -->
     <view v-if="showConfirm" class="ct-modal-mask" @tap="closeConfirm">
       <view class="ct-modal" @tap.stop>
-        <text class="ct-modal__title">确认主体类型？</text>
+        <text class="ct-modal__title">
+          确认主体类型？
+        </text>
         <text class="ct-modal__desc">
           你选择了【{{ currentOption.title }}（{{ currentOption.fee }}）】。
           提交后将打开微信公众平台注册页，请在外部完成小程序注册与认证。
@@ -336,7 +360,9 @@ function handleBack(): void {
         <view class="ct-wait__spinner">
           <text>⏳</text>
         </view>
-        <text class="ct-wait__title">等待你完成微信端操作...</text>
+        <text class="ct-wait__title">
+          等待你完成微信端操作...
+        </text>
         <text class="ct-wait__desc">
           完成后请返回 GamDen，本页会自动检测并更新状态。
         </text>

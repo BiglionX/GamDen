@@ -52,7 +52,7 @@ function loadSDK(): Promise<any> {
     sdkLoadAttempted = true;
     try {
       const mod: any = await import('openim-uniapp-polyfill');
-      realSDK = (mod as { default?: unknown }).default ?? mod;
+      realSDK = (mod as { default?: unknown }).default || mod;
       console.log('[IM] openim-uniapp-polyfill 加载成功');
       return realSDK;
     } catch (e) {
@@ -129,18 +129,22 @@ export const im = {
     }
 
     const config = getIMConfig();
+
+    let appID = '';
+    // #ifdef MP-WEIXIN
+    appID =
+      typeof uni !== 'undefined' && (uni as any).getAccountInfoSync
+        ? (uni as any).getAccountInfoSync().miniProgram.appId
+        : '';
+    // #endif
+
     await sdk.asyncInit({
       apiURL: config.apiURL,
       wsURL: config.wsURL,
       platform: config.platform,
-      appID:
-        // #ifdef MP-WEIXIN
-        typeof uni !== 'undefined' && (uni as any).getAccountInfoSync
-          ? (uni as any).getAccountInfoSync().miniProgram.appId
-          : '',
-      // #endif
-      userIDType: config.userIDType ?? 'string',
-      logLevel: config.logLevel ?? 1,
+      appID,
+      userIDType: config.userIDType || 'string',
+      logLevel: config.logLevel != null ? config.logLevel : 1,
     });
 
     initialized = true;
@@ -388,7 +392,7 @@ export const im = {
       const sdk = await loadSDK();
       if (typeof sdk.getOneConversation === 'function') {
         const res = await sdk.getOneConversation({ sourceID, sessionType });
-        return res ?? null;
+        return res != null ? res : null;
       }
     } catch (e) {
       console.warn('[IM] getOneConversation 失败:', e);
@@ -410,7 +414,7 @@ export const im = {
           sourceID,
           sessionType,
         });
-        return id ?? '';
+        return id != null ? id : '';
       }
     } catch (e) {
       console.warn('[IM] getConversationIDBySessionType 失败:', e);

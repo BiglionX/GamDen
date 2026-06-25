@@ -126,7 +126,7 @@ function runSelectorFallback(): void {
   try {
     const query = uni.createSelectorQuery();
     // #ifdef MP-WEIXIN || H5
-    ;(query as any)
+    (query as any)
       .select('#confetti-canvas')
       .fields({ node: true, size: true })
       .exec((res: any) => {
@@ -136,7 +136,7 @@ function runSelectorFallback(): void {
     // #ifdef APP-PLUS
     setTimeout(() => {
       const q2 = uni.createSelectorQuery();
-      ;(q2 as any)
+      (q2 as any)
         .select('#confetti-canvas')
         .fields({ node: true, size: true })
         .exec((res: any) => {

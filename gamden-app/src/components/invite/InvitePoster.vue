@@ -52,7 +52,7 @@ async function drawPoster() {
   const query = uni.createSelectorQuery();
   // 微信小程序 + H5 都支持
   // #ifdef MP-WEIXIN
-  ;(query as any)
+  (query as any)
     .select(`#${canvasId}`)
     .fields({ node: true, size: true })
     .exec((res: any) => {
@@ -268,15 +268,25 @@ defineExpose({ handleSave, redraw: drawPoster });
     <!-- 海报预览（视觉模拟） -->
     <view v-if="isReady" class="invite-poster__preview">
       <view class="invite-poster__card">
-        <view class="invite-poster__brand">GamDen</view>
-        <view class="invite-poster__subtitle">游戏巢穴 · 邀请制社区</view>
+        <view class="invite-poster__brand">
+          GamDen
+        </view>
+        <view class="invite-poster__subtitle">
+          游戏巢穴 · 邀请制社区
+        </view>
         <view class="invite-poster__divider" />
-        <view class="invite-poster__nickname">{{ data?.nickname }}</view>
+        <view class="invite-poster__nickname">
+          {{ data?.nickname }}
+        </view>
         <view v-if="data?.guardianType" class="invite-poster__guardian">
           {{ GUARDIAN_ICON[data.guardianType] }}  {{ GUARDIAN_LABEL[data.guardianType] }}
         </view>
-        <view class="invite-poster__invite-title">我的邀请码</view>
-        <view class="invite-poster__invite-code">{{ data?.inviteCode }}</view>
+        <view class="invite-poster__invite-title">
+          我的邀请码
+        </view>
+        <view class="invite-poster__invite-code">
+          {{ data?.inviteCode }}
+        </view>
         <view class="invite-poster__invite-stat">
           已邀请 {{ data?.totalInvited }} 位巢友
         </view>
@@ -292,8 +302,12 @@ defineExpose({ handleSave, redraw: drawPoster });
           </view>
         </view>
         <view class="invite-poster__footer">
-          <text class="invite-poster__footer-title">扫码加入 · 共筑巢穴</text>
-          <text class="invite-poster__footer-url">gamden.matux.tech</text>
+          <text class="invite-poster__footer-title">
+            扫码加入 · 共筑巢穴
+          </text>
+          <text class="invite-poster__footer-url">
+            gamden.matux.tech
+          </text>
         </view>
       </view>
     </view>

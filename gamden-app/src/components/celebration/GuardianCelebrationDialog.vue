@@ -87,7 +87,9 @@ function stopProp(e: Event): void {
     <view class="gcd-card" @tap="stopProp">
       <!-- 顶部徽标 -->
       <view class="gcd-badge" :style="{ background: guardianColor }">
-        <text class="gcd-badge__text">{{ badgeText }}</text>
+        <text class="gcd-badge__text">
+          {{ badgeText }}
+        </text>
       </view>
 
       <!-- 守护灵头像 -->
@@ -98,7 +100,9 @@ function stopProp(e: Event): void {
           background: `linear-gradient(135deg, ${guardianColor}33 0%, ${guardianColor}11 100%)`,
         }"
       >
-        <text class="gcd-avatar__icon">{{ guardianIcon }}</text>
+        <text class="gcd-avatar__icon">
+          {{ guardianIcon }}
+        </text>
         <view
           class="gcd-avatar__glow"
           :style="{ background: guardianColor }"
@@ -106,7 +110,9 @@ function stopProp(e: Event): void {
       </view>
 
       <!-- 标题 -->
-      <text class="gcd-title">{{ titleText }}</text>
+      <text class="gcd-title">
+        {{ titleText }}
+      </text>
 
       <!-- 对话气泡 -->
       <view class="gcd-bubble">
@@ -118,10 +124,16 @@ function stopProp(e: Event): void {
           <text
             class="gcd-bubble__name"
             :style="{ color: guardianColor }"
-          >{{ guardianName }}</text>
-          <text class="gcd-bubble__role">守护灵</text>
+          >
+            {{ guardianName }}
+          </text>
+          <text class="gcd-bubble__role">
+            守护灵
+          </text>
         </view>
-        <text class="gcd-bubble__text">{{ body }}</text>
+        <text class="gcd-bubble__text">
+          {{ body }}
+        </text>
       </view>
 
       <!-- 按钮区 -->

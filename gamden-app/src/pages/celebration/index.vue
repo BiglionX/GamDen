@@ -100,7 +100,9 @@ function handleGoNow(): void {
         <view class="navbar__back" @tap="handleBack">
           <text>‹</text>
         </view>
-        <text class="navbar__title">里程碑解锁</text>
+        <text class="navbar__title">
+          里程碑解锁
+        </text>
         <view class="navbar__placeholder" />
       </view>
     </view>
@@ -110,13 +112,21 @@ function handleGoNow(): void {
       <view class="cele-bg">
         <view class="cele-bg__halo cele-bg__halo--gold" />
         <view class="cele-bg__halo cele-bg__halo--green" />
-        <view class="cele-bg__title">🏰 里程碑解锁</view>
-        <view class="cele-bg__subtitle">你的城门口已经为你敞开</view>
+        <view class="cele-bg__title">
+          🏰 里程碑解锁
+        </view>
+        <view class="cele-bg__subtitle">
+          你的城门口已经为你敞开
+        </view>
       </view>
 
       <view class="cele-card">
-        <view class="cele-card__badge">🏆 邀请成就</view>
-        <view class="cele-card__title">邀请满 3 位好友</view>
+        <view class="cele-card__badge">
+          🏆 邀请成就
+        </view>
+        <view class="cele-card__title">
+          邀请满 3 位好友
+        </view>
         <view class="cele-card__desc">
           你已成功邀请 3 位巢友加入游戏巢穴。作为奖励，你已解锁了个人专属小程序
           —— 把你的「城门口」分享给更多人吧。
@@ -124,13 +134,21 @@ function handleGoNow(): void {
 
         <view class="cele-card__stats">
           <view class="cele-card__stat">
-            <text class="cele-card__stat-num">3</text>
-            <text class="cele-card__stat-label">已邀请</text>
+            <text class="cele-card__stat-num">
+              3
+            </text>
+            <text class="cele-card__stat-label">
+              已邀请
+            </text>
           </view>
           <view class="cele-card__divider" />
           <view class="cele-card__stat">
-            <text class="cele-card__stat-num">∞</text>
-            <text class="cele-card__stat-label">可生成小程序码</text>
+            <text class="cele-card__stat-num">
+              ∞
+            </text>
+            <text class="cele-card__stat-label">
+              可生成小程序码
+            </text>
           </view>
         </view>
 

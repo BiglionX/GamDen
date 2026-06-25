@@ -1,14 +1,22 @@
 <template>
   <view class="admin-login">
     <view class="brand">
-      <view class="logo">G</view>
-      <view class="title">GamDen 后台管理</view>
-      <view class="subtitle">小程序申请运营系统</view>
+      <view class="logo">
+        G
+      </view>
+      <view class="title">
+        GamDen 后台管理
+      </view>
+      <view class="subtitle">
+        小程序申请运营系统
+      </view>
     </view>
 
     <view class="card">
       <view class="form-item">
-        <text class="label">手机号</text>
+        <text class="label">
+          手机号
+        </text>
         <input
           v-model="phone"
           class="input"
@@ -19,7 +27,9 @@
         />
       </view>
       <view class="form-item">
-        <text class="label">短信验证码</text>
+        <text class="label">
+          短信验证码
+        </text>
         <view class="code-row">
           <input
             v-model="code"

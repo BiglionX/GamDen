@@ -234,10 +234,14 @@ function previewImage(url: string) {
     <view class="navbar" :style="{ paddingTop: statusBarHeight + 'px' }">
       <view class="navbar__inner" :style="{ height: navBarHeight + 'px' }">
         <view class="navbar__back" @tap="goBack">
-          <text class="navbar__back-icon">‹</text>
+          <text class="navbar__back-icon">
+            ‹
+          </text>
         </view>
         <view class="navbar__center">
-          <text class="navbar__title">{{ peer.nickname }}</text>
+          <text class="navbar__title">
+            {{ peer.nickname }}
+          </text>
         </view>
         <view class="navbar__placeholder" />
       </view>
@@ -262,8 +266,8 @@ function previewImage(url: string) {
       <view class="msg-list">
         <view
           v-for="m in messages"
-          :key="m.clientMsgID"
           :id="`msg_${m.clientMsgID}`"
+          :key="m.clientMsgID"
           class="msg-item"
         >
           <!-- 系统通知 -->

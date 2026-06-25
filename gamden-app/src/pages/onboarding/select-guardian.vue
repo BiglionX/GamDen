@@ -5,7 +5,7 @@
  * 按需求文档 3.3 节设计：
  * - 页面标题："你愿意与谁同行？"
  * - 副标题："它将成为你巢穴的守护者，陪你走过GamDen的每一天。"
- * - 三张守护灵卡片（机械师/精灵/占星师）
+ * - 六张守护灵卡片（机械师/精灵/占星师/游侠/工匠/使徒）
  * - 卡片内容：图标(60pt) + 性格标签 + 选择台词
  * - 选择后高亮 + 震动反馈
  * - 底部【结盟】按钮（选择后变为可点）
@@ -82,8 +82,12 @@ function handleAlliance() {
 
     <!-- 页面标题 -->
     <view class="page-select-guardian__header">
-      <text class="page-select-guardian__title">{{ pageTitle }}</text>
-      <text class="page-select-guardian__subtitle">{{ pageSubtitle }}</text>
+      <text class="page-select-guardian__title">
+        {{ pageTitle }}
+      </text>
+      <text class="page-select-guardian__subtitle">
+        {{ pageSubtitle }}
+      </text>
     </view>
 
     <!-- 守护灵卡片列表 -->
@@ -100,7 +104,9 @@ function handleAlliance() {
       >
         <!-- 守护灵头像 -->
         <view class="guardian-card__avatar">
-          <text class="guardian-card__icon">{{ guardian.icon }}</text>
+          <text class="guardian-card__icon">
+            {{ guardian.icon }}
+          </text>
           <view
             class="guardian-card__avatar-glow"
             :style="{ background: guardian.color }"
@@ -108,25 +114,47 @@ function handleAlliance() {
         </view>
 
         <!-- 守护灵名称 -->
-        <text class="guardian-card__name">{{ guardian.name }}</text>
+        <text class="guardian-card__name">
+          {{ guardian.name }}
+        </text>
 
         <!-- 性格标签 -->
         <view class="guardian-card__tags">
-          <text v-if="guardian.type === 'mechanical'" class="guardian-card__tag">理性</text>
-          <text v-if="guardian.type === 'mechanical'" class="guardian-card__tag">可靠</text>
-          <text v-if="guardian.type === 'mechanical'" class="guardian-card__tag">冷静</text>
+          <text v-if="guardian.type === 'mechanical'" class="guardian-card__tag">
+            理性
+          </text>
+          <text v-if="guardian.type === 'mechanical'" class="guardian-card__tag">
+            可靠
+          </text>
+          <text v-if="guardian.type === 'mechanical'" class="guardian-card__tag">
+            冷静
+          </text>
 
-          <text v-if="guardian.type === 'elf'" class="guardian-card__tag">温暖</text>
-          <text v-if="guardian.type === 'elf'" class="guardian-card__tag">感性</text>
-          <text v-if="guardian.type === 'elf'" class="guardian-card__tag">陪伴</text>
+          <text v-if="guardian.type === 'elf'" class="guardian-card__tag">
+            温暖
+          </text>
+          <text v-if="guardian.type === 'elf'" class="guardian-card__tag">
+            感性
+          </text>
+          <text v-if="guardian.type === 'elf'" class="guardian-card__tag">
+            陪伴
+          </text>
 
-          <text v-if="guardian.type === 'astrologer'" class="guardian-card__tag">深邃</text>
-          <text v-if="guardian.type === 'astrologer'" class="guardian-card__tag">智慧</text>
-          <text v-if="guardian.type === 'astrologer'" class="guardian-card__tag">指引</text>
+          <text v-if="guardian.type === 'astrologer'" class="guardian-card__tag">
+            深邃
+          </text>
+          <text v-if="guardian.type === 'astrologer'" class="guardian-card__tag">
+            智慧
+          </text>
+          <text v-if="guardian.type === 'astrologer'" class="guardian-card__tag">
+            指引
+          </text>
         </view>
 
         <!-- 选择台词 -->
-        <text class="guardian-card__quote">"{{ guardian.selectLine?.text }}"</text>
+        <text class="guardian-card__quote">
+          "{{ guardian.selectLine?.text }}"
+        </text>
 
         <!-- 选中指示器 -->
         <view v-if="selectedGuardian === guardian.type" class="guardian-card__check">

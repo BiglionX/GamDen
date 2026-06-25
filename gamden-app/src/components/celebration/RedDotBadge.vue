@@ -48,7 +48,9 @@ const style = computed(() => ({
 
 <template>
   <view v-if="show" class="red-dot" :style="style">
-    <text v-if="displayCount" class="red-dot__count">{{ displayCount }}</text>
+    <text v-if="displayCount" class="red-dot__count">
+      {{ displayCount }}
+    </text>
   </view>
 </template>
 

@@ -1,6 +1,6 @@
 {
   "name": "GamDen",
-  "appid": "__UNI__GAMDEN",
+  "appid": "__UNI__GAMDEN1",
   "description": "GamDen 游戏巢穴社区 - UniApp 客户端",
   "versionName": "1.0.0",
   "versionCode": "100",
@@ -16,6 +16,19 @@
       "autoclose": true,
       "delay": 0
     },
+    "icons": {
+      "ios": {
+        "app": "static/app-icon/iOS/AppIcon-1024.png",
+        "push": "static/app-icon/drawable-xxxhdpi/ic_notification.png"
+      },
+      "android": {
+        "ic_launcher": "static/app-icon/mipmap-xxxhdpi/ic_launcher.png",
+        "ic_launcher_round": "static/app-icon/mipmap-xxxhdpi/ic_launcher_round.png",
+        "ic_launcher_foreground": "static/app-icon/mipmap-xxxhdpi/ic_launcher_foreground.png",
+        "ic_launcher_background": "#1E241F",
+        "push": "static/app-icon/drawable-xxxhdpi/ic_notification.png"
+      }
+    },
     "modules": {
       "Camera": {},
       "Contacts": {},
@@ -24,6 +37,9 @@
     },
     "distribute": {
       "android": {
+        "minSdkVersion": 21,
+        "targetSdkVersion": 30,
+        "abiFilters": ["armeabi-v7a", "arm64-v8a"],
         "permissions": [
           "<uses-permission android:name=\"android.permission.INTERNET\"/>",
           "<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\"/>",
@@ -38,10 +54,7 @@
           "<uses-permission android:name=\"android.permission.ACCESS_COARSE_LOCATION\"/>",
           "<uses-feature android:name=\"android.hardware.camera.autofocus\"/>",
           "<uses-permission android:name=\"android.permission.POST_NOTIFICATIONS\"/>"
-        ],
-        "abiFilters": ["armeabi-v7a", "arm64-v8a"],
-        "targetSdkVersion": 30,
-        "minSdkVersion": 21
+        ]
       },
       "ios": {
         "idfa": false,

@@ -2,34 +2,54 @@
   <view class="admin-index">
     <view class="header">
       <view class="greet">
-        <view class="hello">运营后台</view>
+        <view class="hello">
+          运营后台
+        </view>
         <view class="user">
           {{ adminStore.profile?.nickname ?? '未登录' }}
-          <text class="role">· admin</text>
+          <text class="role">
+            · admin
+          </text>
         </view>
       </view>
-      <view class="logout" @click="onLogout">退出</view>
+      <view class="logout" @click="onLogout">
+        退出
+      </view>
     </view>
 
     <!-- 统计卡片 -->
     <view class="stats">
       <view class="stat-card">
-        <view class="num">{{ distribution?.totalUnlocked ?? '-' }}</view>
-        <view class="label">已解锁</view>
+        <view class="num">
+          {{ distribution?.totalUnlocked ?? '-' }}
+        </view>
+        <view class="label">
+          已解锁
+        </view>
       </view>
       <view class="stat-card">
-        <view class="num">{{ funnel?.online ?? '-' }}</view>
-        <view class="label">已上线</view>
+        <view class="num">
+          {{ funnel?.online ?? '-' }}
+        </view>
+        <view class="label">
+          已上线
+        </view>
       </view>
       <view class="stat-card highlight">
-        <view class="num">{{ conversionText }}%</view>
-        <view class="label">总转化率</view>
+        <view class="num">
+          {{ conversionText }}%
+        </view>
+        <view class="label">
+          总转化率
+        </view>
       </view>
     </view>
 
     <!-- 状态分布饼图（CSS 柱状） -->
     <view class="card">
-      <view class="card-title">状态分布</view>
+      <view class="card-title">
+        状态分布
+      </view>
       <view v-if="distribution" class="bars">
         <view
           v-for="(count, key) in distribution.distribution"
@@ -52,15 +72,21 @@
               }"
             ></view>
           </view>
-          <view class="bar-num">{{ count }}</view>
+          <view class="bar-num">
+            {{ count }}
+          </view>
         </view>
       </view>
-      <view v-else class="loading">加载中...</view>
+      <view v-else class="loading">
+        加载中...
+      </view>
     </view>
 
     <!-- 转化漏斗 -->
     <view class="card">
-      <view class="card-title">转化漏斗</view>
+      <view class="card-title">
+        转化漏斗
+      </view>
       <view v-if="funnel" class="funnel">
         <view
           v-for="(stage, idx) in funnelStages"
@@ -68,33 +94,67 @@
           class="funnel-row"
         >
           <view class="funnel-step">
-            <view class="funnel-name">{{ stage.name }}</view>
-            <view class="funnel-value">{{ stage.value }}</view>
+            <view class="funnel-name">
+              {{ stage.name }}
+            </view>
+            <view class="funnel-value">
+              {{ stage.value }}
+            </view>
             <view class="funnel-rate">
               {{ idx === 0 ? '基准' : formatRate(stage.rate) + '%' }}
             </view>
           </view>
-          <view v-if="idx < funnelStages.length - 1" class="funnel-arrow">↓</view>
+          <view v-if="idx < funnelStages.length - 1" class="funnel-arrow">
+            ↓
+          </view>
         </view>
       </view>
-      <view v-else class="loading">加载中...</view>
+      <view v-else class="loading">
+        加载中...
+      </view>
     </view>
 
     <!-- 快捷入口 -->
     <view class="card">
-      <view class="card-title">快捷入口</view>
+      <view class="card-title">
+        快捷入口
+      </view>
       <view class="quick-grid">
         <view class="quick-item" @click="goUserList">
-          <view class="quick-icon">📋</view>
+          <view class="quick-icon">
+            📋
+          </view>
           <text>用户列表</text>
         </view>
         <view class="quick-item" @click="goTutorials">
-          <view class="quick-icon">📚</view>
+          <view class="quick-icon">
+            📚
+          </view>
           <text>教程管理</text>
         </view>
         <view class="quick-item" @click="goFaqs">
-          <view class="quick-icon">❓</view>
+          <view class="quick-icon">
+            ❓
+          </view>
           <text>FAQ 管理</text>
+        </view>
+        <view class="quick-item" @click="goClubs">
+          <view class="quick-icon">
+            🏠
+          </view>
+          <text>俱乐部管理</text>
+        </view>
+        <view class="quick-item" @click="goClubProposals">
+          <view class="quick-icon">
+            📝
+          </view>
+          <text>提议审核</text>
+        </view>
+        <view class="quick-item" @click="goClubVitality">
+          <view class="quick-icon">
+            ⚡
+          </view>
+          <text>活力看板</text>
         </view>
       </view>
     </view>
@@ -212,6 +272,15 @@ function goTutorials(): void {
 }
 function goFaqs(): void {
   uni.navigateTo({ url: '/pages/admin/faqs' });
+}
+function goClubs(): void {
+  uni.navigateTo({ url: '/pages/admin/clubs' });
+}
+function goClubProposals(): void {
+  uni.navigateTo({ url: '/pages/admin/club-proposals' });
+}
+function goClubVitality(): void {
+  uni.navigateTo({ url: '/pages/admin/club-vitality' });
 }
 
 async function onLogout(): Promise<void> {

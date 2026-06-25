@@ -156,35 +156,57 @@ function shareToFriend(): void {
   <view class="olv">
     <!-- 顶部已上线 banner -->
     <view class="olv-banner">
-      <text class="olv-banner__emoji">🎉</text>
+      <text class="olv-banner__emoji">
+        🎉
+      </text>
       <view class="olv-banner__body">
-        <text class="olv-banner__title">小程序已上线</text>
-        <text class="olv-banner__desc">你的专属小程序已正式发布</text>
+        <text class="olv-banner__title">
+          小程序已上线
+        </text>
+        <text class="olv-banner__desc">
+          你的专属小程序已正式发布
+        </text>
       </view>
     </view>
 
     <!-- 基本信息 -->
     <view class="olv-info">
       <view v-if="store.record?.customName" class="olv-info__row">
-        <text class="olv-info__label">小程序名称</text>
-        <text class="olv-info__value">{{ store.record.customName }}</text>
+        <text class="olv-info__label">
+          小程序名称
+        </text>
+        <text class="olv-info__value">
+          {{ store.record.customName }}
+        </text>
       </view>
       <view v-if="onlineAtText" class="olv-info__row">
-        <text class="olv-info__label">上线时间</text>
-        <text class="olv-info__value">{{ onlineAtText }}</text>
+        <text class="olv-info__label">
+          上线时间
+        </text>
+        <text class="olv-info__value">
+          {{ onlineAtText }}
+        </text>
       </view>
       <view v-if="appid" class="olv-info__row" @tap="copyAppid">
-        <text class="olv-info__label">AppID</text>
+        <text class="olv-info__label">
+          AppID
+        </text>
         <view class="olv-info__value-wrap">
-          <text class="olv-info__value">{{ appid }}</text>
-          <text class="olv-info__copy">复制</text>
+          <text class="olv-info__value">
+            {{ appid }}
+          </text>
+          <text class="olv-info__copy">
+            复制
+          </text>
         </view>
       </view>
     </view>
 
     <!-- 小程序码 -->
     <view class="olv-card">
-      <view class="olv-card__title">📱 你的专属小程序码</view>
+      <view class="olv-card__title">
+        📱 你的专属小程序码
+      </view>
       <view class="olv-card__qr">
         <image
           v-if="qrCodeUrl"
@@ -197,7 +219,9 @@ function shareToFriend(): void {
           <text>暂无二维码</text>
         </view>
       </view>
-      <text class="olv-card__hint">长按图片可保存到相册</text>
+      <text class="olv-card__hint">
+        长按图片可保存到相册
+      </text>
       <view
         class="olv-card__btn"
         hover-class="olv-card__btn--hover"
@@ -209,29 +233,51 @@ function shareToFriend(): void {
 
     <!-- 路径信息 -->
     <view class="olv-card">
-      <view class="olv-card__title">🔗 小程序路径</view>
-      <view class="olv-card__path" @tap="copyPath">
-        <text class="olv-card__path-text">{{ miniProgramPath }}</text>
-        <text class="olv-card__path-copy">复制</text>
+      <view class="olv-card__title">
+        🔗 小程序路径
       </view>
-      <text class="olv-card__hint">可在公众号文章、自定义菜单中配置此路径</text>
+      <view class="olv-card__path" @tap="copyPath">
+        <text class="olv-card__path-text">
+          {{ miniProgramPath }}
+        </text>
+        <text class="olv-card__path-copy">
+          复制
+        </text>
+      </view>
+      <text class="olv-card__hint">
+        可在公众号文章、自定义菜单中配置此路径
+      </text>
     </view>
 
     <!-- 运营建议 -->
     <view class="olv-advice">
-      <view class="olv-advice__title">💡 运营建议</view>
+      <view class="olv-advice__title">
+        💡 运营建议
+      </view>
       <view class="olv-advice__list">
         <view class="olv-advice__item">
-          <text class="olv-advice__num">1</text>
-          <text class="olv-advice__text">把小程序码贴到公众号文章末尾，引导读者扫码体验</text>
+          <text class="olv-advice__num">
+            1
+          </text>
+          <text class="olv-advice__text">
+            把小程序码贴到公众号文章末尾，引导读者扫码体验
+          </text>
         </view>
         <view class="olv-advice__item">
-          <text class="olv-advice__num">2</text>
-          <text class="olv-advice__text">在俱乐部聊天中分享你的小程序，邀请更多巢友体验</text>
+          <text class="olv-advice__num">
+            2
+          </text>
+          <text class="olv-advice__text">
+            在俱乐部聊天中分享你的小程序，邀请更多巢友体验
+          </text>
         </view>
         <view class="olv-advice__item">
-          <text class="olv-advice__num">3</text>
-          <text class="olv-advice__text">持续邀请新朋友，扩大领地让你的小程序更具人气</text>
+          <text class="olv-advice__num">
+            3
+          </text>
+          <text class="olv-advice__text">
+            持续邀请新朋友，扩大领地让你的小程序更具人气
+          </text>
         </view>
       </view>
     </view>

@@ -145,3 +145,191 @@ export const verifyWebhookSignature = (
   
   return signature === expectedSignature;
 };
+
+// ============================================
+// 俱乐部群组管理（扩展）
+// ============================================
+
+/**
+ * 创建俱乐部群组
+ */
+export const createClubGroup = async (
+  clubId: number,
+  clubName: string,
+  ownerUserId: string,
+  memberUserIds: string[] = []
+): Promise<{ groupId: string }> => {
+  try {
+    const data = {
+      groupName: clubName,
+      introduction: `俱乐部 ${clubName} 的群聊`,
+      notification: '欢迎加入俱乐部！',
+      faceURL: '',
+      ownerUserID: ownerUserId,
+      memberUserIDs: memberUserIds,
+      adminUserIDs: [],
+      ex: JSON.stringify({
+        club_id: clubId,
+        type: 'gamden_club'
+      })
+    };
+
+    const result = await openimRequest('/group/create', 'POST', data);
+    logger.info('创建俱乐部群组成功', { clubId, groupId: result.data?.groupID });
+
+    return {
+      groupId: result.data?.groupID || `club_${clubId}`
+    };
+  } catch (error: any) {
+    logger.error('创建俱乐部群组失败', { clubId, error: error.message });
+    // 失败时返回模拟ID
+    return {
+      groupId: `club_${clubId}_${Date.now()}`
+    };
+  }
+};
+
+/**
+ * 添加成员到群组
+ */
+export const addMemberToGroup = async (
+  groupId: string,
+  userId: string
+): Promise<boolean> => {
+  try {
+    const data = {
+      groupID: groupId,
+      memberUserIDs: [userId],
+      ex: ''
+    };
+
+    await openimRequest('/group/invite_user', 'POST', data);
+    logger.info('添加成员到群组成功', { groupId, userId });
+    return true;
+  } catch (error: any) {
+    logger.error('添加成员到群组失败', { groupId, userId, error: error.message });
+    return false;
+  }
+};
+
+/**
+ * 批量添加成员到群组
+ */
+export const addMembersToGroup = async (
+  groupId: string,
+  userIds: string[]
+): Promise<{ success: number; failed: number }> => {
+  let success = 0;
+  let failed = 0;
+
+  for (const userId of userIds) {
+    const result = await addMemberToGroup(groupId, userId);
+    if (result) {
+      success++;
+    } else {
+      failed++;
+    }
+  }
+
+  logger.info('批量添加成员到群组完成', { groupId, success, failed });
+  return { success, failed };
+};
+
+/**
+ * 移除群组成员
+ */
+export const removeMemberFromGroup = async (
+  groupId: string,
+  userId: string
+): Promise<boolean> => {
+  try {
+    const data = {
+      groupID: groupId,
+      memberUserIDs: [userId],
+      ex: ''
+    };
+
+    await openimRequest('/group/remove_user', 'POST', data);
+    logger.info('移除群组成员成功', { groupId, userId });
+    return true;
+  } catch (error: any) {
+    logger.error('移除群组成员失败', { groupId, userId, error: error.message });
+    return false;
+  }
+};
+
+/**
+ * 设置群组扩展字段
+ */
+export const setGroupCustomField = async (
+  groupId: string,
+  fields: Record<string, string>
+): Promise<boolean> => {
+  try {
+    const data = {
+      groupID: groupId,
+      ex: JSON.stringify(fields)
+    };
+
+    await openimRequest('/group/update', 'POST', data);
+    logger.info('设置群组扩展字段成功', { groupId, fields });
+    return true;
+  } catch (error: any) {
+    logger.error('设置群组扩展字段失败', { groupId, fields, error: error.message });
+    return false;
+  }
+};
+
+/**
+ * 发送俱乐部系统消息
+ */
+export const sendClubSystemMessage = async (
+  groupId: string,
+  message: string,
+  messageType: 'welcome' | 'notice' | 'event' = 'notice'
+): Promise<boolean> => {
+  try {
+    // 自定义消息类型：201=俱乐部系统消息
+    const customData = {
+      customType: 201,
+      data: {
+        type: messageType,
+        content: message,
+        timestamp: Date.now()
+      }
+    };
+
+    const data = {
+      sendID: 'system_club',
+      recvID: '',
+      groupID: groupId,
+      contentType: 200, // 自定义消息
+      content: JSON.stringify(customData),
+      sessionType: 2, // 群聊
+      ex: ''
+    };
+
+    await openimRequest('/message/send', 'POST', data);
+    logger.info('发送俱乐部系统消息成功', { groupId, message });
+    return true;
+  } catch (error: any) {
+    logger.error('发送俱乐部系统消息失败', { groupId, message, error: error.message });
+    return false;
+  }
+};
+
+/**
+ * 获取群组成员列表
+ */
+export const getGroupMembers = async (
+  groupId: string
+): Promise<string[]> => {
+  try {
+    const result = await openimRequest(`/group/get_group_member_list?groupID=${groupId}`, 'GET');
+    const members = result.data || [];
+    return members.map((m: any) => m.userID);
+  } catch (error: any) {
+    logger.error('获取群组成员列表失败', { groupId, error: error.message });
+    return [];
+  }
+};

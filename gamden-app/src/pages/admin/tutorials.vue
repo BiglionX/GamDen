@@ -10,51 +10,79 @@
       >
         <view class="picker">
           阶段：{{ stageOptions[stageIndex] }}
-          <text class="arrow">▾</text>
+          <text class="arrow">
+            ▾
+          </text>
         </view>
       </picker>
       <view class="action-row">
-        <button class="add-btn" @click="onCreate">+ 新建教程</button>
+        <button class="add-btn" @click="onCreate">
+          + 新建教程
+        </button>
       </view>
     </view>
 
-    <view v-if="loading" class="empty">加载中...</view>
-    <view v-else-if="list.length === 0" class="empty">暂无教程</view>
+    <view v-if="loading" class="empty">
+      加载中...
+    </view>
+    <view v-else-if="list.length === 0" class="empty">
+      暂无教程
+    </view>
 
     <view v-for="t in list" :key="t.id" class="card">
       <view class="row1">
-        <view class="title">{{ t.title }}</view>
+        <view class="title">
+          {{ t.title }}
+        </view>
         <view class="badges">
-          <view class="badge stage">{{ stageLabel(t.stage) }}</view>
+          <view class="badge stage">
+            {{ stageLabel(t.stage) }}
+          </view>
           <view class="badge" :class="t.isActive ? 'on' : 'off'">
             {{ t.isActive ? '已启用' : '已停用' }}
           </view>
         </view>
       </view>
       <view class="row2">
-        <text class="type">{{ t.type === 'video' ? '🎬 视频' : '📄 文章' }}</text>
-        <text class="sort">排序：{{ t.sortOrder }}</text>
+        <text class="type">
+          {{ t.type === 'video' ? '🎬 视频' : '📄 文章' }}
+        </text>
+        <text class="sort">
+          排序：{{ t.sortOrder }}
+        </text>
       </view>
-      <view v-if="t.summary" class="summary">{{ t.summary }}</view>
+      <view v-if="t.summary" class="summary">
+        {{ t.summary }}
+      </view>
       <view class="row3">
-        <text class="url">{{ t.url }}</text>
+        <text class="url">
+          {{ t.url }}
+        </text>
       </view>
       <view class="actions">
-        <button class="mini-btn" @click="onEdit(t)">编辑</button>
+        <button class="mini-btn" @click="onEdit(t)">
+          编辑
+        </button>
         <button class="mini-btn" @click="onToggle(t)">
           {{ t.isActive ? '停用' : '启用' }}
         </button>
-        <button class="mini-btn danger" @click="onDelete(t)">删除</button>
+        <button class="mini-btn danger" @click="onDelete(t)">
+          删除
+        </button>
       </view>
     </view>
 
     <!-- 编辑弹窗 -->
     <view v-if="editing" class="modal-mask" @click.self="cancelEdit">
       <view class="modal">
-        <view class="modal-title">{{ editing.id ? '编辑教程' : '新建教程' }}</view>
+        <view class="modal-title">
+          {{ editing.id ? '编辑教程' : '新建教程' }}
+        </view>
         <view class="form">
           <view class="form-item">
-            <text class="label">阶段</text>
+            <text class="label">
+              阶段
+            </text>
             <picker
               mode="selector"
               :range="stageOptions"
@@ -63,12 +91,16 @@
             >
               <view class="picker">
                 {{ stageLabel(editing!.stage) }}
-                <text class="arrow">▾</text>
+                <text class="arrow">
+                  ▾
+                </text>
               </view>
             </picker>
           </view>
           <view class="form-item">
-            <text class="label">标题</text>
+            <text class="label">
+              标题
+            </text>
             <input
               v-model="editing!.title"
               class="input"
@@ -76,7 +108,9 @@
             />
           </view>
           <view class="form-item">
-            <text class="label">类型</text>
+            <text class="label">
+              类型
+            </text>
             <picker
               mode="selector"
               :range="typeOptions"
@@ -85,12 +119,16 @@
             >
               <view class="picker">
                 {{ editing!.type === 'video' ? '视频' : '文章' }}
-                <text class="arrow">▾</text>
+                <text class="arrow">
+                  ▾
+                </text>
               </view>
             </picker>
           </view>
           <view class="form-item">
-            <text class="label">URL</text>
+            <text class="label">
+              URL
+            </text>
             <input
               v-model="editing!.url"
               class="input"
@@ -98,7 +136,9 @@
             />
           </view>
           <view class="form-item">
-            <text class="label">简介</text>
+            <text class="label">
+              简介
+            </text>
             <textarea
               v-model="editing!.summary"
               class="textarea"
@@ -106,7 +146,9 @@
             />
           </view>
           <view class="form-item">
-            <text class="label">排序</text>
+            <text class="label">
+              排序
+            </text>
             <input
               v-model.number="editing!.sortOrder"
               class="input"
@@ -115,16 +157,20 @@
             />
           </view>
           <view class="form-item">
-            <text class="label">启用</text>
+            <text class="label">
+              启用
+            </text>
             <switch
               :checked="editing!.isActive"
-              @change="onEditingActiveChange"
               color="#c9a87c"
+              @change="onEditingActiveChange"
             />
           </view>
         </view>
         <view class="modal-actions">
-          <button class="modal-btn" @click="cancelEdit">取消</button>
+          <button class="modal-btn" @click="cancelEdit">
+            取消
+          </button>
           <button class="modal-btn primary" :disabled="saving" @click="onSave">
             {{ saving ? '保存中...' : '保存' }}
           </button>

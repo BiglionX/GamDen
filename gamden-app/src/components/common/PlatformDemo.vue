@@ -4,19 +4,27 @@
     <!-- 平台标识 -->
     <view class="platform-badge">
       <!-- #ifdef H5 -->
-      <text class="badge h5">H5 网页版</text>
+      <text class="badge h5">
+        H5 网页版
+      </text>
       <!-- #endif -->
 
       <!-- #ifdef MP-WEIXIN -->
-      <text class="badge mp">微信小程序</text>
+      <text class="badge mp">
+        微信小程序
+      </text>
       <!-- #endif -->
 
       <!-- #ifdef APP-ANDROID -->
-      <text class="badge android">Android App</text>
+      <text class="badge android">
+        Android App
+      </text>
       <!-- #endif -->
 
       <!-- #ifdef APP-IOS -->
-      <text class="badge ios">iOS App</text>
+      <text class="badge ios">
+        iOS App
+      </text>
       <!-- #endif -->
     </view>
 
@@ -25,7 +33,9 @@
       <!-- H5 特有：分享按钮 -->
       <!-- #ifdef H5 -->
       <button class="feature-btn" @click="handleH5Share">
-        <text class="icon">🔗</text>
+        <text class="icon">
+          🔗
+        </text>
         <text>复制链接分享</text>
       </button>
       <!-- #endif -->
@@ -33,11 +43,15 @@
       <!-- 微信小程序特有：转发按钮 -->
       <!-- #ifdef MP-WEIXIN -->
       <button class="feature-btn" open-type="share">
-        <text class="icon">👥</text>
+        <text class="icon">
+          👥
+        </text>
         <text>转发给好友</text>
       </button>
       <button class="feature-btn" open-type="launchApp">
-        <text class="icon">📱</text>
+        <text class="icon">
+          📱
+        </text>
         <text>打开 App</text>
       </button>
       <!-- #endif -->
@@ -45,36 +59,58 @@
       <!-- App 特有：原生分享 -->
       <!-- #ifdef APP-PLUS -->
       <button class="feature-btn" @click="handleAppShare">
-        <text class="icon">📤</text>
+        <text class="icon">
+          📤
+        </text>
         <text>原生分享</text>
       </button>
       <!-- #endif -->
 
       <!-- 所有平台通用功能 -->
       <button class="feature-btn" @click="handleCopy">
-        <text class="icon">📋</text>
+        <text class="icon">
+          📋
+        </text>
         <text>复制内容</text>
       </button>
     </view>
 
     <!-- 平台差异展示 -->
     <view class="platform-info">
-      <text class="title">当前平台信息</text>
+      <text class="title">
+        当前平台信息
+      </text>
       <view class="info-item">
-        <text class="label">API 地址：</text>
-        <text class="value">{{ apiBaseUrl }}</text>
+        <text class="label">
+          API 地址：
+        </text>
+        <text class="value">
+          {{ apiBaseUrl }}
+        </text>
       </view>
       <view class="info-item">
-        <text class="label">IM 地址：</text>
-        <text class="value">{{ imApiUrl }}</text>
+        <text class="label">
+          IM 地址：
+        </text>
+        <text class="value">
+          {{ imApiUrl }}
+        </text>
       </view>
       <view class="info-item">
-        <text class="label">状态栏高度：</text>
-        <text class="value">{{ statusBarHeight }}px</text>
+        <text class="label">
+          状态栏高度：
+        </text>
+        <text class="value">
+          {{ statusBarHeight }}px
+        </text>
       </view>
       <view class="info-item">
-        <text class="label">导航栏高度：</text>
-        <text class="value">{{ navBarHeight }}px</text>
+        <text class="label">
+          导航栏高度：
+        </text>
+        <text class="value">
+          {{ navBarHeight }}px
+        </text>
       </view>
     </view>
   </view>

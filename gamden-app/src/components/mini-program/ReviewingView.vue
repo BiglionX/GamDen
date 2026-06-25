@@ -61,7 +61,9 @@ function refresh(): void {
       <view class="rv-status__icon">
         <text>🔍</text>
       </view>
-      <text class="rv-status__title">代码审核中</text>
+      <text class="rv-status__title">
+        代码审核中
+      </text>
       <text class="rv-status__desc">
         微信审核通常需要 1-7 个工作日，请耐心等待。
       </text>
@@ -69,17 +71,27 @@ function refresh(): void {
 
     <!-- 提交时间 + AppID -->
     <view v-if="submittedAtText" class="rv-time">
-      <text class="rv-time__label">提交审核时间</text>
-      <text class="rv-time__value">{{ submittedAtText }}</text>
+      <text class="rv-time__label">
+        提交审核时间
+      </text>
+      <text class="rv-time__value">
+        {{ submittedAtText }}
+      </text>
     </view>
     <view v-if="store.record?.appid" class="rv-time">
-      <text class="rv-time__label">小程序 AppID</text>
-      <text class="rv-time__value">{{ store.record.appid }}</text>
+      <text class="rv-time__label">
+        小程序 AppID
+      </text>
+      <text class="rv-time__value">
+        {{ store.record.appid }}
+      </text>
     </view>
 
     <!-- 关键操作 -->
     <view class="rv-card">
-      <view class="rv-card__title">🔗 查看审核进度</view>
+      <view class="rv-card__title">
+        🔗 查看审核进度
+      </view>
       <text class="rv-card__desc">
         登录微信公众平台 → 版本管理，可查看审核状态、撤回审核、查看反馈。
       </text>
@@ -94,7 +106,9 @@ function refresh(): void {
 
     <!-- 体验版入口 -->
     <view class="rv-card rv-card--secondary">
-      <view class="rv-card__title">📱 预览体验版</view>
+      <view class="rv-card__title">
+        📱 预览体验版
+      </view>
       <text class="rv-card__desc">
         审核通过前，开发者可通过体验版二维码分享给指定用户测试。
       </text>
@@ -109,17 +123,27 @@ function refresh(): void {
 
     <!-- 提示 -->
     <view class="rv-tip">
-      <text class="rv-tip__icon">💡</text>
+      <text class="rv-tip__icon">
+        💡
+      </text>
       <view class="rv-tip__body">
-        <text class="rv-tip__title">审核通过后</text>
-        <text class="rv-tip__desc">系统会自动生成小程序码并展示在此页面。</text>
+        <text class="rv-tip__title">
+          审核通过后
+        </text>
+        <text class="rv-tip__desc">
+          系统会自动生成小程序码并展示在此页面。
+        </text>
       </view>
     </view>
 
     <!-- 刷新 -->
     <view class="rv-refresh" @tap="refresh">
-      <text class="rv-refresh__icon">⟳</text>
-      <text class="rv-refresh__text">刷新状态</text>
+      <text class="rv-refresh__icon">
+        ⟳
+      </text>
+      <text class="rv-refresh__text">
+        刷新状态
+      </text>
     </view>
   </view>
 </template>

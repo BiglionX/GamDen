@@ -2,6 +2,7 @@ import { dbPool } from '../config/database';
 import { logger } from '../utils/logger';
 import { autoGenerateMiniProgram } from './wechatService';
 import { sendAgentMessage } from './agentService';
+import { addExp, addBond } from './agentUpgradeService';
 
 export interface InviteProgress {
   invited_count: number;
@@ -120,6 +121,17 @@ export const activateInviteRecord = async (inviteeId: number): Promise<void> => 
         logger.error('自动生成小程序失败', { inviterId, error: error.message });
       }
     }
+
+    // 触发守护灵升级系统：邀请成功增加EXP和Bond（异步）
+    setImmediate(async () => {
+      try {
+        await addExp(inviterId, 'invite');
+        await addBond(inviterId, 'invite');
+        logger.info('守护灵邀请EXP和Bond添加成功', { inviterId });
+      } catch (err: any) {
+        logger.error('守护灵邀请EXP添加失败', { inviterId, error: err.message });
+      }
+    });
   }
 };
 

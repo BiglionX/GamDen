@@ -257,18 +257,27 @@ export const GUARDIAN_ICON: Record<GuardianType, string> = {
   mechanical: '⚙️',
   elf: '🌿',
   astrologer: '🔮',
+  ranger: '🏹',
+  artisan: '🔨',
+  apostle: '🛡️',
 };
 
 export const GUARDIAN_COLOR: Record<GuardianType, string> = {
   mechanical: '#8B7355',
   elf: '#7AA06E',
   astrologer: '#9B8AC4',
+  ranger: '#C77D45',
+  artisan: '#B5895A',
+  apostle: '#7A4A8E',
 };
 
 export const GUARDIAN_NAME: Record<GuardianType, string> = {
   mechanical: '机械师',
   elf: '精灵',
   astrologer: '占星师',
+  ranger: '游侠',
+  artisan: '工匠',
+  apostle: '使徒',
 };
 
 // ============================================================

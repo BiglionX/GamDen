@@ -37,7 +37,9 @@ function handleDismiss() {
         <text>✨</text>
       </view>
       <view class="agent-guide-bubble__content">
-        <text class="agent-guide-bubble__title">守护灵低语</text>
+        <text class="agent-guide-bubble__title">
+          守护灵低语
+        </text>
         <text class="agent-guide-bubble__text">
           巢穴之门已为你打开，私聊与升级需先入驻
         </text>

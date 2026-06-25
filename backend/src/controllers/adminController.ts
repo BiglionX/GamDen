@@ -15,7 +15,6 @@ import {
   getDashboardData
 } from '../services/adminService';
 import { AppError } from '../middleware/errorHandler';
-import { logAdminOperation } from '../middleware/adminAuth';
 
 /**
  * 获取用户列表

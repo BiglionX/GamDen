@@ -34,6 +34,10 @@ import { useUserStore } from '@/stores/user';
  *    不直接 import openim-uniapp-polyfill，方便本地 mock fallback。
  */
 
+// 新增：导入俱乐部API
+import { clubApi } from '@/utils/club-api';
+import type { ClubUpgrade } from '@/types/club';
+
 // =========================================================
 // 俱乐部 mock 数据（V1.0 - 真实接入后替换为后端接口）
 // =========================================================

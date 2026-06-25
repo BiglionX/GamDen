@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+import jwt, { type Secret, type SignOptions } from 'jsonwebtoken';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -17,14 +17,14 @@ export interface JWTPayload {
  * 生成JWT Token
  */
 export const generateToken = (payload: JWTPayload): string => {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+  return jwt.sign(payload, JWT_SECRET as Secret, { expiresIn: JWT_EXPIRES_IN as any });
 };
 
 /**
  * 生成Refresh Token
  */
 export const generateRefreshToken = (payload: JWTPayload): string => {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_REFRESH_EXPIRES_IN });
+  return jwt.sign(payload, JWT_SECRET as Secret, { expiresIn: JWT_REFRESH_EXPIRES_IN as any });
 };
 
 /**
@@ -32,7 +32,7 @@ export const generateRefreshToken = (payload: JWTPayload): string => {
  */
 export const verifyToken = (token: string): JWTPayload | null => {
   try {
-    const decoded = jwt.verify(token, JWT_SECRET) as JWTPayload;
+    const decoded = jwt.verify(token, JWT_SECRET as Secret) as JWTPayload;
     return decoded;
   } catch (error) {
     return null;

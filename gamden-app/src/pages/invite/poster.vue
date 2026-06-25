@@ -41,7 +41,9 @@ function handleBack() {
         <view class="navbar__back" @tap="handleBack">
           <text>‹</text>
         </view>
-        <text class="navbar__title">分享邀请</text>
+        <text class="navbar__title">
+          分享邀请
+        </text>
         <view class="navbar__placeholder" />
       </view>
     </view>
@@ -55,8 +57,12 @@ function handleBack() {
       <InvitePoster ref="posterRef" :data="inviteStore.posterData" />
 
       <view class="poster-body__url">
-        <text class="poster-body__url-label">落地链接</text>
-        <text class="poster-body__url-text">{{ inviteStore.posterData?.inviteUrl }}</text>
+        <text class="poster-body__url-label">
+          落地链接
+        </text>
+        <text class="poster-body__url-text">
+          {{ inviteStore.posterData?.inviteUrl }}
+        </text>
       </view>
     </view>
 

@@ -121,13 +121,19 @@ function handleSkip() {
 
       <!-- 领地图标 -->
       <view class="page-territory__territory-icon">
-        <text class="page-territory__territory-text">🏰</text>
+        <text class="page-territory__territory-text">
+          🏰
+        </text>
       </view>
 
       <!-- 领地编号 -->
       <view class="page-territory__territory-info">
-        <text class="page-territory__territory-label">你的领地</text>
-        <text class="page-territory__territory-id">#{{ territoryId }}</text>
+        <text class="page-territory__territory-label">
+          你的领地
+        </text>
+        <text class="page-territory__territory-id">
+          #{{ territoryId }}
+        </text>
       </view>
     </view>
 
@@ -142,7 +148,9 @@ function handleSkip() {
             background: `linear-gradient(135deg, ${visual.color}22 0%, ${visual.color}11 100%)`,
           }"
         >
-          <text class="page-territory__celebration-icon">{{ visual.icon }}</text>
+          <text class="page-territory__celebration-icon">
+            {{ visual.icon }}
+          </text>
         </view>
 
         <!-- 祝贺台词 -->
@@ -150,7 +158,9 @@ function handleSkip() {
           <text class="page-territory__celebration-name" :style="{ color: visual.color }">
             {{ visual.name }}
           </text>
-          <text class="page-territory__celebration-text">{{ celebrationLine?.text }}</text>
+          <text class="page-territory__celebration-text">
+            {{ celebrationLine?.text }}
+          </text>
         </view>
       </view>
     </view>

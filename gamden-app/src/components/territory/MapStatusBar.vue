@@ -48,8 +48,12 @@ const unreadText = computed(() => {
     <!-- 领地等级 + 经验条 -->
     <view class="map-status__level">
       <view class="map-status__level-row">
-        <text class="map-status__level-num">Lv.{{ level }}</text>
-        <text class="map-status__exp-text">{{ exp }}/{{ nextLevelExp }} EXP</text>
+        <text class="map-status__level-num">
+          Lv.{{ level }}
+        </text>
+        <text class="map-status__exp-text">
+          {{ exp }}/{{ nextLevelExp }} EXP
+        </text>
       </view>
       <view class="map-status__exp-bar">
         <view class="map-status__exp-bar-fill" :style="{ width: expPercent + '%' }" />
@@ -60,26 +64,38 @@ const unreadText = computed(() => {
     <view class="map-status__actions">
       <!-- 金币 -->
       <view class="map-status__coin">
-        <text class="map-status__coin-icon">🪙</text>
-        <text class="map-status__coin-num">{{ coinBalance }}</text>
+        <text class="map-status__coin-icon">
+          🪙
+        </text>
+        <text class="map-status__coin-num">
+          {{ coinBalance }}
+        </text>
       </view>
 
       <!-- 消息（带未读红点） -->
       <view class="map-status__icon-btn" @tap="emit('messages')">
-        <text class="map-status__icon">💬</text>
+        <text class="map-status__icon">
+          💬
+        </text>
         <view v-if="unreadCount > 0" class="map-status__badge">
-          <text class="map-status__badge-text">{{ unreadText }}</text>
+          <text class="map-status__badge-text">
+            {{ unreadText }}
+          </text>
         </view>
       </view>
 
       <!-- 个人中心 -->
       <view class="map-status__icon-btn" @tap="emit('profile')">
-        <text class="map-status__icon">👤</text>
+        <text class="map-status__icon">
+          👤
+        </text>
       </view>
 
       <!-- 刷新 -->
       <view class="map-status__icon-btn" @tap="emit('refresh')">
-        <text class="map-status__icon" :class="{ 'map-status__icon--spin': loading }">⟳</text>
+        <text class="map-status__icon" :class="{ 'map-status__icon--spin': loading }">
+          ⟳
+        </text>
       </view>
 
       <!-- 缩放指示 -->

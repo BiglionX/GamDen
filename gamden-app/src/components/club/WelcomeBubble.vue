@@ -53,10 +53,14 @@ const guardianName = computed(() => GUARDIAN_NAME[props.guardianType]);
           class="welcome-bubble__avatar"
           :style="{ borderColor: accent }"
         >
-          <text class="welcome-bubble__avatar-icon">{{ avatar }}</text>
+          <text class="welcome-bubble__avatar-icon">
+            {{ avatar }}
+          </text>
         </view>
         <view class="welcome-bubble__member">
-          <text class="welcome-bubble__name">{{ newMemberName }}</text>
+          <text class="welcome-bubble__name">
+            {{ newMemberName }}
+          </text>
           <text class="welcome-bubble__action" :style="{ color: accent }">
             加入巢穴 ✦
           </text>
@@ -64,15 +68,21 @@ const guardianName = computed(() => GUARDIAN_NAME[props.guardianType]);
       </view>
 
       <!-- 欢迎语 -->
-      <text class="welcome-bubble__greeting">{{ greeting }}</text>
+      <text class="welcome-bubble__greeting">
+        {{ greeting }}
+      </text>
 
       <!-- 底部守护灵装饰 -->
       <view class="welcome-bubble__footer">
-        <text class="welcome-bubble__guardian-icon">{{ guardianIcon }}</text>
+        <text class="welcome-bubble__guardian-icon">
+          {{ guardianIcon }}
+        </text>
         <text class="welcome-bubble__guardian-name" :style="{ color: accent }">
           {{ guardianName }}守护中
         </text>
-        <text v-if="time" class="welcome-bubble__time">· {{ time }}</text>
+        <text v-if="time" class="welcome-bubble__time">
+          · {{ time }}
+        </text>
       </view>
     </view>
 

@@ -19,7 +19,7 @@ const pgPool = process.env.DB_TYPE === 'postgres'
   : null;
 
 // 统一导出数据库连接池
-export const dbPool = pgPool;
+export const dbPool = pgPool as Pool;
 
 // Redis客户端配置（可选）
 let redisClient: any = null;

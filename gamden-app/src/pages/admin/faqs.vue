@@ -9,41 +9,63 @@
       >
         <view class="picker">
           阶段：{{ stageOptions[stageIndex] }}
-          <text class="arrow">▾</text>
+          <text class="arrow">
+            ▾
+          </text>
         </view>
       </picker>
-      <button class="add-btn" @click="onCreate">+ 新建 FAQ</button>
+      <button class="add-btn" @click="onCreate">
+        + 新建 FAQ
+      </button>
     </view>
 
-    <view v-if="loading" class="empty">加载中...</view>
-    <view v-else-if="list.length === 0" class="empty">暂无 FAQ</view>
+    <view v-if="loading" class="empty">
+      加载中...
+    </view>
+    <view v-else-if="list.length === 0" class="empty">
+      暂无 FAQ
+    </view>
 
     <view v-for="f in list" :key="f.id" class="card">
       <view class="row1">
-        <view class="q">Q. {{ f.question }}</view>
+        <view class="q">
+          Q. {{ f.question }}
+        </view>
         <view class="badges">
-          <view class="badge stage">{{ stageLabel(f.stage) }}</view>
+          <view class="badge stage">
+            {{ stageLabel(f.stage) }}
+          </view>
           <view class="badge" :class="f.isActive ? 'on' : 'off'">
             {{ f.isActive ? '已启用' : '已停用' }}
           </view>
         </view>
       </view>
-      <view class="a">A. {{ f.answer }}</view>
+      <view class="a">
+        A. {{ f.answer }}
+      </view>
       <view class="actions">
-        <button class="mini-btn" @click="onEdit(f)">编辑</button>
+        <button class="mini-btn" @click="onEdit(f)">
+          编辑
+        </button>
         <button class="mini-btn" @click="onToggle(f)">
           {{ f.isActive ? '停用' : '启用' }}
         </button>
-        <button class="mini-btn danger" @click="onDelete(f)">删除</button>
+        <button class="mini-btn danger" @click="onDelete(f)">
+          删除
+        </button>
       </view>
     </view>
 
     <view v-if="editing" class="modal-mask" @click.self="cancelEdit">
       <view class="modal">
-        <view class="modal-title">{{ editing.id ? '编辑 FAQ' : '新建 FAQ' }}</view>
+        <view class="modal-title">
+          {{ editing.id ? '编辑 FAQ' : '新建 FAQ' }}
+        </view>
         <view class="form">
           <view class="form-item">
-            <text class="label">阶段</text>
+            <text class="label">
+              阶段
+            </text>
             <picker
               mode="selector"
               :range="stageOptions.slice(1)"
@@ -52,12 +74,16 @@
             >
               <view class="picker">
                 {{ stageLabel(editing!.stage) }}
-                <text class="arrow">▾</text>
+                <text class="arrow">
+                  ▾
+                </text>
               </view>
             </picker>
           </view>
           <view class="form-item">
-            <text class="label">问题</text>
+            <text class="label">
+              问题
+            </text>
             <textarea
               v-model="editing!.question"
               class="textarea"
@@ -65,7 +91,9 @@
             />
           </view>
           <view class="form-item">
-            <text class="label">答案</text>
+            <text class="label">
+              答案
+            </text>
             <textarea
               v-model="editing!.answer"
               class="textarea large"
@@ -73,7 +101,9 @@
             />
           </view>
           <view class="form-item">
-            <text class="label">排序</text>
+            <text class="label">
+              排序
+            </text>
             <input
               v-model.number="editing!.sortOrder"
               class="input"
@@ -81,16 +111,20 @@
             />
           </view>
           <view class="form-item">
-            <text class="label">启用</text>
+            <text class="label">
+              启用
+            </text>
             <switch
               :checked="editing!.isActive"
-              @change="onEditingActiveChange"
               color="#c9a87c"
+              @change="onEditingActiveChange"
             />
           </view>
         </view>
         <view class="modal-actions">
-          <button class="modal-btn" @click="cancelEdit">取消</button>
+          <button class="modal-btn" @click="cancelEdit">
+            取消
+          </button>
           <button class="modal-btn primary" :disabled="saving" @click="onSave">
             {{ saving ? '保存中...' : '保存' }}
           </button>

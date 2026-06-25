@@ -299,8 +299,12 @@ function handleContactService(): void {
       hover-class="hcs-entry--hover"
       @tap="openSheet('tutorial')"
     >
-      <text class="hcs-entry__icon">💬</text>
-      <text class="hcs-entry__text">教程与帮助</text>
+      <text class="hcs-entry__icon">
+        💬
+      </text>
+      <text class="hcs-entry__text">
+        教程与帮助
+      </text>
     </view>
   </view>
 
@@ -312,7 +316,9 @@ function handleContactService(): void {
         <view class="hcs-sheet__bar" />
       </view>
       <view class="hcs-sheet__header">
-        <text class="hcs-sheet__title">教程与帮助</text>
+        <text class="hcs-sheet__title">
+          教程与帮助
+        </text>
         <view
           class="hcs-sheet__close"
           hover-class="hcs-sheet__close--hover"
@@ -337,7 +343,9 @@ function handleContactService(): void {
           @tap="switchTab(t.key as TabKey)"
         >
           <text>{{ t.label }}</text>
-          <text v-if="t.count > 0" class="hcs-tab__count">{{ t.count }}</text>
+          <text v-if="t.count > 0" class="hcs-tab__count">
+            {{ t.count }}
+          </text>
         </view>
       </view>
 
@@ -362,10 +370,16 @@ function handleContactService(): void {
                 {{ t.type === 'video' ? '🎬' : '📄' }}
               </text>
               <view class="hcs-tutorial__body">
-                <text class="hcs-tutorial__title">{{ t.title }}</text>
-                <text class="hcs-tutorial__summary">{{ t.summary }}</text>
+                <text class="hcs-tutorial__title">
+                  {{ t.title }}
+                </text>
+                <text class="hcs-tutorial__summary">
+                  {{ t.summary }}
+                </text>
               </view>
-              <text class="hcs-tutorial__arrow">›</text>
+              <text class="hcs-tutorial__arrow">
+                ›
+              </text>
             </view>
             <!-- 步骤化内容（fallback 静态教程有，API 教程可能没有） -->
             <view v-if="t.steps && t.steps.length > 0" class="hcs-tutorial__steps">
@@ -374,8 +388,12 @@ function handleContactService(): void {
                 :key="idx"
                 class="hcs-step"
               >
-                <text class="hcs-step__num">{{ idx + 1 }}</text>
-                <text class="hcs-step__text">{{ step }}</text>
+                <text class="hcs-step__num">
+                  {{ idx + 1 }}
+                </text>
+                <text class="hcs-step__text">
+                  {{ step }}
+                </text>
               </view>
             </view>
           </view>
@@ -391,13 +409,17 @@ function handleContactService(): void {
             @tap="toggleFaq(f.id)"
           >
             <view class="hcs-faq__head">
-              <text class="hcs-faq__q">❓ {{ f.question }}</text>
+              <text class="hcs-faq__q">
+                ❓ {{ f.question }}
+              </text>
               <text class="hcs-faq__toggle">
                 {{ expandedFaq === f.id ? '−' : '+' }}
               </text>
             </view>
             <view v-if="expandedFaq === f.id" class="hcs-faq__body">
-              <text class="hcs-faq__a">{{ f.answer }}</text>
+              <text class="hcs-faq__a">
+                {{ f.answer }}
+              </text>
             </view>
           </view>
         </view>
@@ -408,7 +430,9 @@ function handleContactService(): void {
             <view class="hcs-service__icon">
               <text>🎧</text>
             </view>
-            <text class="hcs-service__title">遇到问题？联系客服</text>
+            <text class="hcs-service__title">
+              遇到问题？联系客服
+            </text>
             <text class="hcs-service__desc">
               我们将在工作日 30 分钟内回复你。
             </text>

@@ -97,6 +97,11 @@ function handleDismissGuide() {
   agentStore.dismiss();
 }
 
+/** 跳到守护灵详情页 */
+function goAgentDetail() {
+  uni.navigateTo({ url: '/pages/agent/detail' });
+}
+
 function handleLogout() {
   uni.showModal({
     title: '确认退出',
@@ -128,7 +133,9 @@ function goLogin() {
           background: guardianVisual.color + '22',
         }"
       >
-        <text class="new-user-guide__icon">{{ guardianVisual.icon }}</text>
+        <text class="new-user-guide__icon">
+          {{ guardianVisual.icon }}
+        </text>
       </view>
 
       <!-- 对话气泡 -->
@@ -137,9 +144,13 @@ function goLogin() {
           <text class="new-user-guide__name" :style="{ color: guardianVisual.color }">
             {{ guardianVisual.name }}
           </text>
-          <text class="new-user-guide__tag">新手任务</text>
+          <text class="new-user-guide__tag">
+            新手任务
+          </text>
         </view>
-        <text class="new-user-guide__text">{{ agentStore.current.text }}</text>
+        <text class="new-user-guide__text">
+          {{ agentStore.current.text }}
+        </text>
       </view>
 
       <!-- 操作按钮 -->
@@ -156,41 +167,97 @@ function goLogin() {
     <!-- 头部用户信息 -->
     <view class="profile-header">
       <view class="profile-header__avatar">
-        <text v-if="!userStore.profile?.avatar">{{ userStore.profile?.nickname?.charAt(0) ?? '?' }}</text>
-        <text v-else>{{ userStore.profile.avatar }}</text>
+        <text v-if="!userStore.profile?.avatar">
+          {{ userStore.profile?.nickname?.charAt(0) ?? '?' }}
+        </text>
+        <text v-else>
+          {{ userStore.profile.avatar }}
+        </text>
       </view>
       <view class="profile-header__info">
-        <text class="profile-header__name">{{ userStore.profile?.nickname ?? '未入驻' }}</text>
+        <text class="profile-header__name">
+          {{ userStore.profile?.nickname ?? '未入驻' }}
+        </text>
         <text class="profile-header__role">
-          <text v-if="userStore.isGuest">访客模式</text>
-          <text v-else-if="userStore.profile?.guardianType === 'mechanical'">机械师领地</text>
-          <text v-else-if="userStore.profile?.guardianType === 'elf'">精灵领地</text>
-          <text v-else-if="userStore.profile?.guardianType === 'astrologer'">占星师领地</text>
-          <text v-else>注册用户</text>
+          <text v-if="userStore.isGuest">
+            访客模式
+          </text>
+          <text v-else-if="userStore.profile?.guardianType === 'mechanical'">
+            机械师领地
+          </text>
+          <text v-else-if="userStore.profile?.guardianType === 'elf'">
+            精灵领地
+          </text>
+          <text v-else-if="userStore.profile?.guardianType === 'astrologer'">
+            占星师领地
+          </text>
+          <text v-else>
+            注册用户
+          </text>
         </text>
       </view>
     </view>
 
     <!-- 游客模式：入驻入口 -->
     <view v-if="userStore.isGuest" class="entry-card" @tap="goLogin">
-      <text class="entry-card__title">立即入驻巢穴</text>
-      <text class="entry-card__desc">选择守护灵，开启你的游戏社交圈</text>
-      <u-button type="primary" size="small" text="去入驻" />
+      <text class="entry-card__title">
+        立即入驻巢穴
+      </text>
+      <text class="entry-card__desc">
+        选择守护灵，开启你的游戏社交圈
+      </text>
+      <u-button type="primary" size="small" text="去入驻" @click="goLogin" />
     </view>
 
     <!-- 注册用户：领地状态 -->
     <view v-else class="territory-stats">
       <view class="stat-item">
-        <text class="stat-item__value">Lv.1</text>
-        <text class="stat-item__label">领地等级</text>
+        <text class="stat-item__value">
+          Lv.1
+        </text>
+        <text class="stat-item__label">
+          领地等级
+        </text>
       </view>
       <view class="stat-item">
-        <text class="stat-item__value">{{ stats?.totalInvited ?? 0 }}</text>
-        <text class="stat-item__label">邀请人数</text>
+        <text class="stat-item__value">
+          {{ stats?.totalInvited ?? 0 }}
+        </text>
+        <text class="stat-item__label">
+          邀请人数
+        </text>
       </view>
       <view class="stat-item">
-        <text class="stat-item__value">2580</text>
-        <text class="stat-item__label">金币余额</text>
+        <text class="stat-item__value">
+          2580
+        </text>
+        <text class="stat-item__label">
+          金币余额
+        </text>
+      </view>
+    </view>
+
+    <!-- 守护灵卡片 -->
+    <view v-if="!userStore.isGuest" class="guardian-card" @tap="goAgentDetail">
+      <view class="guardian-card__left">
+        <view class="guardian-card__avatar" :style="{ background: guardianVisual.bgColor }">
+          <text class="guardian-card__icon">
+            {{ guardianVisual.icon }}
+          </text>
+        </view>
+        <view class="guardian-card__info">
+          <text class="guardian-card__name">
+            {{ guardianVisual.name }}
+          </text>
+          <text class="guardian-card__level">
+            Lv.1
+          </text>
+        </view>
+      </view>
+      <view class="guardian-card__right">
+        <text class="guardian-card__arrow">
+          →
+        </text>
       </view>
     </view>
 
@@ -198,19 +265,29 @@ function goLogin() {
     <view v-if="!userStore.isGuest" class="invite-card">
       <view class="invite-card__header">
         <view class="invite-card__title-row">
-          <text class="invite-card__title">🎟️ 邀请巢友</text>
+          <text class="invite-card__title">
+            🎟️ 邀请巢友
+          </text>
           <view class="invite-card__refresh" @tap="handleRefresh">
-            <text class="invite-card__refresh-icon" :class="{ 'is-spinning': refreshing }">⟳</text>
+            <text class="invite-card__refresh-icon" :class="{ 'is-spinning': refreshing }">
+              ⟳
+            </text>
           </view>
         </view>
-        <text class="invite-card__sub">邀请 3 位巢友，解锁专属小程序码</text>
+        <text class="invite-card__sub">
+          邀请 3 位巢友，解锁专属小程序码
+        </text>
       </view>
 
       <!-- 邀请码 + 复制 -->
       <view class="invite-card__code-row">
         <view class="invite-card__code-box">
-          <text class="invite-card__code-label">我的邀请码</text>
-          <text class="invite-card__code">{{ stats?.code ?? '————' }}</text>
+          <text class="invite-card__code-label">
+            我的邀请码
+          </text>
+          <text class="invite-card__code">
+            {{ stats?.code ?? '————' }}
+          </text>
         </view>
         <view class="invite-card__copy-btn" @tap="handleCopyCode">
           <text>复制</text>
@@ -238,18 +315,30 @@ function goLogin() {
       <!-- 统计：今日/本周 -->
       <view class="invite-card__stats">
         <view class="invite-card__stat-item">
-          <text class="invite-card__stat-num">{{ stats?.todayInvited ?? 0 }}</text>
-          <text class="invite-card__stat-label">今日</text>
+          <text class="invite-card__stat-num">
+            {{ stats?.todayInvited ?? 0 }}
+          </text>
+          <text class="invite-card__stat-label">
+            今日
+          </text>
         </view>
         <view class="invite-card__stat-divider" />
         <view class="invite-card__stat-item">
-          <text class="invite-card__stat-num">{{ stats?.weekInvited ?? 0 }}</text>
-          <text class="invite-card__stat-label">本周</text>
+          <text class="invite-card__stat-num">
+            {{ stats?.weekInvited ?? 0 }}
+          </text>
+          <text class="invite-card__stat-label">
+            本周
+          </text>
         </view>
         <view class="invite-card__stat-divider" />
         <view class="invite-card__stat-item">
-          <text class="invite-card__stat-num">{{ stats?.totalInvited ?? 0 }}</text>
-          <text class="invite-card__stat-label">总计</text>
+          <text class="invite-card__stat-num">
+            {{ stats?.totalInvited ?? 0 }}
+          </text>
+          <text class="invite-card__stat-label">
+            总计
+          </text>
         </view>
       </view>
 
@@ -276,35 +365,67 @@ function goLogin() {
 
     <!-- 顶部全局红点：未读小程序资格提示（覆盖"我的小程序"入口） -->
     <view v-if="showMiniProgramRedDot" class="profile-reddot-banner" @tap="handleMiniProgram">
-      <text class="profile-reddot-banner__icon">🎉</text>
+      <text class="profile-reddot-banner__icon">
+        🎉
+      </text>
       <view class="profile-reddot-banner__body">
-        <text class="profile-reddot-banner__title">你解锁了个人专属小程序！</text>
-        <text class="profile-reddot-banner__desc">点击查看你的小程序码</text>
+        <text class="profile-reddot-banner__title">
+          你解锁了个人专属小程序！
+        </text>
+        <text class="profile-reddot-banner__desc">
+          点击查看你的小程序码
+        </text>
       </view>
-      <text class="profile-reddot-banner__arrow">›</text>
+      <text class="profile-reddot-banner__arrow">
+        ›
+      </text>
     </view>
 
     <!-- 功能列表 -->
     <view class="menu-list">
       <view class="menu-item">
-        <text class="menu-item__icon">📜</text>
-        <text class="menu-item__label">我的帖子</text>
-        <text class="menu-item__arrow">›</text>
+        <text class="menu-item__icon">
+          📜
+        </text>
+        <text class="menu-item__label">
+          我的帖子
+        </text>
+        <text class="menu-item__arrow">
+          ›
+        </text>
       </view>
       <view class="menu-item">
-        <text class="menu-item__icon">🛍️</text>
-        <text class="menu-item__label">兑换记录</text>
-        <text class="menu-item__arrow">›</text>
+        <text class="menu-item__icon">
+          🛍️
+        </text>
+        <text class="menu-item__label">
+          兑换记录
+        </text>
+        <text class="menu-item__arrow">
+          ›
+        </text>
       </view>
       <view class="menu-item">
-        <text class="menu-item__icon">⚙️</text>
-        <text class="menu-item__label">设置</text>
-        <text class="menu-item__arrow">›</text>
+        <text class="menu-item__icon">
+          ⚙️
+        </text>
+        <text class="menu-item__label">
+          设置
+        </text>
+        <text class="menu-item__arrow">
+          ›
+        </text>
       </view>
       <view v-if="!userStore.isGuest" class="menu-item menu-item--danger" @tap="handleLogout">
-        <text class="menu-item__icon">🚪</text>
-        <text class="menu-item__label">退出登录</text>
-        <text class="menu-item__arrow">›</text>
+        <text class="menu-item__icon">
+          🚪
+        </text>
+        <text class="menu-item__label">
+          退出登录
+        </text>
+        <text class="menu-item__arrow">
+          ›
+        </text>
       </view>
     </view>
   </view>

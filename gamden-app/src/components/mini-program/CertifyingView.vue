@@ -57,7 +57,9 @@ function refresh(): void {
       <view class="cv-status__spinner">
         <text>🔄</text>
       </view>
-      <text class="cv-status__title">认证中，等待微信审核</text>
+      <text class="cv-status__title">
+        认证中，等待微信审核
+      </text>
       <text class="cv-status__desc">
         微信审核通常需要 1-3 个工作日，请保持关注。
       </text>
@@ -65,19 +67,29 @@ function refresh(): void {
 
     <!-- 提交时间 -->
     <view v-if="submittedAtText" class="cv-time">
-      <text class="cv-time__label">提交时间</text>
-      <text class="cv-time__value">{{ submittedAtText }}</text>
+      <text class="cv-time__label">
+        提交时间
+      </text>
+      <text class="cv-time__value">
+        {{ submittedAtText }}
+      </text>
     </view>
 
     <!-- 主体信息 -->
     <view v-if="store.certificationLabel" class="cv-type">
-      <text class="cv-type__label">认证主体</text>
-      <text class="cv-type__value">{{ store.certificationLabel }}</text>
+      <text class="cv-type__label">
+        认证主体
+      </text>
+      <text class="cv-type__value">
+        {{ store.certificationLabel }}
+      </text>
     </view>
 
     <!-- 关键操作卡片 -->
     <view class="cv-card">
-      <view class="cv-card__title">📬 查看审核进度</view>
+      <view class="cv-card__title">
+        📬 查看审核进度
+      </view>
       <text class="cv-card__desc">
         登录微信公众平台 → 通知中心，查看微信官方发送的站内信与审核结果。
       </text>
@@ -92,9 +104,13 @@ function refresh(): void {
 
     <!-- 提示 -->
     <view class="cv-tip">
-      <text class="cv-tip__icon">💡</text>
+      <text class="cv-tip__icon">
+        💡
+      </text>
       <view class="cv-tip__body">
-        <text class="cv-tip__title">审核期间可以继续邀请好友</text>
+        <text class="cv-tip__title">
+          审核期间可以继续邀请好友
+        </text>
         <text class="cv-tip__desc">
           扩大领地不仅能解锁更多功能，还能让你的小程序在启动后拥有更高的初始曝光。
         </text>
@@ -103,8 +119,12 @@ function refresh(): void {
 
     <!-- 刷新 -->
     <view class="cv-refresh" @tap="refresh">
-      <text class="cv-refresh__icon">⟳</text>
-      <text class="cv-refresh__text">刷新状态</text>
+      <text class="cv-refresh__icon">
+        ⟳
+      </text>
+      <text class="cv-refresh__text">
+        刷新状态
+      </text>
     </view>
   </view>
 </template>

@@ -189,8 +189,12 @@ function handleFocus() {
             class="emoji-panel__item"
             @tap="pickEmoji(e.char)"
           >
-            <text class="emoji-panel__emoji">{{ e.char }}</text>
-            <text class="emoji-panel__name">{{ e.name }}</text>
+            <text class="emoji-panel__emoji">
+              {{ e.char }}
+            </text>
+            <text class="emoji-panel__name">
+              {{ e.name }}
+            </text>
           </view>
           <view v-if="searchedEmojis.length === 0" class="emoji-panel__empty">
             <text>无匹配表情</text>
@@ -209,7 +213,9 @@ function handleFocus() {
                 class="emoji-panel__item"
                 @tap="pickEmoji(e.char)"
               >
-                <text class="emoji-panel__emoji">{{ e.char }}</text>
+                <text class="emoji-panel__emoji">
+                  {{ e.char }}
+                </text>
               </view>
             </view>
           </scroll-view>

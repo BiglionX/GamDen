@@ -113,18 +113,28 @@ onUnmounted(() => {
   <view class="cdv">
     <!-- 状态提示 -->
     <view class="cdv-banner">
-      <text class="cdv-banner__icon">✅</text>
+      <text class="cdv-banner__icon">
+        ✅
+      </text>
       <view class="cdv-banner__body">
-        <text class="cdv-banner__title">认证通过</text>
-        <text class="cdv-banner__desc">请填写 AppID 完成部署</text>
+        <text class="cdv-banner__title">
+          认证通过
+        </text>
+        <text class="cdv-banner__desc">
+          请填写 AppID 完成部署
+        </text>
       </view>
     </view>
 
     <!-- 获取 AppID 步骤 -->
     <view class="cdv-steps-card">
       <view class="cdv-steps-header" @tap="toggleSteps">
-        <text class="cdv-steps-header__title">📖 如何获取 AppID？</text>
-        <text class="cdv-steps-header__toggle">{{ showSteps ? '收起' : '展开' }}</text>
+        <text class="cdv-steps-header__title">
+          📖 如何获取 AppID？
+        </text>
+        <text class="cdv-steps-header__toggle">
+          {{ showSteps ? '收起' : '展开' }}
+        </text>
       </view>
       <view v-if="showSteps" class="cdv-steps">
         <view
@@ -132,10 +142,16 @@ onUnmounted(() => {
           :key="s.idx"
           class="cdv-step"
         >
-          <view class="cdv-step__num">{{ s.idx }}</view>
+          <view class="cdv-step__num">
+            {{ s.idx }}
+          </view>
           <view class="cdv-step__body">
-            <text class="cdv-step__label">{{ s.label }}</text>
-            <text class="cdv-step__desc">{{ s.desc }}</text>
+            <text class="cdv-step__label">
+              {{ s.label }}
+            </text>
+            <text class="cdv-step__desc">
+              {{ s.desc }}
+            </text>
           </view>
         </view>
         <view class="cdv-step__open" @tap="handleOpenWechatMp">
@@ -146,12 +162,16 @@ onUnmounted(() => {
 
     <!-- 输入表单 -->
     <view class="cdv-form">
-      <view class="cdv-form__title">🔑 填写小程序凭证</view>
+      <view class="cdv-form__title">
+        🔑 填写小程序凭证
+      </view>
 
       <view class="cdv-form__field">
         <view class="cdv-form__label">
           <text>AppID</text>
-          <text class="cdv-form__required">*</text>
+          <text class="cdv-form__required">
+            *
+          </text>
         </view>
         <view
           class="cdv-form__input-wrap"
@@ -171,22 +191,30 @@ onUnmounted(() => {
           <text
             v-if="appidValid === true"
             class="cdv-form__icon cdv-form__icon--ok"
-          >✓</text>
+          >
+            ✓
+          </text>
           <text
             v-else-if="appidValid === false"
             class="cdv-form__icon cdv-form__icon--err"
-          >✕</text>
+          >
+            ✕
+          </text>
         </view>
         <text
           v-if="appidValid === false"
           class="cdv-form__error"
-        >格式错误：应为 wx + 16 位十六进制字符</text>
+        >
+          格式错误：应为 wx + 16 位十六进制字符
+        </text>
       </view>
 
       <view class="cdv-form__field">
         <view class="cdv-form__label">
           <text>AppSecret</text>
-          <text class="cdv-form__required">*</text>
+          <text class="cdv-form__required">
+            *
+          </text>
         </view>
         <view
           class="cdv-form__input-wrap"
@@ -210,7 +238,9 @@ onUnmounted(() => {
         <text
           v-if="appSecretValid === false"
           class="cdv-form__error"
-        >长度不足（至少 16 位）</text>
+        >
+          长度不足（至少 16 位）
+        </text>
         <text class="cdv-form__tip">
           🔒 AppSecret 仅用于调用微信 API，不会展示给其他用户
         </text>
@@ -218,8 +248,12 @@ onUnmounted(() => {
 
       <!-- 错误提示 -->
       <view v-if="store.error" class="cdv-form__alert">
-        <text class="cdv-form__alert-icon">⚠️</text>
-        <text class="cdv-form__alert-text">{{ store.error }}</text>
+        <text class="cdv-form__alert-icon">
+          ⚠️
+        </text>
+        <text class="cdv-form__alert-text">
+          {{ store.error }}
+        </text>
       </view>
 
       <view

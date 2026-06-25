@@ -131,13 +131,17 @@ onShow(() => {
       <picker :value="statusFilter" :range="STATUS_OPTIONS" range-key="label" @change="(e: any) => { statusFilter = e.detail.value ? STATUS_OPTIONS[e.detail.value].value : ''; onStatusChange(); }">
         <view class="filter-item">
           <text>{{ statusFilter ? STATUS_OPTIONS.find((s) => s.value === statusFilter)?.label : '全部状态' }}</text>
-          <text class="arrow">▼</text>
+          <text class="arrow">
+            ▼
+          </text>
         </view>
       </picker>
       <picker :value="typeFilter" :range="TYPE_OPTIONS" range-key="label" @change="(e: any) => { typeFilter = e.detail.value ? TYPE_OPTIONS[e.detail.value].value : ''; onTypeChange(); }">
         <view class="filter-item">
           <text>{{ typeFilter ? TYPE_OPTIONS.find((t) => t.value === typeFilter)?.label : '全部类型' }}</text>
-          <text class="arrow">▼</text>
+          <text class="arrow">
+            ▼
+          </text>
         </view>
       </picker>
     </view>
@@ -150,14 +154,22 @@ onShow(() => {
     <!-- 列表 -->
     <scroll-view class="list" scroll-y @scrolltolower="onReachBottom">
       <view v-for="club in clubs" :key="club.id" class="club-item" @tap="goDetail(club.id)">
-        <view class="club-item__icon">{{ club.icon }}</view>
+        <view class="club-item__icon">
+          {{ club.icon }}
+        </view>
         <view class="club-item__body">
           <view class="club-item__header">
-            <text class="club-item__name">{{ club.name }}</text>
-            <text class="club-item__vitality">{{ getVitalityIcon(club.vitality_level) }}</text>
+            <text class="club-item__name">
+              {{ club.name }}
+            </text>
+            <text class="club-item__vitality">
+              {{ getVitalityIcon(club.vitality_level) }}
+            </text>
           </view>
           <view class="club-item__meta">
-            <text class="club-item__type">{{ club.club_type }}</text>
+            <text class="club-item__type">
+              {{ club.club_type }}
+            </text>
             <text class="club-item__status" :style="{ color: getStatusColor(club.status) }">
               {{ getStatusText(club.status) }}
             </text>
@@ -165,12 +177,20 @@ onShow(() => {
             <text>活力 {{ club.vitality }}</text>
           </view>
         </view>
-        <text class="club-item__arrow">›</text>
+        <text class="club-item__arrow">
+          ›
+        </text>
       </view>
 
-      <view v-if="loading" class="loading">加载中...</view>
-      <view v-else-if="clubs.length >= total && total > 0" class="no-more">没有更多了</view>
-      <view v-else-if="clubs.length === 0" class="empty">暂无数据</view>
+      <view v-if="loading" class="loading">
+        加载中...
+      </view>
+      <view v-else-if="clubs.length >= total && total > 0" class="no-more">
+        没有更多了
+      </view>
+      <view v-else-if="clubs.length === 0" class="empty">
+        暂无数据
+      </view>
     </scroll-view>
   </view>
 </template>

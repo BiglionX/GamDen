@@ -1,7 +1,11 @@
 export {}
 
-declare module "vue" {
-  type Hooks = App.AppInstance & Page.PageInstance;
+declare global {
+  function getCurrentPages(): any;
+}
+
+declare module 'vue' {
+  type Hooks = UniApp.App & UniApp.Page;
   interface ComponentCustomOptions extends Hooks {}
 }
 
@@ -13,7 +17,6 @@ declare module "vue" {
  * - 通过 module augmentation 注入
  */
 declare module '@dcloudio/types' {
-  // 透传：使用同名 interface 合并
   namespace Uni {
     interface RequestOptions {
       method?:
@@ -29,7 +32,6 @@ declare module '@dcloudio/types' {
     }
   }
 }
-export {}
 
 declare module "vue" {
   type Hooks = App.AppInstance & Page.PageInstance;

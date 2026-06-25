@@ -59,6 +59,26 @@ export const TrackEvent = {
   OnboardingTerritoryLanded: 'onboarding_territory_landed',
   /** 用户完成新手任务 */
   OnboardingCompleted: 'onboarding_completed',
+
+  // ========== 守护灵升级系统 ==========
+  /** 经验值增加 */
+  AgentExpGained: 'agent_exp_gained',
+  /** 守护灵升级 */
+  AgentLevelUp: 'agent_level_up',
+  /** 亲密度增加 */
+  AgentBondGained: 'agent_bond_gained',
+  /** 亲密度升阶 */
+  AgentBondUp: 'agent_bond_up',
+  /** 彩蛋触发 */
+  AgentEggTriggered: 'agent_egg_triggered',
+  /** 主动关心触发 */
+  AgentCareTriggered: 'agent_care_triggered',
+  /** 用户发起对话 */
+  AgentDialogueInit: 'agent_dialogue_init',
+  /** 守护灵回复 */
+  AgentDialogueResp: 'agent_dialogue_resp',
+  /** 查看守护灵详情页 */
+  AgentDetailViewed: 'agent_detail_viewed',
 } as const;
 
 export type TrackEventName = (typeof TrackEvent)[keyof typeof TrackEvent];

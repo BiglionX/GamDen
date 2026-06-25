@@ -97,7 +97,9 @@ function handleMaskClick() {
     <view class="member-panel" @tap.stop>
       <!-- 顶部 -->
       <view class="member-panel__header">
-        <text class="member-panel__title">群成员 · {{ members.length }}</text>
+        <text class="member-panel__title">
+          群成员 · {{ members.length }}
+        </text>
         <view class="member-panel__close" @tap="handleClose">
           <text>✕</text>
         </view>
@@ -129,8 +131,12 @@ function handleMaskClick() {
       >
         <view v-for="group in grouped" :key="group.id" class="member-panel__group">
           <view class="member-panel__group-header" :style="{ borderLeftColor: group.color }">
-            <text class="member-panel__group-label">{{ group.label }}</text>
-            <text class="member-panel__group-count">{{ group.items.length }}</text>
+            <text class="member-panel__group-label">
+              {{ group.label }}
+            </text>
+            <text class="member-panel__group-count">
+              {{ group.items.length }}
+            </text>
           </view>
           <view
             v-for="m in group.items"
@@ -144,19 +150,31 @@ function handleMaskClick() {
               </view>
               <view class="member-panel__meta">
                 <view class="member-panel__name-row">
-                  <text class="member-panel__name">{{ m.nickname }}</text>
-                  <text v-if="m.role === 1" class="member-panel__role-tag member-panel__role-tag--owner">群主</text>
-                  <text v-else-if="m.role === 2" class="member-panel__role-tag member-panel__role-tag--admin">管理</text>
+                  <text class="member-panel__name">
+                    {{ m.nickname }}
+                  </text>
+                  <text v-if="m.role === 1" class="member-panel__role-tag member-panel__role-tag--owner">
+                    群主
+                  </text>
+                  <text v-else-if="m.role === 2" class="member-panel__role-tag member-panel__role-tag--admin">
+                    管理
+                  </text>
                 </view>
                 <view v-if="m.guardianType" class="member-panel__guardian-row">
                   <text
                     class="member-panel__guardian-icon"
                     :style="{ color: getGuardianColor(m) }"
-                  >{{ getGuardianIcon(m) }}</text>
-                  <text class="member-panel__guardian-name">{{ getGuardianName(m) }}守护</text>
+                  >
+                    {{ getGuardianIcon(m) }}
+                  </text>
+                  <text class="member-panel__guardian-name">
+                    {{ getGuardianName(m) }}守护
+                  </text>
                 </view>
               </view>
-              <text v-if="!m.online" class="member-panel__offline">离线</text>
+              <text v-if="!m.online" class="member-panel__offline">
+                离线
+              </text>
             </view>
             <!-- 私聊按钮 -->
             <view
@@ -164,8 +182,12 @@ function handleMaskClick() {
               class="member-panel__dm-btn"
               @tap.stop="handlePrivateChat(m)"
             >
-              <text class="member-panel__dm-icon">💬</text>
-              <text class="member-panel__dm-text">私聊</text>
+              <text class="member-panel__dm-icon">
+                💬
+              </text>
+              <text class="member-panel__dm-text">
+                私聊
+              </text>
             </view>
           </view>
         </view>

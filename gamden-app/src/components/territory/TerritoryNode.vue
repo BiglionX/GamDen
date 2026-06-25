@@ -48,9 +48,15 @@ function handleTap() {
     :style="style"
     @tap="handleTap"
   >
-    <text class="t-node__emoji">{{ visual.emoji }}</text>
-    <text v-if="node.isOwn" class="t-node__label">我的领地</text>
-    <text v-else class="t-node__level">Lv.{{ node.level }}</text>
+    <text class="t-node__emoji">
+      {{ visual.emoji }}
+    </text>
+    <text v-if="node.isOwn" class="t-node__label">
+      我的领地
+    </text>
+    <text v-else class="t-node__level">
+      Lv.{{ node.level }}
+    </text>
   </view>
 </template>
 

@@ -28,6 +28,18 @@
       }
     },
     {
+      "path": "pages/club/proposal",
+      "style": {
+        "navigationBarTitleText": "提议新茶摊"
+      }
+    },
+    {
+      "path": "pages/club/endorsement",
+      "style": {
+        "navigationBarTitleText": "联署提议"
+      }
+    },
+    {
       "path": "pages/market/index",
       "style": {
         "navigationBarTitleText": "集市",
@@ -154,6 +166,52 @@
       "path": "pages/admin/faqs",
       "style": {
         "navigationBarTitleText": "FAQ 管理"
+      }
+    },
+    {
+      "path": "pages/admin/clubs",
+      "style": {
+        "navigationBarTitleText": "俱乐部管理"
+      }
+    },
+    {
+      "path": "pages/admin/club-proposals",
+      "style": {
+        "navigationBarTitleText": "提议审核"
+      }
+    },
+    {
+      "path": "pages/admin/club-vitality",
+      "style": {
+        "navigationBarTitleText": "活力值看板"
+      }
+    },
+    {
+      "path": "pages/agent/detail",
+      "style": {
+        "navigationBarTitleText": "我的守护灵",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/agent/chat",
+      "style": {
+        "navigationBarTitleText": "与守护灵对话",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/agent/memories",
+      "style": {
+        "navigationBarTitleText": "守护灵记忆",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/agent/topup",
+      "style": {
+        "navigationBarTitleText": "灵力补给站",
+        "navigationStyle": "custom"
       }
     }
   ],

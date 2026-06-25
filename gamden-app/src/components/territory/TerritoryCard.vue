@@ -20,12 +20,18 @@ const GUARDIAN_LABELS: Record<GuardianType, string> = {
   mechanical: '机械师',
   elf: '精灵',
   astrologer: '占星师',
+  ranger: '游侠',
+  artisan: '工匠',
+  apostle: '使徒',
 };
 
 const GUARDIAN_ICON: Record<GuardianType, string> = {
   mechanical: '⚙️',
   elf: '🌿',
   astrologer: '🔮',
+  ranger: '🏹',
+  artisan: '🔨',
+  apostle: '🛡️',
 };
 
 const guardianLabel = computed(() => GUARDIAN_LABELS[props.neighbor.guardianType]);
@@ -39,37 +45,57 @@ const games = computed(() => props.neighbor.gameTags ?? []);
       <!-- 顶部装饰 -->
       <view class="t-card__deco">
         <text class="t-card__deco-line"></text>
-        <text class="t-card__deco-text">{{ guardianLabel }}领地</text>
+        <text class="t-card__deco-text">
+          {{ guardianLabel }}领地
+        </text>
         <text class="t-card__deco-line"></text>
       </view>
 
       <!-- 头像 + 昵称 + 等级 -->
       <view class="t-card__header">
         <view class="t-card__avatar">
-          <text class="t-card__avatar-icon">{{ guardianIcon }}</text>
+          <text class="t-card__avatar-icon">
+            {{ guardianIcon }}
+          </text>
         </view>
         <view class="t-card__info">
-          <text class="t-card__nickname">{{ neighbor.nickname }}</text>
+          <text class="t-card__nickname">
+            {{ neighbor.nickname }}
+          </text>
           <view class="t-card__meta">
-            <text class="t-card__level">Lv.{{ neighbor.level }}</text>
-            <text class="t-card__dot">·</text>
-            <text class="t-card__coord">({{ neighbor.coordX }}, {{ neighbor.coordY }})</text>
+            <text class="t-card__level">
+              Lv.{{ neighbor.level }}
+            </text>
+            <text class="t-card__dot">
+              ·
+            </text>
+            <text class="t-card__coord">
+              ({{ neighbor.coordX }}, {{ neighbor.coordY }})
+            </text>
           </view>
         </view>
       </view>
 
       <!-- 游戏标签 -->
       <view v-if="games.length" class="t-card__games">
-        <text class="t-card__games-label">最近常玩：</text>
+        <text class="t-card__games-label">
+          最近常玩：
+        </text>
         <view class="t-card__tags">
-          <text v-for="g in games" :key="g" class="t-card__tag">{{ g }}</text>
+          <text v-for="g in games" :key="g" class="t-card__tag">
+            {{ g }}
+          </text>
         </view>
       </view>
 
       <!-- 守护灵说明 -->
       <view class="t-card__guardian">
-        <text class="t-card__guardian-label">守护灵</text>
-        <text class="t-card__guardian-value">{{ guardianLabel }}</text>
+        <text class="t-card__guardian-label">
+          守护灵
+        </text>
+        <text class="t-card__guardian-value">
+          {{ guardianLabel }}
+        </text>
       </view>
 
       <!-- 按钮 -->

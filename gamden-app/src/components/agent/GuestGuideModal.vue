@@ -63,7 +63,9 @@ function handleSecondary() {
           background: visual.bgColor,
         }"
       >
-        <text class="guest-guide-modal__avatar-icon">{{ visual.icon }}</text>
+        <text class="guest-guide-modal__avatar-icon">
+          {{ visual.icon }}
+        </text>
         <view
           class="guest-guide-modal__avatar-glow"
           :style="{ background: visual.color }"
@@ -72,14 +74,22 @@ function handleSecondary() {
 
       <!-- 守护灵名字 + 场景标签 -->
       <view class="guest-guide-modal__header">
-        <text class="guest-guide-modal__name">{{ visual.name }}</text>
-        <text class="guest-guide-modal__scene-tag">{{ sceneLabel }}</text>
+        <text class="guest-guide-modal__name">
+          {{ visual.name }}
+        </text>
+        <text class="guest-guide-modal__scene-tag">
+          {{ sceneLabel }}
+        </text>
       </view>
 
       <!-- 文案卡片 -->
       <view class="guest-guide-modal__content">
-        <text class="guest-guide-modal__title">{{ guideModalLine.title }}</text>
-        <text class="guest-guide-modal__text">{{ guideModalLine.text }}</text>
+        <text class="guest-guide-modal__title">
+          {{ guideModalLine.title }}
+        </text>
+        <text class="guest-guide-modal__text">
+          {{ guideModalLine.text }}
+        </text>
       </view>
 
       <!-- 按钮区 -->

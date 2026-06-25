@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS users (
   password_hash VARCHAR(255) NOT NULL COMMENT '密码哈希（bcrypt）',
   nickname VARCHAR(50) NOT NULL DEFAULT '' COMMENT '用户昵称',
   avatar VARCHAR(255) DEFAULT '' COMMENT '头像URL',
-  guardian_type ENUM('mechanic', 'elf', 'astrologer') NOT NULL COMMENT '守护灵类型',
+  guardian_type ENUM('mechanic', 'elf', 'astrologer', 'ranger', 'artisan', 'apostle') NOT NULL COMMENT '守护灵类型',
   level INT DEFAULT 1 COMMENT '领地等级（1~5）',
   exp INT DEFAULT 0 COMMENT '当前经验值',
   invite_code VARCHAR(10) UNIQUE NOT NULL COMMENT '个人邀请码（6位字母数字）',

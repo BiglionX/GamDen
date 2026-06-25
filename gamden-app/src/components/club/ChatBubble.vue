@@ -51,13 +51,17 @@ const showStatus = computed(() => props.isSelf && props.status && props.status !
   <view class="chat-bubble" :class="{ 'chat-bubble--self': isSelf }">
     <!-- 头像（仅他人消息左侧显示） -->
     <view v-if="!isSelf" class="chat-bubble__avatar">
-      <text class="chat-bubble__avatar-icon">{{ avatar }}</text>
+      <text class="chat-bubble__avatar-icon">
+        {{ avatar }}
+      </text>
     </view>
 
     <!-- 主内容 -->
     <view class="chat-bubble__main">
       <!-- 昵称 -->
-      <text v-if="!isSelf && name" class="chat-bubble__name">{{ name }}</text>
+      <text v-if="!isSelf && name" class="chat-bubble__name">
+        {{ name }}
+      </text>
 
       <!-- 气泡 -->
       <view class="chat-bubble__body">
@@ -68,7 +72,9 @@ const showStatus = computed(() => props.isSelf && props.status && props.status !
           <text v-if="hasText" class="chat-bubble__text" :selectable="true" :user-select="true">
             {{ text }}
           </text>
-          <text v-else-if="hasEmoji" class="chat-bubble__emoji">{{ emoji }}</text>
+          <text v-else-if="hasEmoji" class="chat-bubble__emoji">
+            {{ emoji }}
+          </text>
         </view>
       </view>
 
@@ -77,13 +83,17 @@ const showStatus = computed(() => props.isSelf && props.status && props.status !
         <text v-if="showStatus" class="chat-bubble__status" :class="`chat-bubble__status--${status}`">
           {{ status === 'sending' ? '发送中...' : '发送失败' }}
         </text>
-        <text v-if="time" class="chat-bubble__time">{{ time }}</text>
+        <text v-if="time" class="chat-bubble__time">
+          {{ time }}
+        </text>
       </view>
     </view>
 
     <!-- 自己消息右侧的头像 -->
     <view v-if="isSelf" class="chat-bubble__avatar chat-bubble__avatar--self">
-      <text class="chat-bubble__avatar-icon">{{ avatar }}</text>
+      <text class="chat-bubble__avatar-icon">
+        {{ avatar }}
+      </text>
     </view>
   </view>
 </template>

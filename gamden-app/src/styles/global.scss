@@ -9,7 +9,7 @@
  * 此文件应在 App.vue 的 <style> 中导入
  */
 
-@use './variables' as *;
+// 注：variables.scss 已通过 vite.config.ts 的 additionalData 全局注入，无需重复 @use
 @use './components/card' as *;
 @use './components/button' as *;
 @use './components/text' as *;
