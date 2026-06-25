@@ -29,6 +29,25 @@ yarn-error.log*
 # vercel
 .vercel
 
+# nested project outputs
+**/node_modules/
+**/.next/
+**/dist/
+**/out/
+**/.vercel-tmp/
+**/unpackage/
+**/logs/
+
+# local env and runtime outputs
+.env
+.env.*
+.env.b64
+*.result.txt
+*.proc-err
+*.proc-out
+*.log
+*.log.*
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
